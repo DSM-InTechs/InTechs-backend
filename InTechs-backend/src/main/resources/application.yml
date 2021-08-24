@@ -1,2 +1,10 @@
 server:
   port: 8009
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      auto-index-creation: true
+      host: localhost
+      port: 27017
+      database: in_techs

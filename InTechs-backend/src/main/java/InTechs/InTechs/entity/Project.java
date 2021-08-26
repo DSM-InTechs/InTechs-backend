@@ -3,6 +3,7 @@ package InTechs.InTechs.entity;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
@@ -23,6 +24,7 @@ public class Project {
     @NotBlank
     @Size(max = 26)
     private String name;
-    private String image;
+    private Image images;
+    @DBRef(lazy = true)
     private List<User> users;
 }

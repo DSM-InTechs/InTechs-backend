@@ -2,6 +2,7 @@ package InTechs.InTechs.service.project;
 
 import InTechs.InTechs.entity.Project;
 import InTechs.InTechs.entity.User;
+import InTechs.InTechs.exception.exceptions.BadRequestException;
 import InTechs.InTechs.payload.ProjectCreateRequest;
 import InTechs.InTechs.repository.UserRepository;
 import InTechs.InTechs.repository.project.ProjectRepository;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -29,11 +29,10 @@ public class ProjectService{
         // String image = proReq.getImage();
         // 이미지 리사이즈 후 두 개 이미지 저장
 
-        Optional<User> user = userRepository.findById(userId);
-        user.orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow(BadRequestException::new);
 
         List<User> users = new ArrayList<>();
-        users.add(user.get());
+        users.add(user);
 
         Project project = Project.builder()
                 .number(number)

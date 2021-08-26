@@ -4,7 +4,7 @@ import InTechs.InTechs.entity.Project;
 import InTechs.InTechs.entity.User;
 import InTechs.InTechs.exception.exceptions.BadRequestException;
 import InTechs.InTechs.payload.ProjectCreateRequest;
-import InTechs.InTechs.repository.UserRepository;
+import InTechs.InTechs.repository.user.UserRepository;
 import InTechs.InTechs.repository.project.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

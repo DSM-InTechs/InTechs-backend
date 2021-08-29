@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
+@RestController
+@Log
 @RequiredArgsConstructor
 @RequestMapping("/project")
 public class ProjectController {
@@ -20,5 +22,17 @@ public class ProjectController {
     public ResponseEntity<String> projectCreate(@RequestHeader("Authorization") String token, @RequestBody @Valid ProjectCreateRequest project){
         projectService.createProject(project, token); // token.getUserId
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @RequestMapping("/file")
+    public String uploadFileTest(@RequestPart MultipartFile file){
+        log.info("--진입--");
+        return fileUploadService.uploadImage(file);
+    }
+
+    @RequestMapping("/file02")
+    public String uploadFileTest02(@RequestParam("file") MultipartFile file){
+        log.info("--진입--");
+        return fileUploadService.uploadImage(file);
     }
 }

@@ -27,3 +27,12 @@ cloud:
       secret-key: ${SECRET_KEY:}
 
 logging.level.com.amazonaws.util.EC2MetadataUtils: error
+
+auth:
+  jwt:
+    exp:
+      access: ${ACCESS_TOKEN_EXP:3600}
+      refresh: ${REFRESH_TOKEN_EXP:10000}
+    secret: ${SECRET_KEY}
+    header: ${HEADER:Authorization}
+    prefix: ${PREFIX:Bearer}

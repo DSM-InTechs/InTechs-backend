@@ -6,7 +6,6 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -18,8 +17,8 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public void uploadFile(InputStream inputStream, ObjectMetadata objectMetadata, String fileName){
-        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
+    public void uploadFile(InputStream inputStream, ObjectMetadata objectMetadata, String fileName, String folder){
+        amazonS3Client.putObject(new PutObjectRequest(bucket+folder, fileName, inputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
     }
 
     public String getFileUrl(String fileName){

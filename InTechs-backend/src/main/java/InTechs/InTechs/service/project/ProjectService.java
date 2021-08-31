@@ -1,5 +1,6 @@
 package InTechs.InTechs.service.project;
 
+import InTechs.InTechs.entity.Image;
 import InTechs.InTechs.entity.Project;
 import InTechs.InTechs.entity.User;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
@@ -23,15 +24,17 @@ public class ProjectService{
     private final UserRepository userRepository;
     private final FileUploadService fileUploadService;
 
-    public void createProject(ProjectCreateRequest proReq, String userId, MultipartFile file) {
+    public String createProject(String proName, String userId, MultipartFile file) {
         int number = createProjectNumber();
+
         while (projectRepository.existsById(number)){
             number = createProjectNumber();
         }
 
-        // String image = proReq.getImage();
-        // 이미지 리사이즈 후 두 개 이미지 저장
-        String fileUrl = fileUploadService.uploadImage(file);
+        final String folder = "/project";
+        String fileUrl = fileUploadService.uploadImage(file, folder);
+
+        String miniFileUrl=fileUploadService.imageResizeAndUpload(file);
 
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
@@ -40,12 +43,16 @@ public class ProjectService{
 
         Project project = Project.builder()
                 .number(number)
-                .name(proReq.getName())
+                .name(proName)
+                .images(Image.builder()
+                            .image(fileUrl)
+                            .miniImage(miniFileUrl)
+                            .build())
                 .users(users).build();
 
         projectRepository.save(project);
 
-        // return fileUrl
+        return String.valueOf(number);
     }
 
     private int createProjectNumber(){

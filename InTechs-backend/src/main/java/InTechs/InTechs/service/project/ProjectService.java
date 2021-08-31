@@ -32,9 +32,10 @@ public class ProjectService{
         }
 
         final String folder = "/project";
+        final String miniFolder = "/project/mini";
         String fileUrl = fileUploadService.uploadImage(file, folder);
 
-        String miniFileUrl=fileUploadService.imageResizeAndUpload(file);
+        String miniFileUrl=fileUploadService.imageResizeAndUpload(file, miniFolder);
 
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 

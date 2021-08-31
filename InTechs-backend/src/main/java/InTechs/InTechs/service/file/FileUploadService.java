@@ -45,27 +45,25 @@ public class FileUploadService {
     }
 
     // image resize
-    public String imageResizeAndUpload(MultipartFile file) {
-        String miniFolder = "/project/mini";
+    public String imageResizeAndUpload(MultipartFile file, String folder) {
+
         String fileName = createFileName(file.getOriginalFilename());
-        try{
+
+        try(ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
             BufferedImage bufferImage = ImageIO.read(file.getInputStream());
-            BufferedImage thumbnailImage = Thumbnails.of(bufferImage).size(100,100).asBufferedImage(); // url 넣어도 됨
+            BufferedImage bufferImageResize = Thumbnails.of(bufferImage).size(100,100).asBufferedImage();
 
-            ByteArrayOutputStream thumbOutput = new ByteArrayOutputStream();
-            String imageType = file.getContentType(); // 파일 타입!
-            ImageIO.write(thumbnailImage, imageType.substring(imageType.indexOf("/")+1), thumbOutput);
+            String imageType = file.getContentType();
+            ImageIO.write(bufferImageResize, imageType.substring(imageType.indexOf("/")+1), outputStream);
 
-            // set metadata
-            ObjectMetadata thumbObjectMetadata = new ObjectMetadata();
-            byte[] thumbBytes = thumbOutput.toByteArray();
-            thumbObjectMetadata.setContentLength(thumbBytes.length);
-            thumbObjectMetadata.setContentType(file.getContentType());
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            byte[] outputStreamBytes = outputStream.toByteArray();
+            objectMetadata.setContentLength(outputStreamBytes.length);
+            objectMetadata.setContentType(file.getContentType());
 
-            // save in s3
-            InputStream thumbInput = new ByteArrayInputStream(thumbBytes);
-            s3Service.uploadFile(thumbInput, thumbObjectMetadata, fileName, miniFolder);
-            thumbOutput.close();
+            InputStream thumbInput = new ByteArrayInputStream(outputStreamBytes);
+            s3Service.uploadFile(thumbInput, objectMetadata, fileName, folder);
+
             thumbInput.close();
         } catch(Exception e){
             throw new BaseException(ExceptionMessage.FILE_SIZE_CONVERSION_FAIL);

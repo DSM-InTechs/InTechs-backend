@@ -1,10 +1,10 @@
 package InTechs.InTechs.payload;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
-@Builder
+@Setter
 @Getter
 public class ProjectCreateRequest {
     private String name;

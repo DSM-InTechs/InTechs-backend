@@ -1,0 +1,18 @@
+server:
+  port: 8009
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      auto-index-creation: true
+      host: localhost
+      port: 27017
+      database: in_techs
+auth:
+  jwt:
+    exp:
+      access: ${ACCESS_TOKEN_EXP:3600}
+      refresh: ${REFRESH_TOKEN_EXP:10000}
+    secret: ${SECRET_KEY}
+    header: ${HEADER:Authorization}
+    prefix: ${PREFIX:Bearer}

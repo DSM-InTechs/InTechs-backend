@@ -17,7 +17,7 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-public class ProjectService{
+public class ProjectCreateService {
 
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
@@ -31,10 +31,8 @@ public class ProjectService{
         }
 
         final String folder = "/project";
-        final String miniFolder = "/project/mini";
-        String fileUrl = fileUploadService.uploadImage(file, folder);
 
-        String miniFileUrl=fileUploadService.imageResizeAndUpload(file, miniFolder);
+        Image image = fileUploadService.imageResizeAndUpload(file, folder);
 
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
@@ -44,10 +42,7 @@ public class ProjectService{
         Project project = Project.builder()
                 .number(number)
                 .name(proName)
-                .images(Image.builder()
-                            .image(fileUrl)
-                            .miniImage(miniFileUrl)
-                            .build())
+                .image(image)
                 .users(users).build();
 
         projectRepository.save(project);

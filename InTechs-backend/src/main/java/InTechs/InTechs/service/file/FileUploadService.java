@@ -1,5 +1,6 @@
 package InTechs.InTechs.service.file;
 
+import InTechs.InTechs.entity.Image;
 import InTechs.InTechs.exception.BaseException;
 import InTechs.InTechs.exception.ExceptionMessage;
 import InTechs.InTechs.service.file.S3Service;
@@ -45,13 +46,13 @@ public class FileUploadService {
     }
 
     // image resize
-    public String imageResizeAndUpload(MultipartFile file, String folder) {
+    public Image imageResizeAndUpload(MultipartFile file, String folder) {
 
         String fileName = createFileName(file.getOriginalFilename());
 
         try(ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
             BufferedImage bufferImage = ImageIO.read(file.getInputStream());
-            BufferedImage bufferImageResize = Thumbnails.of(bufferImage).size(100,100).asBufferedImage();
+            BufferedImage bufferImageResize = Thumbnails.of(bufferImage).size(300,300).asBufferedImage();
 
             String imageType = file.getContentType();
             ImageIO.write(bufferImageResize, imageType.substring(imageType.indexOf("/")+1), outputStream);
@@ -68,6 +69,9 @@ public class FileUploadService {
         } catch(Exception e){
             throw new BaseException(ExceptionMessage.FILE_SIZE_CONVERSION_FAIL);
         }
-        return s3Service.getFileUrl(fileName);
+        return Image.builder()
+                .oriName(fileName)
+                .imageUrl(s3Service.getFileUrl(fileName))
+                .build();
     }
 }

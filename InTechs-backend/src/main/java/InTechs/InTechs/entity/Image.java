@@ -6,6 +6,6 @@ import lombok.Getter;
 @Builder
 @Getter
 public class Image {
-    String image;
-    String miniImage;
+    String imageUrl;
+    String oriName;
 }

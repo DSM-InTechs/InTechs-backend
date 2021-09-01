@@ -24,7 +24,7 @@ public class Project {
     @NotBlank
     @Size(max = 26)
     private String name;
-    private Image images;
+    private Image image;
     @DBRef(lazy = true)
     private List<User> users;
 }

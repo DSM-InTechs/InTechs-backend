@@ -81,6 +81,11 @@ public class JwtTokenProvider {
         }
     }
 
+    public Authentication getAuthentication(String token) {
+        AuthDetails authDetails = authDetailsService.loadUserByUsername(getEmail(token));
+        return new UsernamePasswordAuthenticationToken(authDetails, "", authDetails.getAuthorities());
+    }
+
     public boolean isRefreshToken(String token) {
         try {
             return Jwts.parser().setSigningKey(secretKey)
@@ -88,11 +93,6 @@ public class JwtTokenProvider {
         } catch (Exception e) {
             throw new InvalidTokenException();
         }
-    }
-
-    public Authentication getAuthentication(String token) {
-        AuthDetails authDetails = authDetailsService.loadUserByUsername(getEmail(token));
-        return new UsernamePasswordAuthenticationToken(authDetails, "", authDetails.getAuthorities());
     }
 
 }

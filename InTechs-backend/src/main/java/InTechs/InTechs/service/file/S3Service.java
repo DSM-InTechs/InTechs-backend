@@ -24,4 +24,8 @@ public class S3Service {
     public String getFileUrl(String fileName){
         return String.valueOf(amazonS3Client.getUrl(bucket, fileName));
     }
+
+    public void deleteFile(String folder, String oriName){
+        amazonS3Client.deleteObject(bucket+folder, oriName);
+    }
 }

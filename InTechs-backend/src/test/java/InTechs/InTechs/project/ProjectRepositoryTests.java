@@ -1,7 +1,6 @@
 package InTechs.InTechs.project;
 
 import InTechs.InTechs.entity.Image;
-import InTechs.InTechs.repository.project.CustomProjectRepository;
 import InTechs.InTechs.repository.project.ProjectRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +18,17 @@ public class ProjectRepositoryTests {
         projectRepository.projectUpdate(number, name);
     }
     @Test
-    public void ImageChangeTest(){
+    public void imageChangeTest(){
         int number = 297102;
         Image image = Image.builder()
                 .imageUrl("어쨌든 url임")
                 .oriName("어쨌든.jpg")
                 .build();
         projectRepository.projectUpdate(number, image);
+    }
+    @Test
+    public void getProjectTest(){
+        int number = 297102;
+        projectRepository.findById(number);
     }
 }

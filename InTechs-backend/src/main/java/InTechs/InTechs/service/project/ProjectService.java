@@ -31,4 +31,11 @@ public class ProjectService {
     private void changeProjectName(int projectId, String name){
         projectRepository.projectUpdate(projectId,name);
     }
+
+    public  void projectDelete(int projectId){
+        String folder = "/project";
+        Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new); // query dsl로 ㅂ꾸기
+        fileUploadService.fileDelete(folder, project.getImage().getOriName());
+        projectRepository.delete(project);
+    }
 }

@@ -32,4 +32,9 @@ public class ProjectController {
     public void projectInfoChange(@PathVariable int projectId, @ModelAttribute ProjectInfoChangeRequest projectChangeInfo){
         projectService.projectInfoChange(projectId,projectChangeInfo.getName(), projectChangeInfo.getImage());
     }
+
+    @DeleteMapping("/{projectId}")
+    public void projectDelete(@PathVariable int projectId){
+        projectService.projectDelete(projectId);
+    }
 }

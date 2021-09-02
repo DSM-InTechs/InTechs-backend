@@ -3,8 +3,6 @@ package InTechs.InTechs.service.file;
 import InTechs.InTechs.entity.Image;
 import InTechs.InTechs.exception.BaseException;
 import InTechs.InTechs.exception.ExceptionMessage;
-import InTechs.InTechs.service.file.S3Service;
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnails;
@@ -18,7 +16,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class FileUploadService {
+public class FileService {
     private final S3Service s3Service;
 
     public String uploadImage(MultipartFile file, String folder){

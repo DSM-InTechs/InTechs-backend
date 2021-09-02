@@ -6,7 +6,7 @@ import InTechs.InTechs.entity.User;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
 import InTechs.InTechs.repository.project.ProjectRepository;
 import InTechs.InTechs.repository.user.UserRepository;
-import InTechs.InTechs.service.file.FileUploadService;
+import InTechs.InTechs.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +21,7 @@ public class ProjectCreateService {
 
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
-    private final FileUploadService fileUploadService;
+    private final FileService fileUploadService;
 
     public String createProject(String proName, String userId, MultipartFile file) {
         int number = createProjectNumber();

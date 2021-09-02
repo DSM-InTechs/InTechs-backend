@@ -72,4 +72,7 @@ public class FileService {
                 .imageUrl(s3Service.getFileUrl(fileName))
                 .build();
     }
+    public void fileDelete(String folder, String oriName){
+        s3Service.deleteFile(folder, oriName);
+    }
 }

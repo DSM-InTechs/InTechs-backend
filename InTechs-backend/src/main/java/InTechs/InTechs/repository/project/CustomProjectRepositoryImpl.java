@@ -2,11 +2,14 @@ package InTechs.InTechs.repository.project;
 
 import InTechs.InTechs.entity.Image;
 import InTechs.InTechs.entity.Project;
+import InTechs.InTechs.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 public class CustomProjectRepositoryImpl implements CustomProjectRepository{
@@ -28,5 +31,12 @@ public class CustomProjectRepositoryImpl implements CustomProjectRepository{
         Update update= Update.update(column, image);
 
         mongoTemplate.updateFirst(query,update, Project.class);
+    }
+
+    public void addProjectUser(int projectId, List<User> users){
+        String column = "users";
+        Query query = new Query(Criteria.where("_id").is(projectId));
+        Update update = Update.update(column, users);
+        mongoTemplate.updateFirst(query, update, Project.class);
     }
 }

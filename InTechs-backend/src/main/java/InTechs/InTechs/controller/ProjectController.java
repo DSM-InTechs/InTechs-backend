@@ -37,4 +37,9 @@ public class ProjectController {
     public void projectDelete(@PathVariable int projectId){
         projectService.projectDelete(projectId);
     }
+
+    @PostMapping("/{projectId}/user")
+    public void projectJoin(@RequestHeader("Authorization") String token, @PathVariable int projectId){
+        projectService.projectJoin(projectId, jwtTokenProvider.getEmail(token));
+    }
 }

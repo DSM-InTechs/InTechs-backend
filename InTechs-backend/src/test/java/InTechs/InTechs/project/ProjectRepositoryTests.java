@@ -1,6 +1,8 @@
 package InTechs.InTechs.project;
 
 import InTechs.InTechs.entity.Image;
+import InTechs.InTechs.entity.Project;
+import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
 import InTechs.InTechs.repository.project.ProjectRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +32,12 @@ public class ProjectRepositoryTests {
     public void getProjectTest(){
         int number = 297102;
         projectRepository.findById(number);
+
+    }
+
+    @Test
+    public void test(){
+        Project project = projectRepository.findById(297102).orElseThrow(ProjectNotFoundException::new);
+        System.out.println(project.getUsers().get(0).getEmail());
     }
 }

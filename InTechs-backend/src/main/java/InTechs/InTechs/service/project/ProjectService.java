@@ -54,4 +54,10 @@ public class ProjectService {
     private User findUserFromEmail(String email){
         return userRepository.findById(email).orElseThrow(UserNotFoundException::new);
     }
+
+    public void projectExit(int projectId, String email){
+        Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
+        project.removeUser(findUserFromEmail(email));
+        projectRepository.save(project);
+    }
 }

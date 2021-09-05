@@ -31,4 +31,8 @@ public class Project {
     public void addUser(User user){
         this.users.add(user);
     }
+
+    public void removeUser(User user){
+        boolean b = this.users.remove(user);
+    }
 }

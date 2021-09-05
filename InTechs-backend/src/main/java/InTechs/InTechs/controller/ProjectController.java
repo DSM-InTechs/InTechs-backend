@@ -42,4 +42,9 @@ public class ProjectController {
     public void projectJoin(@RequestHeader("Authorization") String token, @PathVariable int projectId){
         projectService.projectJoin(projectId, jwtTokenProvider.getEmail(token));
     }
+
+    @DeleteMapping("/{projectId}/user")
+    public void projectExit(@RequestHeader("Authorization") String token, @PathVariable int projectId){
+        projectService.projectExit(projectId, jwtTokenProvider.getEmail(token));
+    }
 }

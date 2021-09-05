@@ -27,4 +27,8 @@ public class Project {
     private Image image;
     @DBRef(lazy = true)
     private List<User> users;
+
+    public void addUser(User user){
+        this.users.add(user);
+    }
 }

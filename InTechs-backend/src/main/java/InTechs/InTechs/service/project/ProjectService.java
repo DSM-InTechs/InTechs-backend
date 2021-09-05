@@ -45,14 +45,12 @@ public class ProjectService {
         projectRepository.delete(project);
     }
 
-    // use userRepository
     public void projectJoin(int projectId, String email){
         Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
-
-        List<User> users = project.getUsers();
-        users.add(findUserFromEmail(email));
-        projectRepository.addProjectUser(projectId, users);
+        project.addUser(findUserFromEmail(email));
+        projectRepository.save(project);
     }
+
     private User findUserFromEmail(String email){
         return userRepository.findById(email).orElseThrow(UserNotFoundException::new);
     }

@@ -1,7 +1,8 @@
 package InTechs.InTechs.controller;
 
-import InTechs.InTechs.payload.ProjectCreateRequest;
-import InTechs.InTechs.payload.ProjectInfoChangeRequest;
+import InTechs.InTechs.payload.request.ProjectCreateRequest;
+import InTechs.InTechs.payload.request.ProjectInfoChangeRequest;
+import InTechs.InTechs.payload.response.ProjectUserResponse;
 import InTechs.InTechs.security.JwtTokenProvider;
 import InTechs.InTechs.service.project.ProjectCreateService;
 import InTechs.InTechs.service.project.ProjectService;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Log
@@ -46,5 +49,10 @@ public class ProjectController {
     @DeleteMapping("/{projectId}/user")
     public void projectExit(@RequestHeader("Authorization") String token, @PathVariable int projectId){
         projectService.projectExit(projectId, jwtTokenProvider.getEmail(token));
+    }
+
+    @GetMapping("/{projectId}/user")
+    public List<ProjectUserResponse> projectUserList(@PathVariable int projectId){
+        return projectService.projectUserList(projectId);
     }
 }

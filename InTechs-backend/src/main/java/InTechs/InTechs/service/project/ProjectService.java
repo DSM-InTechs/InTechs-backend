@@ -5,6 +5,7 @@ import InTechs.InTechs.entity.Project;
 import InTechs.InTechs.entity.User;
 import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
+import InTechs.InTechs.payload.response.ProjectUserResponse;
 import InTechs.InTechs.repository.project.ProjectRepository;
 import InTechs.InTechs.repository.user.UserRepository;
 import InTechs.InTechs.service.file.FileService;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -59,5 +61,21 @@ public class ProjectService {
         Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
         project.removeUser(findUserFromEmail(email));
         projectRepository.save(project);
+    }
+
+    public List<ProjectUserResponse> projectUserList(int projectId){
+        Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
+        List<User> users = project.getUsers();
+        List<ProjectUserResponse> userListResponse = new ArrayList<>();
+        for(User user :users){
+            ProjectUserResponse userResponse =
+                    ProjectUserResponse.builder()
+                            .email(user.getEmail())
+                            .name(user.getName())
+                            .imageUri(user.getImage())
+                            .isActive(user.isActive()).build();
+            userListResponse.add(userResponse);
+        }
+        return userListResponse;
     }
 }

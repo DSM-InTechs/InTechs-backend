@@ -27,12 +27,14 @@ public class Project {
     private Image image;
     @DBRef(lazy = true)
     private List<User> users;
+    @DBRef(lazy = true)
+    private List<Issue> issues;
 
     public void addUser(User user){
         this.users.add(user);
     }
 
     public void removeUser(User user){
-        boolean b = this.users.remove(user);
+        this.users.remove(user);
     }
 }

@@ -1,11 +1,11 @@
 package InTechs.InTechs.project;
 
-import InTechs.InTechs.entity.Image;
-import InTechs.InTechs.entity.Project;
-import InTechs.InTechs.entity.User;
+import InTechs.InTechs.project.value.Image;
+import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
-import InTechs.InTechs.repository.project.ProjectRepository;
-import InTechs.InTechs.repository.user.UserRepository;
+import InTechs.InTechs.project.entity.Project;
+import InTechs.InTechs.project.repository.ProjectRepository;
+import InTechs.InTechs.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

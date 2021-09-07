@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -32,7 +33,7 @@ public class Project {
     @DBRef(lazy = true)
     private List<User> users;
     @DBRef(lazy = true)
-    private List<Issue> issues;
+    private List<Issue> issues = new ArrayList<>();
     private List<Tag> tags;
 
     public void addUser(User user){
@@ -41,5 +42,9 @@ public class Project {
 
     public void removeUser(User user){
         this.users.remove(user);
+    }
+
+    public void addIssue(Issue issue){
+        this.issues.add(issue);
     }
 }

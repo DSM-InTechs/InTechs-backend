@@ -1,8 +1,10 @@
 package InTechs.InTechs.issue.service;
 
+import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
 import InTechs.InTechs.issue.entity.Issue;
 import InTechs.InTechs.issue.payload.IssueCreateRequest;
 import InTechs.InTechs.issue.repository.IssueRepository;
+import InTechs.InTechs.issue.value.Tag;
 import InTechs.InTechs.project.entity.Project;
 import InTechs.InTechs.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +20,6 @@ public class IssueService {
     private final ProjectRepository projectRepository;
 
     public void issueCreate(String writer, int projectId, IssueCreateRequest issueRequest){
-        List<Issue> issues = projectRepository.findById(projectId).map(Project::getIssues).orElseGet(ArrayList::new);
-
         Issue issue = Issue.builder()
                 .title(issueRequest.getTitle())
                 .content(issueRequest.getContent())
@@ -31,7 +31,12 @@ public class IssueService {
                 .build();
 
         issueRepository.save(issue);
-        issues.add(issue);
-        projectRepository.addProjectIssue(projectId, issues);
+        Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
+
+        // 태그 중복처리...해야함...
+        issueRequest.getTags().forEach(tag -> project.getTags().add(tag));
+
+        project.addIssue(issue);
+        projectRepository.save(project);
     }
 }

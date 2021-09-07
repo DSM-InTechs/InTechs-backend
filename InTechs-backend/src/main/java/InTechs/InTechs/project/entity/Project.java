@@ -1,5 +1,6 @@
 package InTechs.InTechs.project.entity;
 
+import InTechs.InTechs.issue.value.Tag;
 import InTechs.InTechs.project.value.Image;
 import InTechs.InTechs.issue.entity.Issue;
 import InTechs.InTechs.user.entity.User;
@@ -32,6 +33,7 @@ public class Project {
     private List<User> users;
     @DBRef(lazy = true)
     private List<Issue> issues;
+    private List<Tag> tags;
 
     public void addUser(User user){
         this.users.add(user);

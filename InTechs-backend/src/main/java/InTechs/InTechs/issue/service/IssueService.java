@@ -14,6 +14,8 @@ public class IssueService {
                 .state(issueRequest.getState())
                 .progress(issueRequest.getProgress())
                 .end_date(issueRequest.getEnd_date())
+                .tags(issueRequest.getTags())
+                .writer(writer)
                 .build();
     }
 }

@@ -14,7 +14,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
@@ -34,7 +36,7 @@ public class Project {
     private List<User> users;
     @DBRef(lazy = true)
     private List<Issue> issues = new ArrayList<>();
-    private List<Tag> tags;
+    private Set<Tag> tags = new HashSet<>();
 
     public void addUser(User user){
         this.users.add(user);

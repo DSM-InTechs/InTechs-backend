@@ -2,12 +2,14 @@ package InTechs.InTechs.issue.entity;
 
 import InTechs.InTechs.issue.value.State;
 import InTechs.InTechs.issue.value.Tag;
+import InTechs.InTechs.project.entity.Project;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
+import java.util.Set;
 
 @ToString
 @Getter
@@ -25,5 +27,5 @@ public class Issue {
     private int progress; // 퍼센트 에이지
     private String end_date;
     @Setter
-    private List<Tag> tags;
+    private Set<Tag> tags;
 }

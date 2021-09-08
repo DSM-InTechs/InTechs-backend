@@ -1,5 +1,6 @@
 package InTechs.InTechs.project;
 
+import InTechs.InTechs.issue.value.Tag;
 import InTechs.InTechs.project.value.Image;
 import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
@@ -10,7 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @SpringBootTest
 public class ProjectRepositoryTests {
@@ -53,8 +56,8 @@ public class ProjectRepositoryTests {
         users.add(userRepository.findById("whddms@dsm.hs.kr").get());
         users.add(userRepository.findById("ddd@com").get());
         Project project = Project.builder()
-                .number(879465)
-                .name("proName")
+                .number(879487)
+                .name("프로젝트")
                 .image(Image.builder().build())
                 .users(users).build();
 
@@ -66,5 +69,10 @@ public class ProjectRepositoryTests {
         Project project = projectRepository.findById(879465).orElseThrow(ProjectNotFoundException::new);
         project.addUser(userRepository.findById("ddd03@com").get());
         projectRepository.save(project);
+    }
+
+    @Test
+    public void getTagListTest(){
+        Set<Tag> tags = projectRepository.findById(879488).map(Project::getTags).orElseGet(HashSet::new);
     }
 }

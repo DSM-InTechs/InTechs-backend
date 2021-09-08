@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @SpringBootTest
 public class IssueServiceTests {
@@ -17,16 +17,17 @@ public class IssueServiceTests {
     IssueService issueService;
     @Test
     public void issueCreateTest(){
-        List<Tag> tags = new ArrayList<>();
-        tags.add(Tag.builder().tag("안녕").build());
+        Set<Tag> tags = new HashSet<>();
+        tags.add(Tag.builder().tag("태그").build());
+        tags.add(Tag.builder().tag("방가방가").build());
         IssueCreateRequest req = IssueCreateRequest.builder()
-                .content("이슈내용")
+                .content("새로운이슈")
                 .end_date("2020-02-03")
-                .progress(98)
+                .progress(88)
                 .state(State.DONE)
                 .title("제목")
                 .tags(tags)
                 .build();
-        issueService.issueCreate("whddms@dsm.hs.kr",879465,req);
+        issueService.issueCreate("whddms@dsm.hs.kr",879487,req);
     }
 }

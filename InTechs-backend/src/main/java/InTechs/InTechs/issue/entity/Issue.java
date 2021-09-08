@@ -22,11 +22,15 @@ public class Issue {
     private ObjectId id;
     private String writer; // 이슈 생성자
     private String title;
+    @Setter
     private String content;
+    @Setter
     private State state;
+    @Setter
     private int progress; // 퍼센트 에이지
+    @Setter
     private String end_date;
-    @DBRef
+    @DBRef(lazy = true)
     private Project project;
     @Setter
     private Set<Tag> tags;

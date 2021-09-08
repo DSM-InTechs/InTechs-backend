@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @Log
 @RequiredArgsConstructor
@@ -15,7 +17,7 @@ public class IssueController {
     private final IssueService issueService;
     private final JwtTokenProvider jwtTokenProvider;
     @PostMapping("/{projectId}/issue")
-    public void issueCreate(@RequestHeader("Authorization") String token,@PathVariable int projectId, @RequestBody IssueCreateRequest issueRequest){
+    public void issueCreate(@RequestHeader("Authorization") String token,@PathVariable int projectId, @Valid @RequestBody IssueCreateRequest issueRequest){
         issueService.issueCreate(jwtTokenProvider.getEmail(token), projectId, issueRequest);
     }
 }

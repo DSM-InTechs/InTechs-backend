@@ -1,6 +1,6 @@
 package InTechs.InTechs.security.auth;
 
-import InTechs.InTechs.entity.User;
+import InTechs.InTechs.user.entity.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

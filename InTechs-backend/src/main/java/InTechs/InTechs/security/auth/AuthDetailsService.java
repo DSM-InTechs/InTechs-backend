@@ -2,7 +2,7 @@ package InTechs.InTechs.security.auth;
 
 
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
-import InTechs.InTechs.repository.user.UserRepository;
+import InTechs.InTechs.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

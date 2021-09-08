@@ -1,6 +1,6 @@
 package InTechs.InTechs.project;
 
-import InTechs.InTechs.service.project.ProjectService;
+import InTechs.InTechs.project.service.ProjectService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

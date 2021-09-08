@@ -1,7 +1,7 @@
 package InTechs.InTechs.user;
 
-import InTechs.InTechs.entity.User;
-import InTechs.InTechs.repository.user.UserRepository;
+import InTechs.InTechs.user.entity.User;
+import InTechs.InTechs.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

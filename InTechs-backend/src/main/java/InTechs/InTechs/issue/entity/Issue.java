@@ -26,6 +26,8 @@ public class Issue {
     private State state;
     private int progress; // 퍼센트 에이지
     private String end_date;
+    @DBRef
+    private Project project;
     @Setter
     private Set<Tag> tags;
 }

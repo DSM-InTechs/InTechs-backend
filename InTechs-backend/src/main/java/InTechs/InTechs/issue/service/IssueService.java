@@ -47,6 +47,13 @@ public class IssueService {
     }
 
     public void issueUpdate(String issueId, IssueUpdateRequest request){
-
+        Issue issue = issueRepository.findById(issueId).orElseThrow(IssueNotFoundException::new);
+        if(!request.getContent().isBlank()) issue.setContent(request.getContent());
+        if(!request.getEnd_date().isBlank()) issue.setEnd_date(request.getEnd_date());
+        if(request.getProgress()!=0) issue.setProgress(request.getProgress());
+        if(!request.getTitle().isBlank()) issue.setTitle(request.getTitle());
+        if(!request.getTags().isEmpty()) issue.setTags(request.getTags()); // 태그가 삭제되면 어떡하지?
+        if(request.getState() != null) issue.setState(request.getState());
+        issueRepository.save(issue);
     }
 }

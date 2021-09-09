@@ -1,5 +1,7 @@
 package InTechs.InTechs.project.service;
 
+import InTechs.InTechs.issue.value.Tag;
+import InTechs.InTechs.project.payload.response.UserTagResponse;
 import InTechs.InTechs.project.value.Image;
 import InTechs.InTechs.project.entity.Project;
 import InTechs.InTechs.user.entity.User;
@@ -14,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -64,7 +68,7 @@ public class ProjectService {
     }
 
     public List<ProjectUserResponse> projectUserList(int projectId){
-        List<User> users = projectRepository.findById(projectId).map(Project::getUsers).orElseThrow(ProjectNotFoundException::new)
+        List<User> users = projectRepository.findById(projectId).map(Project::getUsers).orElseThrow(ProjectNotFoundException::new);
         List<ProjectUserResponse> userListResponse = new ArrayList<>();
         for(User user :users){
             ProjectUserResponse userResponse =
@@ -76,5 +80,22 @@ public class ProjectService {
             userListResponse.add(userResponse);
         }
         return userListResponse;
+    }
+    public Set<Tag> tagList(int projectId){
+        return projectRepository.findById(projectId).map(Project::getTags).orElseGet(HashSet::new);
+    }
+
+    public Set<UserTagResponse> userTagList(int projectId){
+        List<User> users = projectRepository.findById(projectId).map(Project::getUsers).orElseThrow(ProjectNotFoundException::new);
+        Set<UserTagResponse> userTagList = new HashSet<>();
+        for(User user: users){
+            UserTagResponse userTagResponse =
+                    UserTagResponse.builder()
+                                    .email(user.getEmail())
+                                    .name(user.getName()).build();
+            userTagList.add(userTagResponse);
+        }
+        return userTagList;
+
     }
 }

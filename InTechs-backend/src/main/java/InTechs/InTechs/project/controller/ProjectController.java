@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @Log
@@ -54,5 +55,14 @@ public class ProjectController {
     @GetMapping("/{projectId}/user")
     public List<ProjectUserResponse> projectUserList(@PathVariable int projectId){
         return projectService.projectUserList(projectId);
+    }
+
+    @GetMapping("/{projectId}/tag/{tagNum}")
+    public Set<?> tagList(@PathVariable int projectId, @PathVariable int tagNum){
+        if(tagNum==1){
+            return projectService.userTagList(projectId);
+        } else{
+            return projectService.tagList(projectId);
+        }
     }
 }

@@ -20,4 +20,8 @@ public class IssueController {
     public void issueCreate(@RequestHeader("Authorization") String token,@PathVariable int projectId, @Valid @RequestBody IssueCreateRequest issueRequest){
         issueService.issueCreate(jwtTokenProvider.getEmail(token), projectId, issueRequest);
     }
+    @DeleteMapping("/{projectId}/issue/{issueId}")
+    public void issueDelete(@PathVariable int projectId, @PathVariable String issueId){
+        issueService.issueDelete(projectId, issueId);
+    }
 }

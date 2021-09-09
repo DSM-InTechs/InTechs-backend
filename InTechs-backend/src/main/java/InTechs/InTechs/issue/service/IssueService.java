@@ -4,6 +4,7 @@ import InTechs.InTechs.exception.exceptions.IssueNotFoundException;
 import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
 import InTechs.InTechs.issue.entity.Issue;
 import InTechs.InTechs.issue.payload.IssueCreateRequest;
+import InTechs.InTechs.issue.payload.IssueUpdateRequest;
 import InTechs.InTechs.issue.repository.IssueRepository;
 import InTechs.InTechs.project.entity.Project;
 import InTechs.InTechs.project.repository.ProjectRepository;
@@ -43,5 +44,9 @@ public class IssueService {
         project.getIssues().remove(issueRepository.findById(issueId).orElseThrow(IssueNotFoundException::new));
         projectRepository.save(project);
         issueRepository.deleteById(issueId);
+    }
+
+    public void issueUpdate(String issueId, IssueUpdateRequest request){
+
     }
 }

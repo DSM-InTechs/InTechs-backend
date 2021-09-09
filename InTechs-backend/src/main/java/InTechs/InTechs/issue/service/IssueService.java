@@ -1,5 +1,6 @@
 package InTechs.InTechs.issue.service;
 
+import InTechs.InTechs.exception.exceptions.IssueNotFoundException;
 import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
 import InTechs.InTechs.issue.entity.Issue;
 import InTechs.InTechs.issue.payload.IssueCreateRequest;
@@ -26,7 +27,7 @@ public class IssueService {
                 .end_date(issueRequest.getEnd_date())
                 .tags(issueRequest.getTags())
                 .writer(writer)
-                .project(project)
+                .projectId(projectId)
                 .build();
 
         issueRepository.save(issue);
@@ -35,5 +36,12 @@ public class IssueService {
 
         project.addIssue(issue);
         projectRepository.save(project);
+    }
+
+    public void issueDelete(int projectId, String issueId){
+        Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
+        project.getIssues().remove(issueRepository.findById(issueId).orElseThrow(IssueNotFoundException::new));
+        projectRepository.save(project);
+        issueRepository.deleteById(issueId);
     }
 }

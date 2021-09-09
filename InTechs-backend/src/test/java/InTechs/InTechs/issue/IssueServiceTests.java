@@ -21,7 +21,7 @@ public class IssueServiceTests {
         tags.add(Tag.builder().tag("태그").build());
         tags.add(Tag.builder().tag("방가방가").build());
         IssueCreateRequest req = IssueCreateRequest.builder()
-                .content("새로운이슈")
+                .content("새로운이슈2")
                 .end_date("2020-02-03")
                 .progress(88)
                 .state(State.DONE)
@@ -29,5 +29,10 @@ public class IssueServiceTests {
                 .tags(tags)
                 .build();
         issueService.issueCreate("whddms@dsm.hs.kr",879487,req);
+    }
+
+    @Test
+    public void issueDeleteTest(){
+        issueService.issueDelete(879487, "613893706786e64065cd79a0");
     }
 }

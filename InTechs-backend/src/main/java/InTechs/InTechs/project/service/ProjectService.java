@@ -28,7 +28,7 @@ public class ProjectService {
     private final UserRepository userRepository;
 
     public void projectInfoChange(int projectId, String name,MultipartFile image){
-        if(name!=null) changeProjectName(projectId,name);
+        if(name!=null && name.equals(" ")) changeProjectName(projectId,name);
         if(image!=null) changeProjectImage(projectId, image);
     }
 

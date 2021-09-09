@@ -1,12 +1,10 @@
 package InTechs.InTechs.issue.value;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
+@Getter
 @EqualsAndHashCode
-@ToString
 @Builder
 public class Tag {
-    String tag;
+    private String tag;
 }

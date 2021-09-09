@@ -1,4 +1,4 @@
-package InTechs.InTechs.payload.request;
+package InTechs.InTechs.user.payload.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

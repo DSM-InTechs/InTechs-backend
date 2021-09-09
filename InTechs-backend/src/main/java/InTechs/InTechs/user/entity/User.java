@@ -1,4 +1,4 @@
-package InTechs.InTechs.entity;
+package InTechs.InTechs.user.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.web.multipart.MultipartFile;
 
 @Document(collection = "user")
 @Getter
@@ -21,7 +22,7 @@ public class User {
 
     private String name;
 
-    private String image;
+    private MultipartFile image;
 
     private boolean isActive;
 
@@ -31,9 +32,15 @@ public class User {
         return this;
     }
 
-    public User setImage(String image) {
+    public User setImage(MultipartFile image) {
         this.image = image;
 
         return  this;
+    }
+
+    public User setName(String name) {
+        this.name = name;
+
+        return this;
     }
 }

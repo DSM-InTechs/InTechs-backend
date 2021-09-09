@@ -1,5 +1,7 @@
-package InTechs.InTechs.security;
+package InTechs.InTechs.user.config;
 
+import InTechs.InTechs.user.security.JwtConfigure;
+import InTechs.InTechs.user.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,8 +28,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     }
 
     @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
+    protected void configure(HttpSecurity http) throws Exception {
+        http
                 .csrf().disable()
                 .cors().and()
                 .formLogin().disable()

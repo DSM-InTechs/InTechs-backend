@@ -1,4 +1,4 @@
-package InTechs.InTechs.security;
+package InTechs.InTechs.user.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;

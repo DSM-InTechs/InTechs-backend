@@ -1,8 +1,8 @@
-package InTechs.InTechs.security;
+package InTechs.InTechs.user.security;
 
 import InTechs.InTechs.exception.exceptions.InvalidTokenException;
-import InTechs.InTechs.security.auth.AuthDetails;
-import InTechs.InTechs.security.auth.AuthDetailsService;
+import InTechs.InTechs.user.security.auth.AuthDetails;
+import InTechs.InTechs.user.security.auth.AuthDetailsService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;

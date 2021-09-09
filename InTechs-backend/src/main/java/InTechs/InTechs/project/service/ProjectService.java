@@ -64,8 +64,7 @@ public class ProjectService {
     }
 
     public List<ProjectUserResponse> projectUserList(int projectId){
-        Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
-        List<User> users = project.getUsers();
+        List<User> users = projectRepository.findById(projectId).map(Project::getUsers).orElseThrow(ProjectNotFoundException::new)
         List<ProjectUserResponse> userListResponse = new ArrayList<>();
         for(User user :users){
             ProjectUserResponse userResponse =

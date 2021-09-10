@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@Log
 @RequiredArgsConstructor
 @RequestMapping("/project")
 public class IssueController {
@@ -29,6 +28,5 @@ public class IssueController {
     @PatchMapping("/issue/{issueId}")
     public void issueUpdate(@PathVariable String issueId, @RequestBody IssueUpdateRequest issueUpdateRequest){
         issueService.issueUpdate(issueId, issueUpdateRequest);
-
     }
 }

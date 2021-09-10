@@ -49,4 +49,7 @@ public class Project {
     public void addIssue(Issue issue){
         this.issues.add(issue);
     }
+    public void addTags(Set<Tag> tags){
+        this.tags.addAll(tags);
+    }
 }

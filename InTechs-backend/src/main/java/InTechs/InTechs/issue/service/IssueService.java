@@ -4,11 +4,15 @@ import InTechs.InTechs.exception.exceptions.IssueNotFoundException;
 import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
 import InTechs.InTechs.issue.entity.Issue;
 import InTechs.InTechs.issue.payload.IssueCreateRequest;
+import InTechs.InTechs.issue.payload.IssueUpdateRequest;
 import InTechs.InTechs.issue.repository.IssueRepository;
+import InTechs.InTechs.issue.value.Tag;
 import InTechs.InTechs.project.entity.Project;
 import InTechs.InTechs.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -43,5 +47,23 @@ public class IssueService {
         project.getIssues().remove(issueRepository.findById(issueId).orElseThrow(IssueNotFoundException::new));
         projectRepository.save(project);
         issueRepository.deleteById(issueId);
+    }
+
+    public void issueUpdate(String issueId, IssueUpdateRequest request){
+        Issue issue = issueRepository.findById(issueId).orElseThrow(IssueNotFoundException::new);
+        if(request.getContent() != null) issue.setContent(request.getContent());
+        if(request.getEnd_date() !=null) issue.setEnd_date(request.getEnd_date());
+        if(request.getProgress()!=0) issue.setProgress(request.getProgress());
+        if(request.getTitle() != null) issue.setTitle(request.getTitle());
+        if(request.getTags() != null) tagChange(issue, request.getTags());
+        if(request.getState() != null) issue.setState(request.getState());
+        issueRepository.save(issue);
+    }
+    private void tagChange(Issue issue, Set<Tag> tags){
+        Project project = projectRepository.findById(issue.getProjectId()).orElseThrow(ProjectNotFoundException::new);
+        project.getTags().removeAll(tags);
+        project.addTags(tags); // lambda
+        projectRepository.save(project);
+        issue.setTags(tags);
     }
 }

@@ -25,7 +25,7 @@ public class ProjectService {
 
     public void projectInfoChange(int projectId, String name,MultipartFile image){
         if(!name.isBlank()) changeProjectName(projectId,name);
-        if(!image.isEmpty()) changeProjectImage(projectId, image);
+        if(image!=null) changeProjectImage(projectId, image);
     }
 
     private void changeProjectImage(int projectId, MultipartFile image){

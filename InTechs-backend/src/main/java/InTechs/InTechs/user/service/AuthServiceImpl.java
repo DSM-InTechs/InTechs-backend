@@ -27,8 +27,8 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${spring.jwt.exp.refresh}")
-    private final Long refreshTokenTime;
+    @Value("${auth.jwt.exp.refresh}")
+    private Long refreshTokenTime;
 
     @Override
     public void SignUp(SignUpRequest signUpRequest) {

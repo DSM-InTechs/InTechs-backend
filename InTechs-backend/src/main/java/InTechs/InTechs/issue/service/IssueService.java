@@ -19,6 +19,7 @@ import java.util.Set;
 public class IssueService {
     private final IssueRepository issueRepository;
     private final ProjectRepository projectRepository;
+    private final MongoTemplate mongoTemplate;
 
     public void issueCreate(String writer, int projectId, IssueCreateRequest issueRequest){
         Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
@@ -65,5 +66,14 @@ public class IssueService {
         project.addTags(tags); // lambda
         projectRepository.save(project);
         issue.setTags(tags);
+    }
+
+    public void issueFiltering(int projectId, Set<String> tags, List<String> users, List<State> states){
+
+        Criteria criteria = new Criteria("projectId");
+        criteria.is(projectId);
+
+        Query query = new Query(criteria);
+        List<Issue> issue = mongoTemplate.find(query, Issue.class);
     }
 }

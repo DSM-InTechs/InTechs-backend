@@ -12,7 +12,7 @@ public class ProfileResponse {
 
     private final String name;
     private final String email;
-    private final MultipartFile image;
+    private final String image;
     private final boolean isActive;
 
 }

@@ -14,7 +14,7 @@ public class MyProjectListResponse {
 
     private final int id;
     private final String name;
-    private final MultipartFile image;
+    private final String image;
     private final LocalDate createdAt;
 
 }

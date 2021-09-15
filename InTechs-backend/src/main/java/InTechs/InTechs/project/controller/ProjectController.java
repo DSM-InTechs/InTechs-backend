@@ -59,10 +59,6 @@ public class ProjectController {
 
     @GetMapping("/{projectId}/tag/{tagNum}")
     public Set<?> tagList(@PathVariable int projectId, @PathVariable int tagNum){
-        if(tagNum==1){
-            return projectService.userTagList(projectId);
-        } else{
-            return projectService.tagList(projectId);
-        }
+        return tagNum==1 ? projectService.userTagList(projectId) : projectService.tagList(projectId);
     }
 }

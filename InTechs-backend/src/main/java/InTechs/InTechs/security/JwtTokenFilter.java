@@ -1,4 +1,4 @@
-package InTechs.InTechs.user.security;
+package InTechs.InTechs.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

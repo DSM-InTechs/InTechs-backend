@@ -1,4 +1,4 @@
-package InTechs.InTechs.user.security.auth;
+package InTechs.InTechs.security.auth;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

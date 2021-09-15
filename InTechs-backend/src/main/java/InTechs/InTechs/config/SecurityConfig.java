@@ -1,10 +1,11 @@
-package InTechs.InTechs.user.config;
+package InTechs.InTechs.config;
 
-import InTechs.InTechs.user.security.JwtConfigure;
-import InTechs.InTechs.user.security.JwtTokenProvider;
+import InTechs.InTechs.security.JwtConfigure;
+import InTechs.InTechs.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -35,10 +36,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .formLogin().disable()
                 .sessionManagement().disable()
                 .authorizeRequests()
-                    .antMatchers("/join").permitAll()
-                    .antMatchers("/auth").permitAll()
+                    .antMatchers(HttpMethod.POST, "/join").permitAll()
+                    .antMatchers(HttpMethod.POST, "/auth").permitAll()
+                    .antMatchers(HttpMethod.POST, "/refresh").permitAll()
                     .antMatchers("/user").permitAll()
-                    .antMatchers("/refresh/**").permitAll()
                     .antMatchers("/project/**").permitAll()
                     .anyRequest().authenticated()
                 .and()

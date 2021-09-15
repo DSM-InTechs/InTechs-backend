@@ -6,6 +6,7 @@ import InTechs.InTechs.issue.entity.Issue;
 import InTechs.InTechs.issue.payload.request.IssueCreateRequest;
 import InTechs.InTechs.issue.payload.request.IssueFilterRequest;
 import InTechs.InTechs.issue.payload.request.IssueUpdateRequest;
+import InTechs.InTechs.issue.payload.response.IssueFilterResponse;
 import InTechs.InTechs.issue.repository.IssueRepository;
 import InTechs.InTechs.issue.value.Tag;
 import InTechs.InTechs.project.entity.Project;
@@ -71,8 +72,8 @@ public class IssueService {
         issue.setTags(tags);
     }
 
-    public void issueFiltering(int projectId, IssueFilterRequest request){
-        List<Issue> issue = issueRepository.findAllByProjectId(projectId)
+    public List<IssueFilterResponse> issueFiltering(int projectId, IssueFilterRequest request){
+        List<Issue> issues = issueRepository.findAllByProjectId(projectId)
                 .stream()
                 .filter((i)-> {
                     if(request.getTags()==null) return true;
@@ -87,5 +88,24 @@ public class IssueService {
                     return request.getStates().contains(i.getState());
                 })
                 .collect(Collectors.toList());
+
+        List<IssueFilterResponse> filterIssues = new ArrayList<>();
+        issues.forEach(
+                (i)-> filterIssues.add(
+                        IssueFilterResponse.builder()
+                            .id(i.getId().toString())
+                            .writer(i.getWriter())
+                            .title(i.getTitle())
+                            .content(i.getContent())
+                            .state(i.getState())
+                            .progress(i.getProgress())
+                            .end_date(i.getEnd_date())
+                            .projectId(i.getProjectId())
+                            .usersId(i.getUserIds())
+                            .tags(i.getTags())
+                            .build()
+                    )
+        );
+        return filterIssues;
     }
 }

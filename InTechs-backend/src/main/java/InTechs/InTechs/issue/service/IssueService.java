@@ -3,23 +3,25 @@ package InTechs.InTechs.issue.service;
 import InTechs.InTechs.exception.exceptions.IssueNotFoundException;
 import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
 import InTechs.InTechs.issue.entity.Issue;
-import InTechs.InTechs.issue.payload.IssueCreateRequest;
-import InTechs.InTechs.issue.payload.IssueUpdateRequest;
+import InTechs.InTechs.issue.payload.request.IssueCreateRequest;
+import InTechs.InTechs.issue.payload.request.IssueFilterRequest;
+import InTechs.InTechs.issue.payload.request.IssueUpdateRequest;
 import InTechs.InTechs.issue.repository.IssueRepository;
 import InTechs.InTechs.issue.value.Tag;
 import InTechs.InTechs.project.entity.Project;
 import InTechs.InTechs.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class IssueService {
     private final IssueRepository issueRepository;
     private final ProjectRepository projectRepository;
-    private final MongoTemplate mongoTemplate;
 
     public void issueCreate(String writer, int projectId, IssueCreateRequest issueRequest){
         Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
@@ -69,12 +71,21 @@ public class IssueService {
         issue.setTags(tags);
     }
 
-    public void issueFiltering(int projectId, Set<String> tags, List<String> users, List<State> states){
-
-        Criteria criteria = new Criteria("projectId");
-        criteria.is(projectId);
-
-        Query query = new Query(criteria);
-        List<Issue> issue = mongoTemplate.find(query, Issue.class);
+    public void issueFiltering(int projectId, IssueFilterRequest request){
+        List<Issue> issue = issueRepository.findAllByProjectId(projectId)
+                .stream()
+                .filter((i)-> {
+                    if(request.getTags()==null) return true;
+                    return i.getTags().containsAll(request.getTags());
+                })
+                .filter((i)-> {
+                    if(request.getUserIds()==null) return true;
+                    return i.getUserIds().containsAll(request.getUserIds());
+                })
+                .filter((i)->{
+                    if(request.getStates()==null) return true;
+                    return request.getStates().contains(i.getState());
+                })
+                .collect(Collectors.toList());
     }
 }

@@ -1,7 +1,7 @@
-package InTechs.InTechs.user.config;
+package InTechs.InTechs.config;
 
-import InTechs.InTechs.user.security.JwtConfigure;
-import InTechs.InTechs.user.security.JwtTokenProvider;
+import InTechs.InTechs.security.JwtConfigure;
+import InTechs.InTechs.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

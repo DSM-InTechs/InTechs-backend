@@ -1,5 +1,6 @@
 package InTechs.InTechs.user.entity;
 
+import InTechs.InTechs.project.entity.Project;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package InTechs.InTechs.user.security.auth;
+package InTechs.InTechs.security.auth;
 
 import InTechs.InTechs.user.entity.User;
 import lombok.AllArgsConstructor;

@@ -20,4 +20,6 @@ public class IssueCreateRequest {
     private String end_date;
     @Setter
     private Set<Tag> tags;
+    @JsonProperty("users")
+    private List<String> userIds;
 }

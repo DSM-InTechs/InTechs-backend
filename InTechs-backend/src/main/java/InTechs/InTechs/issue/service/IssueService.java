@@ -32,6 +32,7 @@ public class IssueService {
                 .end_date(issueRequest.getEnd_date())
                 .tags(issueRequest.getTags())
                 .writer(writer)
+                .userIds(issueRequest.getUserIds()) // USER 객체 저장...?
                 .projectId(projectId)
                 .build();
 

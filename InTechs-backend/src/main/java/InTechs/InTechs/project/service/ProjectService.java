@@ -1,7 +1,7 @@
 package InTechs.InTechs.project.service;
 
 import InTechs.InTechs.issue.value.Tag;
-import InTechs.InTechs.project.payload.response.UserTagResponse;
+import InTechs.InTechs.project.payload.response.UserIssueResponse;
 import InTechs.InTechs.project.value.Image;
 import InTechs.InTechs.project.entity.Project;
 import InTechs.InTechs.user.entity.User;
@@ -28,7 +28,7 @@ public class ProjectService {
     private final UserRepository userRepository;
 
     public void projectInfoChange(int projectId, String name,MultipartFile image){
-        if(name!=null && name.equals(" ")) changeProjectName(projectId,name);
+        if(name!=null && !name.equals(" ")) changeProjectName(projectId,name);
         if(image!=null) changeProjectImage(projectId, image);
     }
 
@@ -85,12 +85,12 @@ public class ProjectService {
         return projectRepository.findById(projectId).map(Project::getTags).orElseGet(HashSet::new);
     }
 
-    public Set<UserTagResponse> userTagList(int projectId){
+    public Set<UserIssueResponse> userTagList(int projectId){
         List<User> users = projectRepository.findById(projectId).map(Project::getUsers).orElseThrow(ProjectNotFoundException::new);
-        Set<UserTagResponse> userTagList = new HashSet<>();
+        Set<UserIssueResponse> userTagList = new HashSet<>();
         for(User user: users){
-            UserTagResponse userTagResponse =
-                    UserTagResponse.builder()
+            UserIssueResponse userTagResponse =
+                    UserIssueResponse.builder()
                                     .email(user.getEmail())
                                     .name(user.getName()).build();
             userTagList.add(userTagResponse);

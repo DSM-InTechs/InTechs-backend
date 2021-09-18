@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -43,6 +44,7 @@ public class ProjectCreateService {
                 .number(number)
                 .name(proName)
                 .image(image)
+                .createAt(LocalDateTime.now())
                 .users(users).build();
 
         projectRepository.save(project);

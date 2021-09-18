@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -32,6 +33,7 @@ public class Project {
     @Size(max = 26)
     private String name;
     private Image image;
+    private LocalDateTime createAt;
     @DBRef(lazy = true)
     private List<User> users;
     @DBRef(lazy = true)

@@ -13,6 +13,6 @@ import java.util.Set;
 public class IssueFilterRequest {
     Set<Tag> tags;
     @JsonProperty("users")
-    List<String> userIds;
+    List<String> usersId;
     List<State> states;
 }

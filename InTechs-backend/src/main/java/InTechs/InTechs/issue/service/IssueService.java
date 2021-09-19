@@ -10,9 +10,12 @@ import InTechs.InTechs.issue.payload.response.IssueFilterResponse;
 import InTechs.InTechs.issue.repository.IssueRepository;
 import InTechs.InTechs.issue.value.Tag;
 import InTechs.InTechs.project.entity.Project;
+import InTechs.InTechs.project.payload.response.UserIssueResponse;
 import InTechs.InTechs.project.repository.ProjectRepository;
+import InTechs.InTechs.user.entity.User;
+import InTechs.InTechs.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import org.apache.commons.collections4.IteratorUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
 public class IssueService {
     private final IssueRepository issueRepository;
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
 
     public void issueCreate(String writer, int projectId, IssueCreateRequest issueRequest){
         Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
@@ -35,7 +39,7 @@ public class IssueService {
                 .end_date(issueRequest.getEnd_date())
                 .tags(issueRequest.getTags())
                 .writer(writer)
-                .userIds(issueRequest.getUserIds()) // USER 객체 저장...?
+                .users(getUserListFromUsersEmail(issueRequest.getUsersId()))
                 .projectId(projectId)
                 .build();
 
@@ -73,6 +77,7 @@ public class IssueService {
     }
 
     public List<IssueFilterResponse> issueFiltering(int projectId, IssueFilterRequest request){
+
         List<Issue> issues = issueRepository.findAllByProjectId(projectId)
                 .stream()
                 .filter((i)-> {
@@ -80,8 +85,8 @@ public class IssueService {
                     return i.getTags().containsAll(request.getTags());
                 })
                 .filter((i)-> {
-                    if(request.getUserIds()==null) return true;
-                    return i.getUserIds().containsAll(request.getUserIds());
+                    if(request.getUsersId()==null) return true;
+                    return i.getUsers().containsAll(getUserListFromUsersEmail(request.getUsersId()));
                 })
                 .filter((i)->{
                     if(request.getStates()==null) return true;
@@ -107,5 +112,9 @@ public class IssueService {
                     )
         );
         return filterIssues;
+    }
+
+    private List<User> getUserListFromUsersEmail(List<String> usersEmail){
+        return IteratorUtils.toList(userRepository.findAllById(usersEmail).iterator());
     }
 }

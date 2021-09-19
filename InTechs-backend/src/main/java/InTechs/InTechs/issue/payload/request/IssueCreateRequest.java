@@ -24,5 +24,5 @@ public class IssueCreateRequest {
     @Setter
     private Set<Tag> tags;
     @JsonProperty("users")
-    private List<String> userIds;
+    private List<String> usersId;
 }

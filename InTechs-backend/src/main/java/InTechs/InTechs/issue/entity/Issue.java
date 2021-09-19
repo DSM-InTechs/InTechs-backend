@@ -33,10 +33,9 @@ public class Issue {
     private int progress = 0;
     @Setter
     private String end_date;
-    /*@DBRef(lazy = true)
-    private Project project;*/
     private int projectId;
-    private List<String> userIds;
+    @DBRef(lazy = true)
+    private List<User> users;
     @Setter
     private Set<Tag> tags;
 }

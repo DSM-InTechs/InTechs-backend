@@ -1,13 +1,16 @@
 package InTechs.InTechs.user.controller;
 
+import InTechs.InTechs.user.payload.request.IsActiveRequest;
 import InTechs.InTechs.user.payload.request.ProfileRequest;
 import InTechs.InTechs.user.payload.response.MyPageResponse;
+import InTechs.InTechs.user.payload.response.MyProjectListResponse;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
 import InTechs.InTechs.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,8 +29,20 @@ public class UserController {
     }
 
     @PatchMapping("/user")
-    public void updateUser(@RequestHeader("Authorization") String token) {
-        return userService.updateUser(token);
+    public void updateUser(@RequestBody @Valid ProfileRequest profileRequest,
+                           @RequestHeader("Authorization") String token) {
+        userService.updateUser(profileRequest, token);
+    }
+
+    @GetMapping("/user/project")
+    public List<MyProjectListResponse> getMyProject(@RequestHeader("Authorization") String token) {
+        return userService.getMyProject(token);
+    }
+
+    @PatchMapping("/user/active")
+    public void updateActive(@RequestBody @Valid IsActiveRequest isActiveRequest,
+                             @RequestHeader("Authorization") String token) {
+        userService.updateActive(isActiveRequest, token);
     }
 
 }

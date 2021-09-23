@@ -19,10 +19,6 @@ public interface UserService {
 
     List<MyProjectListResponse> getMyProject(String token);
 
-<<<<<<< HEAD
     void updateActive(IsActiveRequest isActiveRequest, String email);
-=======
-    IsActiveResponse getActive(Boolean isActive);
 
->>>>>>> user
 }

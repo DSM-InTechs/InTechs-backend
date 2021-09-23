@@ -2,6 +2,7 @@ package InTechs.InTechs.user.service;
 
 import InTechs.InTechs.user.payload.request.IsActiveRequest;
 import InTechs.InTechs.user.payload.request.ProfileRequest;
+import InTechs.InTechs.user.payload.response.IsActiveResponse;
 import InTechs.InTechs.user.payload.response.MyPageResponse;
 import InTechs.InTechs.user.payload.response.MyProjectListResponse;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
@@ -18,5 +19,10 @@ public interface UserService {
 
     List<MyProjectListResponse> getMyProject(String token);
 
+<<<<<<< HEAD
     void updateActive(IsActiveRequest isActiveRequest, String email);
+=======
+    IsActiveResponse getActive(Boolean isActive);
+
+>>>>>>> user
 }

@@ -5,6 +5,7 @@ import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
 import InTechs.InTechs.user.payload.request.IsActiveRequest;
 import InTechs.InTechs.user.payload.request.ProfileRequest;
+import InTechs.InTechs.user.payload.response.IsActiveResponse;
 import InTechs.InTechs.user.payload.response.MyPageResponse;
 import InTechs.InTechs.user.payload.response.MyProjectListResponse;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
@@ -68,6 +69,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(findUser(token).setName(name));
 
         userRepository.save(findUser(token).setImage(image.toString()));
+
     }
 
     @Override
@@ -94,6 +96,11 @@ public class UserServiceImpl implements UserService {
     private User findUser(String token) {
         return userRepository.findByEmail(jwtTokenProvider.getEmail(token))
                 .orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
+    public IsActiveResponse getActive(Boolean isActive) {
+        return null;
     }
 
 }

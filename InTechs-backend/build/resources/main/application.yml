@@ -23,5 +23,10 @@ auth:
       access: ${ACCESS_TOKEN_EXP:3600}
       refresh: ${REFRESH_TOKEN_EXP:10000}
     secret: ${SECRET_KEY}
+<<<<<<< HEAD
     header: Authorization
     prefix: Bearer
+=======
+    header: ${HEADER:Authorization}
+    prefix: ${PREFIX:Bearer}
+>>>>>>> user

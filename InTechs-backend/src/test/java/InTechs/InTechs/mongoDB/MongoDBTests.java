@@ -1,7 +1,7 @@
 package InTechs.InTechs.mongoDB;
 
-import InTechs.InTechs.user.entity.Project;
-import InTechs.InTechs.user.repository.ProjectRepository;
+import InTechs.InTechs.project.entity.Project;
+import InTechs.InTechs.project.repository.ProjectRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

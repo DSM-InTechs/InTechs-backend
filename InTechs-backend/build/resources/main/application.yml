@@ -20,13 +20,14 @@ image:
 auth:
   jwt:
     exp:
-      access: ${ACCESS_TOKEN_EXP:3600}
+      access: ${ACCESS_TOKEN_EXP:10000}
       refresh: ${REFRESH_TOKEN_EXP:10000}
     secret: ${SECRET_KEY}
-<<<<<<< HEAD
-    header: Authorization
-    prefix: Bearer
-=======
     header: ${HEADER:Authorization}
     prefix: ${PREFIX:Bearer}
->>>>>>> user
+
+management:
+  endpoints:
+    jmx:
+      exposure:
+        include: health

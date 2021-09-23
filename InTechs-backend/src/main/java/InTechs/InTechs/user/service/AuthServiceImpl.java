@@ -10,7 +10,7 @@ import InTechs.InTechs.user.payload.request.SignUpRequest;
 import InTechs.InTechs.user.payload.response.TokenResponse;
 import InTechs.InTechs.user.repository.RefreshTokenRepository;
 import InTechs.InTechs.user.repository.UserRepository;
-import InTechs.InTechs.user.security.JwtTokenProvider;
+import InTechs.InTechs.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
                 User.builder()
                         .name(signUpRequest.getName())
                         .email(signUpRequest.getEmail())
-                        .password(signUpRequest.getPassword())
+                        .password(passwordEncoder.encode(signUpRequest.getPassword()))
                         .build()
         );
     }
@@ -52,20 +52,17 @@ public class AuthServiceImpl implements AuthService {
                 .filter(user -> passwordEncoder.matches(signInRequest.getPassword(), user.getPassword()))
                 .orElseThrow(UserNotFoundException::new);
 
-
         RefreshToken refreshToken = refreshTokenRepository.save(
                 RefreshToken.builder()
                         .email(signInRequest.getEmail())
                         .refreshToken(jwtTokenProvider.generateRefreshToken(signInRequest.getEmail()))
                         .refreshTokenTime(refreshTokenTime)
-                        .build()
-        );
+                        .build());
 
         return TokenResponse.builder()
                 .accessToken(jwtTokenProvider.generateAccessToken(signInRequest.getEmail()))
                 .refreshToken(refreshToken.getRefreshToken())
                 .build();
-
     }
 
     @Override

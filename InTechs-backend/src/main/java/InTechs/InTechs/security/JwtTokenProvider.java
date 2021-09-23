@@ -40,7 +40,7 @@ public class JwtTokenProvider {
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + accessToken * 1000))
                 .setSubject(email)
-                .claim("type", "access_token")
+                .claim("type", "access")
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
@@ -51,11 +51,13 @@ public class JwtTokenProvider {
                 .setExpiration(new Date(System.currentTimeMillis() + refreshToken * 1000))
                 .setSubject(email)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
+                .claim("type", "refresh")
                 .compact();
     }
 
     public String resolveToken(HttpServletRequest httpServletRequest) {
         String bearerToken = httpServletRequest.getHeader(header);
+
         if(bearerToken != null && bearerToken.startsWith(prefix)) {
             return bearerToken.substring(7);
         }

@@ -1,6 +1,9 @@
 server:
   port: 8009
 spring:
+  redis:
+    host: localhost
+    port: 6379
   data:
     mongodb:
       authentication-database: admin
@@ -8,15 +11,17 @@ spring:
       host: localhost
       port: 27017
       database: in_techs
-  redis:
-    host: ${REDIS_HOST:localhost}
-    port: ${REDIS_PORT:6379}
-    password: ${REDIS_PASSWORD}
+  servlet:
+    multipart:
+      enabled: true
+image:
+  upload:
+    dir: ${IMAGE:C:\Users\user\Desktop\오목눈이}
 auth:
   jwt:
     exp:
       access: ${ACCESS_TOKEN_EXP:3600}
       refresh: ${REFRESH_TOKEN_EXP:10000}
     secret: ${SECRET_KEY}
-    header: ${HEADER:Authorization}
-    prefix: ${PREFIX:Bearer}
+    header: Authorization
+    prefix: Bearer

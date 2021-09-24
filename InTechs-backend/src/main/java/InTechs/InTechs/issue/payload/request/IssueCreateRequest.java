@@ -1,12 +1,15 @@
-package InTechs.InTechs.issue.payload;
+package InTechs.InTechs.issue.payload.request;
 
 import InTechs.InTechs.issue.value.State;
 import InTechs.InTechs.issue.value.Tag;
+import InTechs.InTechs.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 import java.util.Set;
 
 @Builder
@@ -20,4 +23,6 @@ public class IssueCreateRequest {
     private String end_date;
     @Setter
     private Set<Tag> tags;
+    @JsonProperty("users")
+    private List<String> usersId;
 }

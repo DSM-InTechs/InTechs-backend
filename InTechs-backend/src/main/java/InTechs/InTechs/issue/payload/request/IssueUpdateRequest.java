@@ -1,4 +1,4 @@
-package InTechs.InTechs.issue.payload;
+package InTechs.InTechs.issue.payload.request;
 
 import InTechs.InTechs.issue.value.State;
 import InTechs.InTechs.issue.value.Tag;

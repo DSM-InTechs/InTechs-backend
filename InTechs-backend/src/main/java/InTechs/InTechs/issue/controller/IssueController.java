@@ -1,14 +1,16 @@
 package InTechs.InTechs.issue.controller;
 
-import InTechs.InTechs.issue.payload.IssueCreateRequest;
-import InTechs.InTechs.issue.payload.IssueUpdateRequest;
+import InTechs.InTechs.issue.payload.request.IssueCreateRequest;
+import InTechs.InTechs.issue.payload.request.IssueFilterRequest;
+import InTechs.InTechs.issue.payload.request.IssueUpdateRequest;
+import InTechs.InTechs.issue.payload.response.IssueFilterResponse;
 import InTechs.InTechs.issue.service.IssueService;
 import InTechs.InTechs.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,5 +30,10 @@ public class IssueController {
     @PatchMapping("/issue/{issueId}")
     public void issueUpdate(@PathVariable String issueId, @RequestBody IssueUpdateRequest issueUpdateRequest){
         issueService.issueUpdate(issueId, issueUpdateRequest);
+    }
+
+    @GetMapping("/{projectId}/issue")
+    public List<IssueFilterResponse> issueFiltering(@PathVariable int projectId, @RequestBody IssueFilterRequest issueFilterRequest){
+        return issueService.issueFiltering(projectId,issueFilterRequest);
     }
 }

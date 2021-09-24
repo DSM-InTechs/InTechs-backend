@@ -2,10 +2,9 @@ package InTechs.InTechs.issue.payload.response;
 
 import InTechs.InTechs.issue.value.State;
 import InTechs.InTechs.issue.value.Tag;
+import InTechs.InTechs.project.payload.response.UserIssueResponse;
 import lombok.*;
-import org.bson.types.ObjectId;
 
-import java.util.List;
 import java.util.Set;
 
 @ToString
@@ -21,6 +20,6 @@ public class IssueFilterResponse {
     private int progress;
     private String end_date;
     private int projectId;
-    private List<String> usersId;
+    private UserIssueResponse users;
     private Set<Tag> tags;
 }

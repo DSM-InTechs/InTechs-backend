@@ -36,24 +36,24 @@ public class User {
     @Size(max = 100)
     private String image;
 
-    private boolean isActive;
+    private Boolean isActive;
 
     @DBRef(lazy = true)
     private List<Project> project;
 
-    public User setActive(boolean isActive) {
+    public User updateActive(boolean isActive) {
         this.isActive = isActive;
 
         return this;
     }
 
-    public User setImage(String image) {
+    public User updateImage(String image) {
         this.image = image;
 
         return  this;
     }
 
-    public User setName(String name) {
+    public User updateName(String name) {
         this.name = name;
 
         return this;

@@ -11,6 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class IsActiveRequest {
 
-    private boolean isActive;
+    private Boolean isActive;
 
 }

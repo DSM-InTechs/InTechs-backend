@@ -1,5 +1,6 @@
 package InTechs.InTechs.user.service;
 
+import InTechs.InTechs.exception.ExceptionMessage;
 import InTechs.InTechs.exception.exceptions.InvalidTokenException;
 import InTechs.InTechs.exception.exceptions.UserAlreadyException;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
@@ -29,6 +30,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Value("${auth.jwt.exp.refresh}")
     private Long refreshTokenTime;
+
+    @Value("${auth.jwt.prefix}")
+    private String tokenType;
 
     @Override
     public void SignUp(SignUpRequest signUpRequest) {
@@ -66,20 +70,16 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    @Transactional
     public TokenResponse refreshToken(String token) {
-        if(!jwtTokenProvider.isRefreshToken(token))
-            throw new InvalidTokenException();
-
         return refreshTokenRepository.findByRefreshToken(token)
                 .map(refreshToken -> {
-                    String generatedAccessToken = jwtTokenProvider.generateAccessToken(refreshToken.getEmail());
+                    String generatedAccessToken = jwtTokenProvider.generateRefreshToken(refreshToken.getEmail());
                     return refreshToken.update(generatedAccessToken, refreshTokenTime);
                 })
                 .map(refreshTokenRepository::save)
                 .map(refreshToken -> {
-                    String generatedAccessToken = jwtTokenProvider.generateAccessToken(refreshToken.getEmail());
-                    return new TokenResponse(generatedAccessToken, refreshToken.getRefreshToken());
+                    String generatedAccessToken =jwtTokenProvider.generateAccessToken(refreshToken.getEmail());
+                    return new TokenResponse(generatedAccessToken, refreshToken.getRefreshToken(), tokenType);
                 })
                 .orElseThrow(InvalidTokenException::new);
     }

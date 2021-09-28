@@ -93,7 +93,7 @@ public class JwtTokenProvider {
             return Jwts.parser().setSigningKey(secretKey)
                     .parseClaimsJws(token).getBody().get("type").equals("refresh_token");
         } catch (Exception e) {
-            throw new InvalidTokenException();
+            return false;
         }
     }
 

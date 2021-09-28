@@ -1,6 +1,7 @@
 package InTechs.InTechs.user.service;
 
 import InTechs.InTechs.security.JwtTokenProvider;
+import InTechs.InTechs.security.auth.AuthenticationFacade;
 import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
 import InTechs.InTechs.user.payload.request.IsActiveRequest;
@@ -29,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
 
+    private final AuthenticationFacade authenticationFacade;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
@@ -40,41 +42,39 @@ public class UserServiceImpl implements UserService {
                 .email(user.getEmail())
                 .name(user.getName())
                 .image(user.getImage())
-                .isActive(user.isActive())
+                .isActive(user.getIsActive())
                 .build();
     }
 
     @Override
-    public MyPageResponse getMyPage(String token) {
-
-        String fileName = findUser(token).getEmail();
+    public MyPageResponse getMyPage() {
+        String fileName = findUser().getEmail();
 
         File file = new File(imageDir, fileName);
 
         return MyPageResponse.builder()
-                .name(findUser(token).getName())
-                .email(findUser(token).getEmail())
+                .name(findUser().getName())
+                .email(findUser().getEmail())
                 .image(fileName)
                 .build();
     }
 
     @Override
-    public void updateUser(ProfileRequest profileRequest, String token) {
+    public void updateUser(ProfileRequest profileRequest) {
 
         String name = profileRequest.getName();
 
         MultipartFile image = profileRequest.getImage();
 
-        userRepository.save(findUser(token).setName(name));
+        userRepository.save(findUser().updateName(name));
 
-        userRepository.save(findUser(token).setImage(image.toString()));
+        userRepository.save(findUser().updateImage(image.toString()));
 
     }
 
     @Override
-    public List<MyProjectListResponse> getMyProject(String token) {
-
-        return projectRepository.findByUsersContainsOrderByCreateAtDesc(findUser(token)).stream()
+    public List<MyProjectListResponse> getMyProject() {
+        return projectRepository.findByUsersContainsOrderByCreateAtDesc(findUser()).stream()
                 .map(project -> MyProjectListResponse.builder()
                         .id(project.getNumber())
                         .name(project.getName())
@@ -85,15 +85,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateActive(IsActiveRequest isActiveRequest, String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(UserNotFoundException::new);
+    public void updateActive(IsActiveRequest isActiveRequest) {
+        boolean isActive = isActiveRequest.getIsActive();
 
-        userRepository.save(user.setActive(isActiveRequest.isActive()));
+        userRepository.save(findUser().updateActive(isActive));
     }
 
-    private User findUser(String token) {
-        return userRepository.findByEmail(jwtTokenProvider.getEmail(token))
+    private User findUser() {
+        return userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
     }
 

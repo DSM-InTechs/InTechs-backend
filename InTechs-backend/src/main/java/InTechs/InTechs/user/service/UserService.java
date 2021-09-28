@@ -13,12 +13,12 @@ public interface UserService {
 
     ProfileResponse getProfile(String email);
 
-    MyPageResponse getMyPage(String token);
+    MyPageResponse getMyPage();
 
-    void updateUser(ProfileRequest profileRequest, String token);
+    void updateUser(ProfileRequest profileRequest);
 
-    List<MyProjectListResponse> getMyProject(String token);
+    List<MyProjectListResponse> getMyProject();
 
-    void updateActive(IsActiveRequest isActiveRequest, String email);
+    void updateActive(IsActiveRequest isActiveRequest);
 
 }

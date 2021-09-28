@@ -24,25 +24,23 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public MyPageResponse getMyPage(@RequestHeader("Authorization") String token) {
-        return userService.getMyPage(token);
+    public MyPageResponse getMyPage() {
+        return userService.getMyPage();
     }
 
     @PatchMapping("/user")
-    public void updateUser(@RequestBody @Valid ProfileRequest profileRequest,
-                           @RequestHeader("Authorization") String token) {
-        userService.updateUser(profileRequest, token);
+    public void updateUser(@RequestBody @Valid ProfileRequest profileRequest) {
+        userService.updateUser(profileRequest);
     }
 
     @GetMapping("/user/project")
-    public List<MyProjectListResponse> getMyProject(@RequestHeader("Authorization") String token) {
-        return userService.getMyProject(token);
+    public List<MyProjectListResponse> getMyProject() {
+        return userService.getMyProject();
     }
 
     @PatchMapping("/user/active")
-    public void updateActive(@RequestBody @Valid IsActiveRequest isActiveRequest,
-                             @RequestHeader("Authorization") String token) {
-        userService.updateActive(isActiveRequest, token);
+    public void updateActive(@RequestBody @Valid IsActiveRequest isActiveRequest) {
+        userService.updateActive(isActiveRequest);
     }
 
 }

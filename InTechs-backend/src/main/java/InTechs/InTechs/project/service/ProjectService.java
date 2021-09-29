@@ -124,7 +124,7 @@ public class ProjectService {
 
         return DashboardResponse.builder()
                 .issuesCount(issuesCountInfo)
-                .userNumber(userCount)
+                .userCount(userCount)
                 .build();
     }
 }

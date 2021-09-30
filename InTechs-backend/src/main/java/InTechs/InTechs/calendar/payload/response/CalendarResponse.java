@@ -4,13 +4,13 @@ import InTechs.InTechs.issue.value.State;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.bson.types.ObjectId;
 
 @Getter
 @Builder
 @AllArgsConstructor
 public class CalendarResponse {
 
+    private final String id;
     private final String name;
     private final int progress;
     private final State state;

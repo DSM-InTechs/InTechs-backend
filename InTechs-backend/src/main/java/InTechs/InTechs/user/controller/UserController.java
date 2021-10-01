@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @PatchMapping("/user")
-    public void updateUser(@RequestBody @Valid ProfileRequest profileRequest) {
+    public void updateUser(@ModelAttribute @Valid ProfileRequest profileRequest) {
         userService.updateUser(profileRequest);
     }
 

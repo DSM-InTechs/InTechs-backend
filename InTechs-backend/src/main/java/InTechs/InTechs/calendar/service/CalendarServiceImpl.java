@@ -3,6 +3,7 @@ package InTechs.InTechs.calendar.service;
 import InTechs.InTechs.calendar.payload.request.FilterRequest;
 import InTechs.InTechs.calendar.payload.response.CalendarResponse;
 import InTechs.InTechs.issue.entity.Issue;
+import InTechs.InTechs.issue.repository.CustomIssueRepository;
 import InTechs.InTechs.issue.repository.IssueRepository;
 import InTechs.InTechs.issue.value.State;
 import InTechs.InTechs.issue.value.Tag;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CalendarServiceImpl implements CalendarService {
 
-    private final IssueRepository issueRepository;
+    private final CustomIssueRepository customIssueRepository;
 
     @Override
     public List<CalendarResponse> getCalendar(int projectId, int year, int month) {
@@ -26,7 +27,7 @@ public class CalendarServiceImpl implements CalendarService {
             monthString = "0" + monthString;
         }
 
-        List<Issue> issues = issueRepository.findByProjectIdAndEndDateStartingWith(projectId, year + monthString);
+        List<Issue> issues = customIssueRepository.findProjectAndEndDate(projectId, year + monthString);
 
         return buildCalendar(issues);
     }
@@ -38,7 +39,7 @@ public class CalendarServiceImpl implements CalendarService {
         State state = filterRequest.getState();
         String name = filterRequest.getName();
 
-        List<Issue> issues = issueRepository.findByProjectIdAndTag(projectId, name, state, tags);
+        List<Issue> issues = customIssueRepository.findByProjectIdAndTag(projectId, name, state, tags);
 
         return buildCalendar(issues);
     }

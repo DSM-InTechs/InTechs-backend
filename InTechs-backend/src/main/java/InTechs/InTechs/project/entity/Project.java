@@ -1,6 +1,8 @@
 package InTechs.InTechs.project.entity;
 
+import InTechs.InTechs.issue.value.Tag;
 import InTechs.InTechs.project.value.Image;
+import InTechs.InTechs.issue.entity.Issue;
 import InTechs.InTechs.user.entity.User;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
@@ -11,9 +13,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 import java.awt.*;
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
@@ -32,7 +39,12 @@ public class Project {
     @DBRef(lazy = true)
     private List<User> users;
 
-    private LocalDate createAt;
+    private LocalDateTime createAt;
+    @DBRef(lazy = true)
+    private List<User> users;
+    @DBRef(lazy = true)
+    private List<Issue> issues = new ArrayList<>();
+    private Set<Tag> tags = new HashSet<>();
 
     public void addUser(User user){
         this.users.add(user);
@@ -40,5 +52,14 @@ public class Project {
 
     public void removeUser(User user){
         boolean b = this.users.remove(user);
+        this.users.remove(user);
+    }
+
+    public void addIssue(Issue issue){
+        this.issues.add(issue);
+    }
+  
+    public void addTags(Set<Tag> tags){
+        this.tags.addAll(tags);
     }
 }

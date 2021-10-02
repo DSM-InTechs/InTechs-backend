@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ProjectRepository extends MongoRepository<Project, Integer> {
+public interface ProjectRepository extends CustomProjectRepository, MongoRepository<Project, Integer> {
     Optional<Project> findByUsersContainsOrderByCreateAtDesc(User user);
 }

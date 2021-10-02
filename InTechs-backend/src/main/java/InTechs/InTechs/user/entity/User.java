@@ -14,6 +14,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@EqualsAndHashCode
 @Document(collection = "user")
 @Getter
 @Builder
@@ -43,19 +48,16 @@ public class User {
 
     public User updateActive(boolean isActive) {
         this.isActive = isActive;
-
         return this;
     }
 
     public User updateImage(String image) {
         this.image = image;
-
         return  this;
     }
 
     public User updateName(String name) {
         this.name = name;
-
         return this;
     }
 }

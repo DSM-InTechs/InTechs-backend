@@ -10,10 +10,9 @@ public enum ExceptionMessage {
     INVALID_TOKEN(401, "INVALID_TOKEN"),
     USER_NOT_FOUND(404, "USER_NOT_FOUND"),
     PROJECT_NOT_FOUND(404, "PROJECT_NOT_FOUND"),
-    PROJECT_NOT_FOUND(404, "PROJECT_NOT_FOUND"),
     ISSUE_NOT_FOUND(404, "ISSUE_NOT_FOUND"),
     USER_ALREADY(409, "USER_ALREADY");
-]
+
     private final int status;
     private final String message;
 

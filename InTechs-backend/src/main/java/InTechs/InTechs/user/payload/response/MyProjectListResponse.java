@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -14,6 +14,6 @@ public class MyProjectListResponse {
     private final int id;
     private final String name;
     private final String image;
-    private final LocalDate createdAt;
+    private final LocalDateTime createdAt;
 
 }

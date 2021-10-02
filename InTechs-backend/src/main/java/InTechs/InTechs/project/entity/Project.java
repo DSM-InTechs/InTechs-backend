@@ -40,8 +40,7 @@ public class Project {
     private List<User> users;
 
     private LocalDateTime createAt;
-    @DBRef(lazy = true)
-    private List<User> users;
+    
     @DBRef(lazy = true)
     private List<Issue> issues = new ArrayList<>();
     private Set<Tag> tags = new HashSet<>();

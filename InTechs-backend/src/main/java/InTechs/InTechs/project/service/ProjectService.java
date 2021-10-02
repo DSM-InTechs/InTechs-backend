@@ -82,7 +82,7 @@ public class ProjectService {
                             .email(user.getEmail())
                             .name(user.getName())
                             .imageUri(user.getImage())
-                            .isActive(user.isActive()).build();
+                            .isActive(user.getIsActive()).build();
             userListResponse.add(userResponse);
         }
         return userListResponse;

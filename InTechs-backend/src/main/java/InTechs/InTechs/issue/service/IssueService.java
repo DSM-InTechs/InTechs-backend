@@ -36,7 +36,7 @@ public class IssueService {
                 .content(issueRequest.getContent())
                 .state(issueRequest.getState())
                 .progress(issueRequest.getProgress())
-                .end_date(issueRequest.getEnd_date())
+                .endDate(issueRequest.getEnd_date())
                 .tags(issueRequest.getTags())
                 .writer(writer)
                 .users(getUserListFromUsersEmail(issueRequest.getUsersId()))
@@ -61,7 +61,7 @@ public class IssueService {
     public void issueUpdate(String issueId, IssueUpdateRequest request){
         Issue issue = issueRepository.findById(issueId).orElseThrow(IssueNotFoundException::new);
         if(request.getContent() != null) issue.setContent(request.getContent());
-        if(request.getEnd_date() !=null) issue.setEnd_date(request.getEnd_date());
+        if(request.getEnd_date() !=null) issue.setEndDate(request.getEnd_date());
         if(request.getProgress()!=0) issue.setProgress(request.getProgress());
         if(request.getTitle() != null) issue.setTitle(request.getTitle());
         if(request.getTags() != null) tagChange(issue, request.getTags());

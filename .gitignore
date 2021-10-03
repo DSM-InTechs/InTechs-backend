@@ -1,7 +1,10 @@
-
 *.lock
 
 *.properties
+
+InTechs-backend/build/reports/tests/test/js/report.js
+
+InTechs-backend/build/test-results/test/binary/output.bin.idx
 
 *.bin
 
@@ -12,8 +15,6 @@
 *.class
 
 *.css
-
-InTechs-backend/build/reports/tests/test/js/report.js
 
 *.idx
 

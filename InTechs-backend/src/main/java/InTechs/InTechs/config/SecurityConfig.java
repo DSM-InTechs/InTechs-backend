@@ -5,6 +5,7 @@ import InTechs.InTechs.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -35,14 +36,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .formLogin().disable()
                 .sessionManagement().disable()
                 .authorizeRequests()
-                .antMatchers("/join").permitAll()
-                .antMatchers("/auth").permitAll()
-                .antMatchers("/user").permitAll()
-                .antMatchers("/refresh/**").permitAll()
-                .antMatchers("/project/**").permitAll()
-                .anyRequest().authenticated()
+                    .antMatchers(HttpMethod.POST, "/join").permitAll()
+                    .antMatchers(HttpMethod.POST, "/auth").permitAll()
+                    .antMatchers(HttpMethod.POST, "/refresh").permitAll()
+                    .antMatchers("/{userEmail}").permitAll()
+                    .antMatchers("/project/**").permitAll()
+                    .anyRequest().authenticated()
                 .and()
-                .apply(new JwtConfigure(jwtTokenProvider));
+                    .apply(new JwtConfigure(jwtTokenProvider));
     }
 
     @Override
@@ -58,5 +59,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

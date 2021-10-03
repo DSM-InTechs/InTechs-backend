@@ -2,6 +2,7 @@ package InTechs.InTechs.issue.value;
 
 import lombok.*;
 
+@ToString
 @Getter
 @EqualsAndHashCode
 @Builder

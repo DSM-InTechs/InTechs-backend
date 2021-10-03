@@ -13,6 +13,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import java.awt.*;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,6 +38,9 @@ public class Project {
     private Image image;
     @DBRef(lazy = true)
     private List<User> users;
+
+    private LocalDateTime createAt;
+    
     @DBRef(lazy = true)
     private List<Issue> issues = new ArrayList<>();
     private Set<Tag> tags = new HashSet<>();
@@ -43,12 +50,14 @@ public class Project {
     }
 
     public void removeUser(User user){
+        boolean b = this.users.remove(user);
         this.users.remove(user);
     }
 
     public void addIssue(Issue issue){
         this.issues.add(issue);
     }
+  
     public void addTags(Set<Tag> tags){
         this.tags.addAll(tags);
     }

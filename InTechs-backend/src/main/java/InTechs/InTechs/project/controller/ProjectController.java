@@ -2,6 +2,7 @@ package InTechs.InTechs.project.controller;
 
 import InTechs.InTechs.project.payload.request.ProjectCreateRequest;
 import InTechs.InTechs.project.payload.request.ProjectInfoChangeRequest;
+import InTechs.InTechs.project.payload.response.DashboardResponse;
 import InTechs.InTechs.project.payload.response.ProjectUserResponse;
 import InTechs.InTechs.security.JwtTokenProvider;
 import InTechs.InTechs.project.service.ProjectCreateService;
@@ -59,10 +60,11 @@ public class ProjectController {
 
     @GetMapping("/{projectId}/tag/{tagNum}")
     public Set<?> tagList(@PathVariable int projectId, @PathVariable int tagNum){
-        if(tagNum==1){
-            return projectService.userTagList(projectId);
-        } else{
-            return projectService.tagList(projectId);
-        }
+        return tagNum==1 ? projectService.userTagList(projectId) : projectService.tagList(projectId);
+    }
+
+    @GetMapping("/{projectId}/dashboard")
+    public DashboardResponse projectDashboard(@RequestHeader("Authorization") String token, @PathVariable int projectId){
+        return projectService.projectDashboard(projectId, jwtTokenProvider.getEmail(token));
     }
 }

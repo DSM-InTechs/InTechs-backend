@@ -1,6 +1,6 @@
 package InTechs.InTechs.issue;
 
-import InTechs.InTechs.issue.payload.IssueCreateRequest;
+import InTechs.InTechs.issue.payload.request.IssueCreateRequest;
 import InTechs.InTechs.issue.service.IssueService;
 import InTechs.InTechs.issue.value.State;
 import InTechs.InTechs.issue.value.Tag;

@@ -2,11 +2,14 @@ package InTechs.InTechs.issue.entity;
 
 import InTechs.InTechs.issue.value.State;
 import InTechs.InTechs.issue.value.Tag;
+import InTechs.InTechs.user.entity.User;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode
@@ -33,6 +36,8 @@ public class Issue {
     /*@DBRef(lazy = true)
     private Project project;*/
     private int projectId;
+    @DBRef(lazy = true)
+    private List<User> users;
     @Setter
     private Set<Tag> tags;
 }

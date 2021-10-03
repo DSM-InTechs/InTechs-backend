@@ -13,8 +13,8 @@ import java.util.Set;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
-@RequiredArgsConstructor
 @Repository
+@RequiredArgsConstructor
 public class CustomIssueRepositoryImpl implements CustomIssueRepository {
 
     private final MongoTemplate mongoTemplate;
@@ -27,11 +27,10 @@ public class CustomIssueRepositoryImpl implements CustomIssueRepository {
 
     public List<Issue> findByProjectIdAndTag(int projectId, String writer, State state, Set<Tag> tags) {
         return mongoTemplate.find(query(where("projectId").is(projectId)
-                .and("tags.tag").in(tags)
+                .and("tags.tag").is(tags)
                 .orOperator(where("writer").is(writer),
                         (where("state")).is(state))),
                 Issue.class);
     }
-
 
 }

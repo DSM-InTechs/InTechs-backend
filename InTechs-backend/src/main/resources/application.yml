@@ -9,9 +9,8 @@ spring:
     mongodb:
       authentication-database: admin
       auto-index-creation: true
-      host: localhost
-      port: 27017
-      database: in_techs
+      uri: ${MONGO_DB:}
+
   servlet:
     multipart:
       enabled: true

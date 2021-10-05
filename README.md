@@ -9,4 +9,4 @@
 > __실행시 명령어 java -jar  InTechs-backend-0.0.1-SNAPSHOT.jar__
 
 __만일 Test에서 에러가 난다면!__
-InTechs-backend.scr. test 폴더 삭제 후 진행하세용
+InTechs-backend.scr.>test 폴더 삭제 후 진행하세용

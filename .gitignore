@@ -1,18 +1,21 @@
-
 *.lock
-
-*.class
-
-*.bin
 
 *.properties
 
-*.html
+InTechs-backend/build/reports/tests/test/js/report.js
 
-*.css
+InTechs-backend/build/test-results/test/binary/output.bin.idx
+
+*.bin
 
 *.xml
 
+*.html
+
+*.class
+
+*.css
+
 *.idx
 
-*.js
+InTechs-backend/build/resources/main/application.yml

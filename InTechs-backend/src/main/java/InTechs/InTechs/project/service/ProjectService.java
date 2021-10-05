@@ -18,10 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static InTechs.InTechs.issue.value.State.*;
 
@@ -119,7 +116,7 @@ public class ProjectService {
                 .forMe(myIssueCount)
                 .resolved(resolved)
                 .unresolved(unresolved)
-                .foreMeAndUnresolved(myIssueCount+unresolved)
+                .forMeAndUnresolved(myIssueCount+unresolved)
                 .build();
 
         return DashboardResponse.builder()

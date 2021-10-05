@@ -18,7 +18,7 @@ public class IssueFilterResponse {
     private String content;
     private State state;
     private int progress;
-    private String end_date;
+    private String endDate;
     private int projectId;
     private UserIssueResponse users;
     private Set<Tag> tags;

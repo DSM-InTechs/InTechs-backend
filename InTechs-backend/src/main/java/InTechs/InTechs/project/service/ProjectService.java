@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
-public class ProjectUpdateDeleteService {
+public class ProjectService {
     private final ProjectRepository projectRepository;
     private final FileService fileUploadService;
 

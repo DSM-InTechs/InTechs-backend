@@ -104,7 +104,7 @@ public class IssueService {
                             .content(i.getContent())
                             .state(i.getState())
                             .progress(i.getProgress())
-                            .end_date(i.getEnd_date())
+                            .end_date(i.getEndDate())
                             .projectId(i.getProjectId())
                             .users(UserIssueResponse.builder()
                                                     .name(i.getUsers().get(issues.indexOf(i)).getName())

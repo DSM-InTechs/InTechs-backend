@@ -43,4 +43,9 @@ public class UserController {
         userService.updateActive(isActiveRequest);
     }
 
+    @DeleteMapping("/user")
+    public void deleteUser(){
+        userService.deleteUser();
+    }
+
 }

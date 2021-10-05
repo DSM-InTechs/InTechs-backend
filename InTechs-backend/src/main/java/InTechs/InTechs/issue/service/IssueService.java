@@ -61,7 +61,7 @@ public class IssueService {
     public void issueUpdate(String issueId, IssueUpdateRequest request){
         Issue issue = issueRepository.findById(issueId).orElseThrow(IssueNotFoundException::new);
         if(request.getContent() != null) issue.setContent(request.getContent());
-        if(request.getEnd_date() !=null) issue.setEndDate(request.getEnd_date());
+        if(request.getEndDate() !=null) issue.setEndDate(request.getEndDate());
         if(request.getProgress()!=0) issue.setProgress(request.getProgress());
         if(request.getTitle() != null) issue.setTitle(request.getTitle());
         if(request.getTags() != null) tagChange(issue, request.getTags());
@@ -104,7 +104,7 @@ public class IssueService {
                             .content(i.getContent())
                             .state(i.getState())
                             .progress(i.getProgress())
-                            .end_date(i.getEnd_date())
+                            .endDate(i.getEndDate())
                             .projectId(i.getProjectId())
                             .users(UserIssueResponse.builder()
                                                     .name(i.getUsers().get(issues.indexOf(i)).getName())
@@ -117,6 +117,7 @@ public class IssueService {
     }
 
     private List<User> getUserListFromUsersEmail(List<String> usersEmail){
-        return IteratorUtils.toList(userRepository.findAllById(usersEmail).iterator());
+        //return new HashSet<>(IteratorUtils.toList(userRepository.findAllById(usersEmail).iterator()));
+        return IteratorUtils.toList(userRepository.findAllById(usersEmail).iterator()); //set
     }
 }

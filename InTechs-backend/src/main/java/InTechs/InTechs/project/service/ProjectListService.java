@@ -1,20 +1,23 @@
 package InTechs.InTechs.project.service;
 
-import InTechs.InTechs.issue.value.Tag;
-import InTechs.InTechs.project.payload.response.UserIssueResponse;
-import InTechs.InTechs.project.entity.Project;
-import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
+import InTechs.InTechs.issue.value.Tag;
+import InTechs.InTechs.project.entity.Project;
 import InTechs.InTechs.project.payload.response.ProjectUserResponse;
+import InTechs.InTechs.project.payload.response.UserIssueResponse;
 import InTechs.InTechs.project.repository.ProjectRepository;
+import InTechs.InTechs.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-@RequiredArgsConstructor
 @Service
-public class ProjectService {
+@RequiredArgsConstructor
+public class ProjectListService {
     private final ProjectRepository projectRepository;
 
     public List<ProjectUserResponse> projectUserList(int projectId){
@@ -41,8 +44,8 @@ public class ProjectService {
         for(User user: users){
             UserIssueResponse userTagResponse =
                     UserIssueResponse.builder()
-                                    .email(user.getEmail())
-                                    .name(user.getName()).build();
+                            .email(user.getEmail())
+                            .name(user.getName()).build();
             userTagList.add(userTagResponse);
         }
         return userTagList;

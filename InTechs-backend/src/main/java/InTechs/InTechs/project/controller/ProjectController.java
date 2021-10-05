@@ -23,10 +23,10 @@ import java.util.Set;
 public class ProjectController {
     private final ProjectCreateService projectCreateService;
     private final JwtTokenProvider jwtTokenProvider;
-    private final ProjectService projectService;
     private final ProjectDashboardService dashboardService;
     private final ProjectUpdateDeleteService updateDeleteService;
     private final ProjectUserService projectUserService;
+    private final ProjectListService projectListService;
 
     @PostMapping
     public ResponseEntity<String> projectCreate(@RequestHeader("Authorization") String token, @ModelAttribute ProjectCreateRequest project){
@@ -57,12 +57,12 @@ public class ProjectController {
 
     @GetMapping("/{projectId}/user")
     public List<ProjectUserResponse> projectUserList(@PathVariable int projectId){
-        return projectService.projectUserList(projectId);
+        return projectListService.projectUserList(projectId);
     }
 
     @GetMapping("/{projectId}/tag/{tagNum}")
     public Set<?> tagList(@PathVariable int projectId, @PathVariable int tagNum){
-        return tagNum==1 ? projectService.userTagList(projectId) : projectService.tagList(projectId);
+        return tagNum==1 ? projectListService.userTagList(projectId) : projectListService.tagList(projectId);
     }
 
     @GetMapping("/{projectId}/dashboard")

@@ -45,7 +45,8 @@ public class IssueService {
 
         issueRepository.save(issue);
 
-        issueRequest.getTags().forEach(tag -> project.getTags().add(tag));
+        if (issueRequest.getTags()!=null)
+            issueRequest.getTags().forEach(tag -> project.getTags().add(tag));
 
         project.addIssue(issue);
         projectRepository.save(project);
@@ -117,6 +118,8 @@ public class IssueService {
     }
 
     private List<User> getUserListFromUsersEmail(List<String> usersEmail){
-        return IteratorUtils.toList(userRepository.findAllById(usersEmail).iterator());
+        if (usersEmail!=null)
+            return IteratorUtils.toList(userRepository.findAllById(usersEmail).iterator());
+        return null;
     }
 }

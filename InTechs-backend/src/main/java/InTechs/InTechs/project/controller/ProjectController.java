@@ -27,6 +27,8 @@ public class ProjectController {
     private final JwtTokenProvider jwtTokenProvider;
     private final ProjectService projectService;
     private final ProjectDashboardService dashboardService;
+    private final ProjectUpdateDeleteService updateDeleteService;
+    private final ProjectUserService projectUserService;
 
     @PostMapping
     public ResponseEntity<String> projectCreate(@RequestHeader("Authorization") String token, @ModelAttribute ProjectCreateRequest project){
@@ -37,12 +39,12 @@ public class ProjectController {
 
     @PatchMapping("/{projectId}")
     public void projectInfoChange(@PathVariable int projectId, @ModelAttribute ProjectInfoChangeRequest projectChangeInfo){
-        projectService.projectInfoChange(projectId,projectChangeInfo.getName(), projectChangeInfo.getImage());
+        updateDeleteService.projectInfoChange(projectId,projectChangeInfo.getName(), projectChangeInfo.getImage());
     }
 
     @DeleteMapping("/{projectId}")
     public void projectDelete(@PathVariable int projectId){
-        projectService.projectDelete(projectId);
+        updateDeleteService.projectDelete(projectId);
     }
 
     @PostMapping("/{projectId}/user")

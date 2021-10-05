@@ -4,10 +4,8 @@ import InTechs.InTechs.project.payload.request.ProjectCreateRequest;
 import InTechs.InTechs.project.payload.request.ProjectInfoChangeRequest;
 import InTechs.InTechs.project.payload.response.DashboardResponse;
 import InTechs.InTechs.project.payload.response.ProjectUserResponse;
-import InTechs.InTechs.project.service.ProjectDashboardService;
+import InTechs.InTechs.project.service.*;
 import InTechs.InTechs.security.JwtTokenProvider;
-import InTechs.InTechs.project.service.ProjectCreateService;
-import InTechs.InTechs.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpHeaders;
@@ -49,12 +47,12 @@ public class ProjectController {
 
     @PostMapping("/{projectId}/user")
     public void projectJoin(@RequestHeader("Authorization") String token, @PathVariable int projectId){
-        projectService.projectJoin(projectId, jwtTokenProvider.getEmail(token));
+        projectUserService.projectJoin(projectId, jwtTokenProvider.getEmail(token));
     }
 
     @DeleteMapping("/{projectId}/user")
     public void projectExit(@RequestHeader("Authorization") String token, @PathVariable int projectId){
-        projectService.projectExit(projectId, jwtTokenProvider.getEmail(token));
+        projectUserService.projectExit(projectId, jwtTokenProvider.getEmail(token));
     }
 
     @GetMapping("/{projectId}/user")

@@ -91,6 +91,11 @@ public class UserServiceImpl implements UserService {
         userRepository.save(findUser().updateActive(isActive));
     }
 
+    @Override
+    public void deleteUser() {
+        userRepository.delete(findUser());
+    }
+
     private User findUser() {
         return userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);

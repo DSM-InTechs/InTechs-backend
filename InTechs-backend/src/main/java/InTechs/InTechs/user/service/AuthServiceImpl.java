@@ -1,6 +1,5 @@
 package InTechs.InTechs.user.service;
 
-import InTechs.InTechs.exception.ExceptionMessage;
 import InTechs.InTechs.exception.exceptions.InvalidTokenException;
 import InTechs.InTechs.exception.exceptions.UserAlreadyException;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
@@ -16,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor

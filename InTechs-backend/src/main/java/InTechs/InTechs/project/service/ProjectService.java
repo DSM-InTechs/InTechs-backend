@@ -101,27 +101,4 @@ public class ProjectService {
         return userTagList;
 
     }
-
-    public DashboardResponse projectDashboard(int projectId, String userId){
-        long userCount = projectRepository.findById(projectId).map(Project::getName).stream().count(); // 프로젝트에 속한 유저 수
-        long unresolved = issueRepository.countByStateAndProjectId(IN_PROGRESS, projectId)+issueRepository.countByStateAndProjectId(READY, projectId);
-        long resolved = issueRepository.countByStateAndProjectId(DONE, projectId);
-        ;
-        long myIssueCount = issueRepository.findAllByProjectId(projectId).stream().filter(
-                (a)->a.getUsers().contains(
-                        userRepository.findById(userId).orElseThrow(UserNotFoundException::new)
-                )).count();
-
-        IssuesCountInfo issuesCountInfo = IssuesCountInfo.builder()
-                .forMe(myIssueCount)
-                .resolved(resolved)
-                .unresolved(unresolved)
-                .forMeAndUnresolved(myIssueCount+unresolved)
-                .build();
-
-        return DashboardResponse.builder()
-                .issuesCount(issuesCountInfo)
-                .userCount(userCount)
-                .build();
-    }
 }

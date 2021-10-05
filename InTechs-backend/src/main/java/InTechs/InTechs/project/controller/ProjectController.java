@@ -4,6 +4,7 @@ import InTechs.InTechs.project.payload.request.ProjectCreateRequest;
 import InTechs.InTechs.project.payload.request.ProjectInfoChangeRequest;
 import InTechs.InTechs.project.payload.response.DashboardResponse;
 import InTechs.InTechs.project.payload.response.ProjectUserResponse;
+import InTechs.InTechs.project.service.ProjectDashboardService;
 import InTechs.InTechs.security.JwtTokenProvider;
 import InTechs.InTechs.project.service.ProjectCreateService;
 import InTechs.InTechs.project.service.ProjectService;
@@ -25,6 +26,7 @@ public class ProjectController {
     private final ProjectCreateService projectCreateService;
     private final JwtTokenProvider jwtTokenProvider;
     private final ProjectService projectService;
+    private final ProjectDashboardService dashboardService;
 
     @PostMapping
     public ResponseEntity<String> projectCreate(@RequestHeader("Authorization") String token, @ModelAttribute ProjectCreateRequest project){
@@ -65,6 +67,6 @@ public class ProjectController {
 
     @GetMapping("/{projectId}/dashboard")
     public DashboardResponse projectDashboard(@RequestHeader("Authorization") String token, @PathVariable int projectId){
-        return projectService.projectDashboard(projectId, jwtTokenProvider.getEmail(token));
+        return dashboardService.projectDashboard(projectId, jwtTokenProvider.getEmail(token));
     }
 }

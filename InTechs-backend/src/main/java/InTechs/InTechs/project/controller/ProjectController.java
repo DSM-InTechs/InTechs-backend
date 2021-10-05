@@ -3,7 +3,7 @@ package InTechs.InTechs.project.controller;
 import InTechs.InTechs.project.payload.request.ProjectCreateRequest;
 import InTechs.InTechs.project.payload.request.ProjectInfoChangeRequest;
 import InTechs.InTechs.project.payload.response.DashboardResponse;
-import InTechs.InTechs.project.payload.response.ProjectUserResponse;
+
 import InTechs.InTechs.project.service.*;
 import InTechs.InTechs.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +12,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Set;
 
 @RestController
 @Log
@@ -26,7 +23,6 @@ public class ProjectController {
     private final ProjectDashboardService dashboardService;
     private final ProjectUpdateDeleteService updateDeleteService;
     private final ProjectUserService projectUserService;
-    private final ProjectListService projectListService;
 
     @PostMapping
     public ResponseEntity<String> projectCreate(@RequestHeader("Authorization") String token, @ModelAttribute ProjectCreateRequest project){
@@ -53,16 +49,6 @@ public class ProjectController {
     @DeleteMapping("/{projectId}/user")
     public void projectExit(@RequestHeader("Authorization") String token, @PathVariable int projectId){
         projectUserService.projectExit(projectId, jwtTokenProvider.getEmail(token));
-    }
-
-    @GetMapping("/{projectId}/user")
-    public List<ProjectUserResponse> projectUserList(@PathVariable int projectId){
-        return projectListService.projectUserList(projectId);
-    }
-
-    @GetMapping("/{projectId}/tag/{tagNum}")
-    public Set<?> tagList(@PathVariable int projectId, @PathVariable int tagNum){
-        return tagNum==1 ? projectListService.userTagList(projectId) : projectListService.tagList(projectId);
     }
 
     @GetMapping("/{projectId}/dashboard")

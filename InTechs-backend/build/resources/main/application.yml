@@ -1,5 +1,5 @@
 server:
-  port: 8000
+  port: 8009
 
 spring:
   redis:
@@ -9,17 +9,14 @@ spring:
     mongodb:
       authentication-database: admin
       auto-index-creation: true
-      host: localhost
-      port: 27017
-      database: in_techs
+      uri: ${MONGO_DB:}
+
   servlet:
     multipart:
       enabled: true
 image:
   upload:
-    dir: ${IMAGE:C:\Users\user\Desktop\오목눈이}
-      max-file-size: 10MB
-      max-request-size: 10MB
+    dir: C:\Users\user\Desktop\오목눈이
 
 cloud:
   aws:

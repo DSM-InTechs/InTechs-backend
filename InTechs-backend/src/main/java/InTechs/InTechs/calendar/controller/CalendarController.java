@@ -3,8 +3,6 @@ package InTechs.InTechs.calendar.controller;
 import InTechs.InTechs.calendar.payload.request.FilterRequest;
 import InTechs.InTechs.calendar.payload.response.CalendarResponse;
 import InTechs.InTechs.calendar.service.CalendarService;
-import InTechs.InTechs.issue.value.State;
-import InTechs.InTechs.issue.value.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

@@ -4,7 +4,6 @@ import InTechs.InTechs.calendar.payload.request.FilterRequest;
 import InTechs.InTechs.calendar.payload.response.CalendarResponse;
 import InTechs.InTechs.issue.entity.Issue;
 import InTechs.InTechs.issue.repository.CustomIssueRepository;
-import InTechs.InTechs.issue.repository.IssueRepository;
 import InTechs.InTechs.issue.value.State;
 import InTechs.InTechs.issue.value.Tag;
 import lombok.RequiredArgsConstructor;

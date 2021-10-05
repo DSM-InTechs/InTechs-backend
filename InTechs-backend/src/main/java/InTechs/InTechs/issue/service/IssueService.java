@@ -117,7 +117,6 @@ public class IssueService {
     }
 
     private List<User> getUserListFromUsersEmail(List<String> usersEmail){
-        //return new HashSet<>(IteratorUtils.toList(userRepository.findAllById(usersEmail).iterator()));
-        return IteratorUtils.toList(userRepository.findAllById(usersEmail).iterator()); //set
+        return IteratorUtils.toList(userRepository.findAllById(usersEmail).iterator());
     }
 }

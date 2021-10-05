@@ -21,4 +21,5 @@ public interface UserService {
 
     void updateActive(IsActiveRequest isActiveRequest);
 
+    void deleteUser();
 }

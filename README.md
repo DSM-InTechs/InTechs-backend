@@ -1,6 +1,6 @@
 # InTechs-backend
 
-https://dev-gorany.tistory.com/281
+[블로그] https://dev-gorany.tistory.com/281
 
 1. cmd 접속 후 cd로 프로젝트 폴더가 위치한 곳으로 이동
 2. ./gradlew build로 빌드한다

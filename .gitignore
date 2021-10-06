@@ -19,3 +19,6 @@ InTechs-backend/build/test-results/test/binary/output.bin.idx
 *.idx
 
 InTechs-backend/build/resources/main/application.yml
+*.MF
+
+*.jar

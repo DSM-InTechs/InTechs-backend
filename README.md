@@ -6,7 +6,7 @@
 
 $ sh execute.sh 
 
-__Shell script 코드__
+__Shell script 명령어__
 
 > cd InTechs-backend
 

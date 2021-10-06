@@ -2,7 +2,7 @@ package InTechs.InTechs.issue.payload.response;
 
 import InTechs.InTechs.issue.value.State;
 import InTechs.InTechs.issue.value.Tag;
-import InTechs.InTechs.project.payload.response.UserIssueResponse;
+import InTechs.InTechs.project.payload.response.UserResponse;
 import lombok.*;
 
 import java.util.List;
@@ -21,6 +21,6 @@ public class IssueFilterResponse {
     private int progress;
     private String endDate;
     private int projectId;
-    private List<UserIssueResponse> users;
+    private List<UserResponse> users;
     private Set<Tag> tags;
 }

@@ -4,6 +4,7 @@ import InTechs.InTechs.issue.payload.request.IssueCreateRequest;
 import InTechs.InTechs.issue.payload.request.IssueFilterRequest;
 import InTechs.InTechs.issue.payload.request.IssueUpdateRequest;
 import InTechs.InTechs.issue.payload.response.IssueFilterResponse;
+import InTechs.InTechs.issue.payload.response.IssueResponse;
 import InTechs.InTechs.issue.service.IssueService;
 import InTechs.InTechs.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -35,5 +36,10 @@ public class IssueController {
     @GetMapping("/{projectId}/issue")
     public List<IssueFilterResponse> issueFiltering(@PathVariable int projectId, @RequestBody IssueFilterRequest issueFilterRequest){
         return issueService.issueFiltering(projectId,issueFilterRequest);
+    }
+
+    @GetMapping("/issue/{issueId}")
+    public IssueResponse issueDetails(@PathVariable String issueId){
+        return issueService.issueDetails(issueId);
     }
 }

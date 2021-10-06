@@ -5,6 +5,7 @@ import InTechs.InTechs.issue.value.Tag;
 import InTechs.InTechs.project.payload.response.UserIssueResponse;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @ToString
@@ -20,6 +21,6 @@ public class IssueFilterResponse {
     private int progress;
     private String endDate;
     private int projectId;
-    private UserIssueResponse users;
+    private List<UserIssueResponse> users;
     private Set<Tag> tags;
 }

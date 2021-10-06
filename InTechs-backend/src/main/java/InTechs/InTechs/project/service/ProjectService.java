@@ -38,5 +38,4 @@ public class ProjectService {
         fileUploadService.fileDelete(folder, project.getImage().getOriName());
         projectRepository.delete(project);
     }
-        projectRepository.save(project);
 }

@@ -119,7 +119,7 @@ public class ProjectService {
                 .forMe(myIssueCount)
                 .resolved(resolved)
                 .unresolved(unresolved)
-                .foreMeAndUnresolved(myIssueCount+unresolved)
+                .forMeAndUnresolved(myIssueCount+unresolved)
                 .build();
 
         return DashboardResponse.builder()

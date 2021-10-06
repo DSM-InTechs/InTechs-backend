@@ -4,7 +4,7 @@ import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
 import InTechs.InTechs.issue.value.Tag;
 import InTechs.InTechs.project.entity.Project;
 import InTechs.InTechs.project.payload.response.ProjectUserResponse;
-import InTechs.InTechs.project.payload.response.UserIssueResponse;
+import InTechs.InTechs.project.payload.response.UserResponse;
 import InTechs.InTechs.project.repository.ProjectRepository;
 import InTechs.InTechs.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -38,12 +38,12 @@ public class ProjectListService {
         return projectRepository.findById(projectId).map(Project::getTags).orElseGet(HashSet::new);
     }
 
-    public Set<UserIssueResponse> userTagList(int projectId){
+    public Set<UserResponse> userTagList(int projectId){
         List<User> users = projectRepository.findById(projectId).map(Project::getUsers).orElseThrow(ProjectNotFoundException::new);
-        Set<UserIssueResponse> userTagList = new HashSet<>();
+        Set<UserResponse> userTagList = new HashSet<>();
         for(User user: users){
-            UserIssueResponse userTagResponse =
-                    UserIssueResponse.builder()
+            UserResponse userTagResponse =
+                    UserResponse.builder()
                             .email(user.getEmail())
                             .name(user.getName()).build();
             userTagList.add(userTagResponse);

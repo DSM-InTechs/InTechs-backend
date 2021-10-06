@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class UserIssueResponse {
+public class UserResponse {
     private String email;
     private String name;
 }

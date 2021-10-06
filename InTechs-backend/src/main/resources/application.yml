@@ -9,16 +9,19 @@ spring:
     mongodb:
       authentication-database: admin
       auto-index-creation: true
-      uri: ${MONGO_DB:}
+      host: localhost
+      port: 27017
+      database: in_techs
 
   servlet:
     multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
       enabled: true
+
 image:
   upload:
     dir: ${IMAGE:C:\Users\user\Desktop\오목눈이}
-      max-file-size: 10MB
-      max-request-size: 10MB
 
 cloud:
   aws:

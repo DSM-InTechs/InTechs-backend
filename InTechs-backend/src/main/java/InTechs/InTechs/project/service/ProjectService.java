@@ -3,6 +3,7 @@ package InTechs.InTechs.project.service;
 import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
 import InTechs.InTechs.file.FileService;
 import InTechs.InTechs.project.entity.Project;
+import InTechs.InTechs.project.payload.response.ProjectInfoResponse;
 import InTechs.InTechs.project.repository.ProjectRepository;
 import InTechs.InTechs.project.value.Image;
 import lombok.RequiredArgsConstructor;
@@ -37,5 +38,12 @@ public class ProjectService {
         Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new); // query dsl로 ㅂ꾸기
         fileUploadService.fileDelete(folder, project.getImage().getOriName());
         projectRepository.delete(project);
+    }
+
+    public ProjectInfoResponse projectInfo(int projectId){
+        Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
+        return ProjectInfoResponse.builder()
+                .name(project.getName())
+                .image(project.getImage()).build();
     }
 }

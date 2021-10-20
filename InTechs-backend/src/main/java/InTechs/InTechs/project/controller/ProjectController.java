@@ -3,6 +3,7 @@ package InTechs.InTechs.project.controller;
 import InTechs.InTechs.project.payload.request.ProjectInfoChangeRequest;
 import InTechs.InTechs.project.payload.response.DashboardResponse;
 
+import InTechs.InTechs.project.payload.response.ProjectInfoResponse;
 import InTechs.InTechs.project.service.*;
 import InTechs.InTechs.security.JwtTokenProvider;
 import InTechs.InTechs.security.auth.AuthenticationFacade;
@@ -32,5 +33,10 @@ public class ProjectController {
     @GetMapping("/dashboard")
     public DashboardResponse projectDashboard(@RequestHeader("Authorization") String token, @PathVariable int projectId){
         return dashboardService.projectDashboard(projectId, authenticationFacade.getUserEmail());
+    }
+
+    @GetMapping
+    public ProjectInfoResponse projectInfo(@PathVariable int projectId){
+        return projectService.projectInfo(projectId);
     }
 }

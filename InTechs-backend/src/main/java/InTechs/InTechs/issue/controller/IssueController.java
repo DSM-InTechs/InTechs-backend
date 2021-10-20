@@ -6,7 +6,7 @@ import InTechs.InTechs.issue.payload.request.IssueUpdateRequest;
 import InTechs.InTechs.issue.payload.response.IssueFilterResponse;
 import InTechs.InTechs.issue.payload.response.IssueResponse;
 import InTechs.InTechs.issue.service.IssueService;
-import InTechs.InTechs.security.JwtTokenProvider;
+import InTechs.InTechs.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,10 +18,11 @@ import java.util.List;
 @RequestMapping("/project")
 public class IssueController {
     private final IssueService issueService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationFacade authenticationFacade;
+
     @PostMapping("/{projectId}/issue")
-    public void issueCreate(@RequestHeader("Authorization") String token,@PathVariable int projectId, @Valid @RequestBody IssueCreateRequest issueRequest){
-        issueService.issueCreate(jwtTokenProvider.getEmail(token), projectId, issueRequest);
+    public void issueCreate(@PathVariable int projectId, @Valid @RequestBody IssueCreateRequest issueRequest){
+        issueService.issueCreate(authenticationFacade.getUserEmail(), projectId, issueRequest);
     }
     @DeleteMapping("/{projectId}/issue/{issueId}")
     public void issueDelete(@PathVariable int projectId, @PathVariable String issueId){

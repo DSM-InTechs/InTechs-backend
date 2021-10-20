@@ -28,7 +28,7 @@ public class FileService {
         } catch(IOException e){
             throw new IllegalArgumentException(String.format("Error during file conversion (%s)", file.getOriginalFilename()));
         }
-        return s3Service.getFileUrl(fileName);
+        return s3Service.getFileUrl(fileName, folder);
     }
 
     private String createFileName(String originalFileName){
@@ -69,7 +69,7 @@ public class FileService {
         }
         return Image.builder()
                 .oriName(fileName)
-                .imageUrl(s3Service.getFileUrl(fileName))
+                .imageUrl(s3Service.getFileUrl(fileName, folder))
                 .build();
     }
     public void fileDelete(String folder, String oriName){

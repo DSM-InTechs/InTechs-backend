@@ -7,4 +7,5 @@ import lombok.Getter;
 public class UserResponse {
     private String email;
     private String name;
+    private String image;
 }

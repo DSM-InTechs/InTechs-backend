@@ -45,7 +45,8 @@ public class ProjectListService {
             UserResponse userTagResponse =
                     UserResponse.builder()
                             .email(user.getEmail())
-                            .name(user.getName()).build();
+                            .name(user.getName())
+                            .image(user.getImage()).build();
             userTagList.add(userTagResponse);
         }
         return userTagList;

@@ -116,6 +116,7 @@ public class IssueService {
                                         UserResponse.builder()
                                                 .name(user.getName())
                                                 .email(user.getEmail())
+                                                .image(user.getImage())
                                                 .build())
                                         .collect(Collectors.toList()))
                                 .tags(i.getTags())
@@ -146,6 +147,7 @@ public class IssueService {
                         UserResponse.builder()
                                 .email(user.getEmail())
                                 .name(user.getName())
+                                .image(user.getImage())
                                 .build()).collect(Collectors.toList()))
                 .comments(issue.getComments().stream().map(comment ->
                         IssueCommentResponse.builder()
@@ -155,7 +157,8 @@ public class IssueService {
                                 .user(UserResponse
                                         .builder()
                                         .email(comment.getUser().getEmail())
-                                        .name(comment.getUser().getName()).build())
+                                        .name(comment.getUser().getName())
+                                        .image(comment.getUser().getImage()).build())
                                 .build()).collect(Collectors.toList()))
                 .build();
     }

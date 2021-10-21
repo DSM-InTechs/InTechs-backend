@@ -34,7 +34,7 @@ public class IssueController {
         issueService.issueUpdate(issueId, issueUpdateRequest);
     }
 
-    @GetMapping("/{projectId}/issue")
+    @PostMapping("/{projectId}/issue/filter")
     public List<IssueFilterResponse> issueFiltering(@PathVariable int projectId, @RequestBody IssueFilterRequest issueFilterRequest){
         return issueService.issueFiltering(projectId,issueFilterRequest);
     }

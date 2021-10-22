@@ -5,6 +5,7 @@ import InTechs.InTechs.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@RestController
 @RequestMapping("/project/{projectId}/user")
 @RequiredArgsConstructor
 public class ProjectUserController {

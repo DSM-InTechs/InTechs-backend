@@ -7,13 +7,14 @@ import InTechs.InTechs.user.payload.response.MyPageResponse;
 import InTechs.InTechs.user.payload.response.MyProjectListResponse;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
 
-    ProfileResponse getProfile(String email);
+    ProfileResponse getProfile(String email) throws IOException;
 
-    MyPageResponse getMyPage();
+    MyPageResponse getMyPage() throws IOException;
 
     void updateUser(ProfileRequest profileRequest);
 

@@ -6,11 +6,13 @@ import InTechs.InTechs.issue.entity.Issue;
 import InTechs.InTechs.issue.payload.request.IssueCreateRequest;
 import InTechs.InTechs.issue.payload.request.IssueFilterRequest;
 import InTechs.InTechs.issue.payload.request.IssueUpdateRequest;
+import InTechs.InTechs.issue.payload.response.IssueCommentResponse;
 import InTechs.InTechs.issue.payload.response.IssueFilterResponse;
+import InTechs.InTechs.issue.payload.response.IssueResponse;
 import InTechs.InTechs.issue.repository.IssueRepository;
 import InTechs.InTechs.issue.value.Tag;
 import InTechs.InTechs.project.entity.Project;
-import InTechs.InTechs.project.payload.response.UserIssueResponse;
+import InTechs.InTechs.project.payload.response.UserResponse;
 import InTechs.InTechs.project.repository.ProjectRepository;
 import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.user.repository.UserRepository;
@@ -111,7 +113,7 @@ public class IssueService {
                                 .endDate(i.getEndDate())
                                 .projectId(i.getProjectId())
                                 .users(i.getUsers().stream().map(user ->
-                                        UserIssueResponse.builder()
+                                        UserResponse.builder()
                                                 .name(user.getName())
                                                 .email(user.getEmail())
                                                 .build())
@@ -127,5 +129,34 @@ public class IssueService {
         if (usersEmail != null)
             return IteratorUtils.toList(userRepository.findAllById(usersEmail).iterator());
         return null;
+    }
+
+    public IssueResponse issueDetails(String issueId) {
+        Issue issue = issueRepository.findById(issueId).orElseThrow(IssueNotFoundException::new);
+        return IssueResponse.builder()
+                .id(issue.getId().toString())
+                .title(issue.getTitle())
+                .content(issue.getContent())
+                .writer(issue.getWriter())
+                .endDate(issue.getEndDate())
+                .progress(issue.getProgress())
+                .state(issue.getState())
+                .tags(issue.getTags())
+                .users(issue.getUsers().stream().map(user ->
+                        UserResponse.builder()
+                                .email(user.getEmail())
+                                .name(user.getName())
+                                .build()).collect(Collectors.toList()))
+                .comments(issue.getComments().stream().map(comment ->
+                        IssueCommentResponse.builder()
+                                .id(comment.getId().toString())
+                                .content(comment.getContent())
+                                .createAt(comment.getCreateAt())
+                                .user(UserResponse
+                                        .builder()
+                                        .email(comment.getUser().getEmail())
+                                        .name(comment.getUser().getName()).build())
+                                .build()).collect(Collectors.toList()))
+                .build();
     }
 }

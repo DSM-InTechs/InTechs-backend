@@ -34,7 +34,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void SignUp(SignUpRequest signUpRequest) {
-        userRepository.findByEmail(signUpRequest.getEmail())
+         userRepository.findByEmail(signUpRequest.getEmail())
                 .ifPresent(user -> {
                     throw new UserAlreadyException();
                 });

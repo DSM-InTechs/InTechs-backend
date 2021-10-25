@@ -1,4 +1,4 @@
-package InTechs.InTechs.issue.repository;
+package InTechs.InTechs.calendar.repository;
 
 import InTechs.InTechs.issue.entity.Issue;
 import InTechs.InTechs.issue.value.State;
@@ -15,7 +15,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Repository
 @RequiredArgsConstructor
-public class CustomIssueRepositoryImpl implements CustomIssueRepository {
+public class CustomCalendarRepositoryImpl implements CustomCalendarRepository {
 
     private final MongoTemplate mongoTemplate;
 

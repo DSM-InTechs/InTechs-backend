@@ -15,8 +15,6 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 @EqualsAndHashCode
 @Document(collection = "user")
@@ -37,11 +35,9 @@ public class User {
     @NotBlank
     @Size(max = 15)
     private String name;
+    private String fileName;
 
-    @Size(max = 100)
-    private String image;
-
-    private Boolean isActive;
+    private Boolean isActive = false;
 
     @DBRef(lazy = true)
     private List<Project> project;
@@ -51,13 +47,13 @@ public class User {
         return this;
     }
 
-    public User updateImage(String image) {
-        this.image = image;
-        return  this;
-    }
-
     public User updateName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public User updateFileName(String fileName) {
+        this.fileName = fileName;
         return this;
     }
 }

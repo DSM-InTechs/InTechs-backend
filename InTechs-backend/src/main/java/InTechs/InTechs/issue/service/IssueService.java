@@ -2,6 +2,7 @@ package InTechs.InTechs.issue.service;
 
 import InTechs.InTechs.exception.exceptions.IssueNotFoundException;
 import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
+import InTechs.InTechs.file.FileUploader;
 import InTechs.InTechs.issue.entity.Issue;
 import InTechs.InTechs.issue.payload.request.IssueCreateRequest;
 import InTechs.InTechs.issue.payload.request.IssueFilterRequest;
@@ -31,6 +32,7 @@ public class IssueService {
     private final IssueRepository issueRepository;
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
+    private final FileUploader fileUploader;
 
     public void issueCreate(String writer, int projectId, IssueCreateRequest issueRequest) {
         Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
@@ -116,6 +118,7 @@ public class IssueService {
                                         UserResponse.builder()
                                                 .name(user.getName())
                                                 .email(user.getEmail())
+                                                .image(fileUploader.getObjectUrl(user.getFileName()))
                                                 .build())
                                         .collect(Collectors.toList()))
                                 .tags(i.getTags())
@@ -146,6 +149,7 @@ public class IssueService {
                         UserResponse.builder()
                                 .email(user.getEmail())
                                 .name(user.getName())
+                                .image(imageUrl(user.getFileName()))
                                 .build()).collect(Collectors.toList()))
                 .comments(issue.getComments().stream().map(comment ->
                         IssueCommentResponse.builder()
@@ -155,8 +159,18 @@ public class IssueService {
                                 .user(UserResponse
                                         .builder()
                                         .email(comment.getUser().getEmail())
-                                        .name(comment.getUser().getName()).build())
+                                        .name(comment.getUser().getName())
+                                        .image(imageUrl(comment.getUser().getFileName())).build())
                                 .build()).collect(Collectors.toList()))
                 .build();
+    }
+
+    private String imageUrl(String fileName) {
+        String fileUrl = fileUploader.getObjectUrl(fileName);
+
+        if(fileUrl == null) {
+            fileUrl = fileUploader.getObjectUrl("인덱스 프로필.jpg");
+        }
+        return fileUrl;
     }
 }

@@ -37,32 +37,21 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
-        String fileUrl = fileUploader.getObjectUrl(user.getFileName());
-
-        if(fileUrl == null) {
-            fileUrl = fileUploader.getObjectUrl("인덱스 프로필.jpg");
-        }
-
         return ProfileResponse.builder()
                 .email(user.getEmail())
                 .name(user.getName())
-                .image(fileUrl)
+                .image(imageUrl(user.getFileName()))
                 .isActive(user.getIsActive())
                 .build();
     }
 
     @Override
     public MyPageResponse getMyPage() throws IOException {
-        String fileUrl = fileUploader.getObjectUrl(findUser().getFileName());
-
-        if(fileUrl == null) {
-            fileUrl = fileUploader.getObjectUrl("인덱스 프로필.jpg");
-        }
 
         return MyPageResponse.builder()
                 .name(findUser().getName())
                 .email(findUser().getEmail())
-                .image(fileUrl)
+                .image(imageUrl(findUser().getFileName()))
                 .build();
     }
 
@@ -109,4 +98,12 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(UserNotFoundException::new);
     }
 
+    private String imageUrl(String fileName) {
+        String fileUrl = fileUploader.getObjectUrl(fileName);
+
+        if(fileUrl == null) {
+            fileUrl = fileUploader.getObjectUrl("인덱스 프로필.jpg");
+        }
+        return fileUrl;
+    }
 }

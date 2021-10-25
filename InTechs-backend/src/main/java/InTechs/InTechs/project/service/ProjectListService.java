@@ -1,6 +1,7 @@
 package InTechs.InTechs.project.service;
 
 import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
+import InTechs.InTechs.file.FileUploader;
 import InTechs.InTechs.issue.value.Tag;
 import InTechs.InTechs.project.entity.Project;
 import InTechs.InTechs.project.payload.response.ProjectUserResponse;
@@ -19,6 +20,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ProjectListService {
     private final ProjectRepository projectRepository;
+    private final FileUploader fileUploader;
 
     public List<ProjectUserResponse> projectUserList(int projectId){
         List<User> users = projectRepository.findById(projectId).map(Project::getUsers).orElseThrow(ProjectNotFoundException::new);
@@ -28,7 +30,7 @@ public class ProjectListService {
                     ProjectUserResponse.builder()
                             .email(user.getEmail())
                             .name(user.getName())
-                            .imageUri(user.getImage())
+                            .imageUri(imageUrl(user.getFileName()))
                             .isActive(user.getIsActive()).build();
             userListResponse.add(userResponse);
         }
@@ -45,10 +47,20 @@ public class ProjectListService {
             UserResponse userTagResponse =
                     UserResponse.builder()
                             .email(user.getEmail())
-                            .name(user.getName()).build();
+                            .name(user.getName())
+                            .image(imageUrl(user.getFileName())).build();
             userTagList.add(userTagResponse);
         }
         return userTagList;
 
+    }
+
+    private String imageUrl(String fileName) {
+        String fileUrl = fileUploader.getObjectUrl(fileName);
+
+        if(fileUrl == null) {
+            fileUrl = fileUploader.getObjectUrl("인덱스 프로필.jpg");
+        }
+        return fileUrl;
     }
 }

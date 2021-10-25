@@ -1,11 +1,12 @@
 package InTechs.InTechs.project.payload.response;
+
+import InTechs.InTechs.project.value.Image;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
 @Builder
-public class UserResponse {
-    private String email;
+@Getter
+public class ProjectInfoResponse {
     private String name;
-    private String image;
+    private Image image;
 }

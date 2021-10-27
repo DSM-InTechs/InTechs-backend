@@ -47,11 +47,12 @@ public class CalendarServiceImpl implements CalendarService {
         return issues.stream()
                 .map(issue -> CalendarResponse.builder()
                         .id(issue.getId().toString())
-                        .name(issue.getWriter())
+                        .title(issue.getTitle())
+                        .writer(issue.getWriter())
                         .state(issue.getState())
                         .progress(issue.getProgress())
                         .content(issue.getContent())
-                        .date(issue.getEndDate())
+                        .endDate(issue.getEndDate())
                         .build())
                 .collect(Collectors.toList());
     }

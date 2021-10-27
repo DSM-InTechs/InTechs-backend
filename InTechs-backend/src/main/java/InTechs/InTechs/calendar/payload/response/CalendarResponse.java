@@ -11,10 +11,11 @@ import lombok.Getter;
 public class CalendarResponse {
 
     private final String id;
-    private final String name;
+    private final String title;
+    private final String writer;
     private final int progress;
     private final State state;
-    private final String date;
+    private final String endDate;
     private final String content;
 
 }

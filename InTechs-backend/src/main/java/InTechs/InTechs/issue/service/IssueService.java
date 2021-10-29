@@ -3,6 +3,7 @@ package InTechs.InTechs.issue.service;
 import InTechs.InTechs.exception.exceptions.IssueNotFoundException;
 import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
 import InTechs.InTechs.file.FileUploader;
+import InTechs.InTechs.file.S3Service;
 import InTechs.InTechs.issue.entity.Issue;
 import InTechs.InTechs.issue.payload.request.IssueCreateRequest;
 import InTechs.InTechs.issue.payload.request.IssueFilterRequest;
@@ -19,6 +20,7 @@ import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.IteratorUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,10 +31,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class IssueService {
+    @Value("${image.user}")
+    private String userBasicImage;
+
     private final IssueRepository issueRepository;
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
-    private final FileUploader fileUploader;
+    private final S3Service s3Service;
 
     public void issueCreate(String writer, int projectId, IssueCreateRequest issueRequest) {
         Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
@@ -118,7 +123,7 @@ public class IssueService {
                                         UserResponse.builder()
                                                 .name(user.getName())
                                                 .email(user.getEmail())
-                                                .image(fileUploader.getObjectUrl(user.getFileName()))
+                                                .image(getImage(user.getFileName()))
                                                 .build())
                                         .collect(Collectors.toList()))
                                 .tags(i.getTags())
@@ -149,7 +154,7 @@ public class IssueService {
                         UserResponse.builder()
                                 .email(user.getEmail())
                                 .name(user.getName())
-                                .image(imageUrl(user.getFileName()))
+                                .image(getImage(user.getFileName()))
                                 .build()).collect(Collectors.toList()))
                 .comments(issue.getComments().stream().map(comment ->
                         IssueCommentResponse.builder()
@@ -160,17 +165,16 @@ public class IssueService {
                                         .builder()
                                         .email(comment.getUser().getEmail())
                                         .name(comment.getUser().getName())
-                                        .image(imageUrl(comment.getUser().getFileName())).build())
+                                        .image(getImage(comment.getUser().getFileName())).build())
                                 .build()).collect(Collectors.toList()))
                 .build();
     }
 
-    private String imageUrl(String fileName) {
-        String fileUrl = fileUploader.getObjectUrl(fileName);
+    private String getImage(String fileName) {
+        final String folder = "/user";
 
-        if(fileUrl == null) {
-            fileUrl = fileUploader.getObjectUrl("인덱스 프로필.jpg");
-        }
-        return fileUrl;
+        if(fileName == null) return userBasicImage;
+
+        return s3Service.getFileUrl(fileName, folder);
     }
 }

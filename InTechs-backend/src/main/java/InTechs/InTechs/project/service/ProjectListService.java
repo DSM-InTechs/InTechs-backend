@@ -1,7 +1,7 @@
 package InTechs.InTechs.project.service;
 
 import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
-import InTechs.InTechs.file.FileUploader;
+import InTechs.InTechs.file.S3Service;
 import InTechs.InTechs.issue.value.Tag;
 import InTechs.InTechs.project.entity.Project;
 import InTechs.InTechs.project.payload.response.ProjectUserResponse;
@@ -9,6 +9,7 @@ import InTechs.InTechs.project.payload.response.UserResponse;
 import InTechs.InTechs.project.repository.ProjectRepository;
 import InTechs.InTechs.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,8 +20,11 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class ProjectListService {
+    @Value("${image.user}")
+    private String userBasicImage;
+
     private final ProjectRepository projectRepository;
-    private final FileUploader fileUploader;
+    private final S3Service s3Service;
 
     public List<ProjectUserResponse> projectUserList(int projectId){
         List<User> users = projectRepository.findById(projectId).map(Project::getUsers).orElseThrow(ProjectNotFoundException::new);
@@ -30,7 +34,7 @@ public class ProjectListService {
                     ProjectUserResponse.builder()
                             .email(user.getEmail())
                             .name(user.getName())
-                            .imageUri(imageUrl(user.getFileName()))
+                            .imageUri(getImage(user.getFileName()))
                             .isActive(user.getIsActive()).build();
             userListResponse.add(userResponse);
         }
@@ -48,19 +52,18 @@ public class ProjectListService {
                     UserResponse.builder()
                             .email(user.getEmail())
                             .name(user.getName())
-                            .image(imageUrl(user.getFileName())).build();
+                            .image(getImage(user.getFileName())).build();
             userTagList.add(userTagResponse);
         }
         return userTagList;
 
     }
 
-    private String imageUrl(String fileName) {
-        String fileUrl = fileUploader.getObjectUrl(fileName);
+    private String getImage(String fileName) {
+        final String folder = "/user";
 
-        if(fileUrl == null) {
-            fileUrl = fileUploader.getObjectUrl("인덱스 프로필.jpg");
-        }
-        return fileUrl;
+        if(fileName == null) return userBasicImage;
+
+        return s3Service.getFileUrl(fileName, folder);
     }
 }

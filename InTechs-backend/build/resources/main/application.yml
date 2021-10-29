@@ -18,10 +18,11 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
       enabled: true
+
 image:
   upload:
     dir: ${IMAGE:C:\Users\user\Desktop\오목눈이}
-
+  user: ${USER_BASIC_IMAGE:}
 
 cloud:
   aws:

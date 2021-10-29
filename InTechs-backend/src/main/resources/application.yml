@@ -22,6 +22,7 @@ spring:
 image:
   upload:
     dir: ${IMAGE:C:\Users\user\Desktop\오목눈이}
+  user: ${USER_BASIC_IMAGE:}
 
 cloud:
   aws:

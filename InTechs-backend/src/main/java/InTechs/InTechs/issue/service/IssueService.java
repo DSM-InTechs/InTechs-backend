@@ -127,6 +127,7 @@ public class IssueService {
                                                 .build())
                                         .collect(Collectors.toList()))
                                 .tags(i.getTags())
+                                .comments(i.getComments().stream().map(this::commentResponseCreate).collect(Collectors.toList()))
                                 .build()
                 )
         );

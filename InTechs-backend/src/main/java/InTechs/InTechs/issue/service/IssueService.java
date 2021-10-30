@@ -1,8 +1,8 @@
 package InTechs.InTechs.issue.service;
 
+import InTechs.InTechs.comment.entity.Comment;
 import InTechs.InTechs.exception.exceptions.IssueNotFoundException;
 import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
-import InTechs.InTechs.file.FileUploader;
 import InTechs.InTechs.file.S3Service;
 import InTechs.InTechs.issue.entity.Issue;
 import InTechs.InTechs.issue.payload.request.IssueCreateRequest;
@@ -157,17 +157,7 @@ public class IssueService {
                                 .name(user.getName())
                                 .image(getImage(user.getFileName()))
                                 .build()).collect(Collectors.toList()))
-                .comments(issue.getComments().stream().map(comment ->
-                        IssueCommentResponse.builder()
-                                .id(comment.getId().toString())
-                                .content(comment.getContent())
-                                .createAt(comment.getCreateAt())
-                                .user(UserResponse
-                                        .builder()
-                                        .email(comment.getUser().getEmail())
-                                        .name(comment.getUser().getName())
-                                        .image(getImage(comment.getUser().getFileName())).build())
-                                .build()).collect(Collectors.toList()))
+                .comments(issue.getComments().stream().map(this::commentResponseCreate).collect(Collectors.toList()))
                 .build();
     }
 
@@ -177,5 +167,17 @@ public class IssueService {
         if(fileName == null) return userBasicImage;
 
         return s3Service.getFileUrl(fileName, folder);
+    }
+
+    private IssueCommentResponse commentResponseCreate(Comment comment){
+        return IssueCommentResponse.builder()
+                .id(comment.getId().toString())
+                .content(comment.getContent())
+                .createAt(comment.getCreateAt())
+                .user(UserResponse
+                        .builder()
+                        .email(comment.getUser().getEmail())
+                        .name(comment.getUser().getName())
+                        .image(getImage(comment.getUser().getFileName())).build()).build();
     }
 }

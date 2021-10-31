@@ -12,6 +12,6 @@ public interface CalendarService {
 
     List<CalendarResponse> getCalendar(int projectId, int year, int month);
 
-    List<CalendarResponse> getFilterCalendar(int projectId, FilterRequest filterRequest);
+    List<CalendarResponse> getFilterCalendar(int projectId, Set<Tag> tag, State state, String name);
 
 }

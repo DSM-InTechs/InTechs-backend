@@ -5,6 +5,7 @@ import InTechs.InTechs.issue.value.State;
 import InTechs.InTechs.issue.value.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,12 +26,11 @@ public class CustomCalendarRepositoryImpl implements CustomCalendarRepository {
                 Issue.class);
     }
 
-    public List<Issue> findByProjectIdAndTag(int projectId, String writer, State state, Set<Tag> tags) {
+    public List<Issue> findByProjectIdAndTag(int projectId, @Nullable String writer, @Nullable State state, @Nullable Set<Tag> tags) {
         return mongoTemplate.find(query(where("projectId").is(projectId)
-                .and("tags.tag").is(tags)
+                .and("tag").is(tags)
                 .orOperator(where("writer").is(writer),
                         (where("state")).is(state))),
                 Issue.class);
     }
-
 }

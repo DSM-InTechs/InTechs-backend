@@ -32,7 +32,13 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
-    public List<CalendarResponse> getFilterCalendar(int projectId, FilterRequest filterRequest) {
+    public List<CalendarResponse> getFilterCalendar(int projectId, Set<Tag> tag, State state, String name) {
+        List<Issue> issues = customCalendarRepository.findByProjectIdAndTag(projectId, name, state, tag);
+
+        return buildCalendar(issues);
+    }
+
+    private List<CalendarResponse> geFilterCalendar(int projectId, FilterRequest filterRequest) {
 
         Set<Tag> tags = filterRequest.getTags();
         State state = filterRequest.getState();

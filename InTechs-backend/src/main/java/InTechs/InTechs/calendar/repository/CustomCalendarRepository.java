@@ -12,5 +12,5 @@ public interface CustomCalendarRepository {
 
     List<Issue> findProjectAndEndDate(int projectId, String date);
 
-    List<Issue> findByProjectIdAndTag(int projectId, @Nullable String writer, @Nullable State state, @Nullable Set<Tag> tags);
+    List<Issue> findByProjectIdAndTag(int projectId, String[] writer, String[] state, Set<Tag> tags);
 }

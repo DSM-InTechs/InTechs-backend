@@ -26,7 +26,7 @@ public class CustomCalendarRepositoryImpl implements CustomCalendarRepository {
                 Issue.class);
     }
 
-    public List<Issue> findByProjectIdAndTag(int projectId, @Nullable String writer, @Nullable State state, @Nullable Set<Tag> tags) {
+    public List<Issue> findByProjectIdAndTag(int projectId, String[] writer, String[] state, Set<Tag> tags) {
         return mongoTemplate.find(query(where("projectId").is(projectId)
                 .and("tag").is(tags)
                 .orOperator(where("writer").is(writer),

@@ -2,13 +2,17 @@ package InTechs.InTechs.calendar.service;
 
 import InTechs.InTechs.calendar.payload.request.FilterRequest;
 import InTechs.InTechs.calendar.payload.response.CalendarResponse;
+import InTechs.InTechs.exception.exceptions.IssueNotFoundException;
 import InTechs.InTechs.issue.entity.Issue;
 import InTechs.InTechs.calendar.repository.CustomCalendarRepository;
+import InTechs.InTechs.issue.repository.IssueRepository;
 import InTechs.InTechs.issue.value.State;
 import InTechs.InTechs.issue.value.Tag;
+import InTechs.InTechs.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,6 +22,7 @@ import java.util.stream.Collectors;
 public class CalendarServiceImpl implements CalendarService {
 
     private final CustomCalendarRepository customCalendarRepository;
+    private final IssueRepository issueRepository;
 
     @Override
     public List<CalendarResponse> getCalendar(int projectId, int year, int month) {
@@ -32,12 +37,13 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
-    public List<CalendarResponse> getFilterCalendar(int projectId, Set<Tag> tag, State state, String name) {
-        List<Issue> issues = customCalendarRepository.findByProjectIdAndTag(projectId, name, state, tag);
+    public List<CalendarResponse> getFilterCalendar(int projectId, Collection<List<User>> users, Collection<State> state, Collection<Set<Tag>> tags) {
+        List<Issue> issues = issueRepository.findByProjectIdAndUsersInOrStateInOrTagsIn(projectId, users, state, tags);
 
         return buildCalendar(issues);
     }
 
+    /*
     private List<CalendarResponse> geFilterCalendar(int projectId, FilterRequest filterRequest) {
 
         Set<Tag> tags = filterRequest.getTags();
@@ -45,6 +51,13 @@ public class CalendarServiceImpl implements CalendarService {
         String name = filterRequest.getName();
 
         List<Issue> issues = customCalendarRepository.findByProjectIdAndTag(projectId, name, state, tags);
+
+        return buildCalendar(issues);
+    }*/
+
+    @Override
+    public List<CalendarResponse> getDeadLine(int projectId, String date) {
+        List<Issue> issues = issueRepository.findByEndDate(date);
 
         return buildCalendar(issues);
     }
@@ -59,6 +72,7 @@ public class CalendarServiceImpl implements CalendarService {
                         .progress(issue.getProgress())
                         .content(issue.getContent())
                         .endDate(issue.getEndDate())
+                        .tags(issue.getTags())
                         .build())
                 .collect(Collectors.toList());
     }

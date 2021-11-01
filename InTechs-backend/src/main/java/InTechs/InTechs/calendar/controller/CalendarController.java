@@ -4,11 +4,11 @@ import InTechs.InTechs.calendar.payload.response.CalendarResponse;
 import InTechs.InTechs.calendar.service.CalendarService;
 import InTechs.InTechs.issue.value.State;
 import InTechs.InTechs.issue.value.Tag;
+import InTechs.InTechs.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -28,15 +28,16 @@ public class CalendarController {
 
     @GetMapping ("/{projectId}/calendar/filter")
     public List<CalendarResponse> getFilterCalendar(@PathVariable int projectId,
-                                                    @Nullable @RequestParam("tag") Set<Tag> tag,
-                                                    @Nullable @RequestParam("state") State state,
-                                                    @Nullable @RequestParam("name") String name) {
-        return calendarService.getFilterCalendar(projectId, tag, state, name);
+                                                    @RequestParam(required = false) Collection<List<User>> users,
+                                                    @RequestParam(required = false) Collection<State> states,
+                                                    @RequestParam(required = false) Collection<Set<Tag>> tags) {
+        return calendarService.getFilterCalendar(projectId, users, states, tags);
     }
 
-    @GetMapping
-    public void asd(@RequestParam("asd") String[] asd) {
-        System.out.println(Arrays.toString(asd));
+    @GetMapping("/{projectId}/calendar/{deadline}")
+    public List<CalendarResponse> getdeadline(@PathVariable int projectId,
+                                              @PathVariable String deadline) {
+        return calendarService.getDeadLine(projectId, deadline);
     }
 
 }

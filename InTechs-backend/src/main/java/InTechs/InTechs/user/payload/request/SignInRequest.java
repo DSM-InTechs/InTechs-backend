@@ -1,17 +1,12 @@
 package InTechs.InTechs.user.payload.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Setter
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SignInRequest {
 
-    private String email;
-    private String password;
+    private final String email;
+    private final String password;
 
 }

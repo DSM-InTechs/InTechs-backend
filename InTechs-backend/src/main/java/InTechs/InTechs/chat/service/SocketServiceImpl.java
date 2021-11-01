@@ -1,0 +1,115 @@
+package InTechs.InTechs.chat.service;
+
+import InTechs.InTechs.chat.payload.request.ChatRequest;
+import InTechs.InTechs.chat.payload.response.ErrorResponse;
+import InTechs.InTechs.chat.repository.ChannelRepository;
+import InTechs.InTechs.chat.repository.ChatRepository;
+import InTechs.InTechs.security.JwtTokenProvider;
+import InTechs.InTechs.user.entity.User;
+import InTechs.InTechs.user.repository.UserRepository;
+import com.corundumstudio.socketio.SocketIOClient;
+import com.corundumstudio.socketio.SocketIOServer;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+@Service
+@RequiredArgsConstructor
+public class SocketServiceImpl implements SocketService {
+
+    private final JwtTokenProvider jwtTokenProvider;
+
+    private final ChatRepository chatRepository;
+    private final ChannelRepository channelRepository;
+    private final UserRepository userRepository;
+
+    private final SocketIOServer server;
+
+    @Override
+    public void connect(SocketIOClient client) {
+        String token = client.getHandshakeData().getSingleUrlParam("token");
+        if (!jwtTokenProvider.validateToken(token)) {
+            clientDisconnect(client, 403, "Can not resolve token");
+            return;
+        }
+
+        User user;
+        try {
+            user = userRepository.findByEmail(jwtTokenProvider.getEmail(token))
+                    .orElseThrow(RuntimeException::new);
+            client.set("user", user);
+        } catch (Exception e) {
+            clientDisconnect(client, 404, "Could not get user");
+            return;
+        }
+    }
+
+    @Override
+    public void disConnect(SocketIOClient client) {
+        printLog(
+                client,
+                String.format("Socket Disconnected, Sesstion Id: %s%n", client.getSessionId())
+        );
+    }
+
+    @Override
+    public void joinChannel(SocketIOClient client, int channelId) {
+        User user = client.get("user");
+
+        if(user == null) {
+            clientDisconnect(client, 403, "Invalid Connection");
+            return;
+        }
+
+        boolean exisUser = channelRepository.existsByChannelIdAndUsers(channelId, user);
+
+        if(!exisUser) {
+            clientDisconnect(client, 401, "Invalid Room");
+            return;
+        }
+
+        try {
+
+        } catch (){
+
+        }
+
+        printLog(
+                client,
+                String.format("Join Room [senderId(%d) -> receiverId(%d)] Session Id: %s%n",
+                        user.getId(), targetId, client.getSessionId())
+        );
+    }
+
+    @Override
+    public void chat(SocketIOClient client, ChatRequest chatRequest) {
+
+    }
+
+
+    @SneakyThrows
+    private void printLog(SocketIOClient client, String content) {
+        String stringDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+
+        System.out.printf(
+                "%s  %s - [%s] - %s",
+                stringDate,
+                "SOCKET",
+                client.getRemoteAddress().toString().substring(1),
+                content
+        );
+    }
+
+    private void clientDisconnect(SocketIOClient client, Integer status, String reason) {
+        client.sendEvent("ERROR", new ErrorResponse(status, reason));
+        client.disconnect();
+        printLog(
+                client,
+                String.format("Socket Disconnected, Session Id: %s - %s%n", client.getSessionId(), reason)
+        );
+    }
+
+}

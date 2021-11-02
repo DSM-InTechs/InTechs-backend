@@ -1,5 +1,6 @@
 package InTechs.InTechs.chat.service;
 
+import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.payload.request.ChatRequest;
 import InTechs.InTechs.chat.payload.response.ErrorResponse;
 import InTechs.InTechs.chat.repository.ChannelRepository;
@@ -14,6 +15,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @Service
@@ -71,21 +73,37 @@ public class SocketServiceImpl implements SocketService {
             return;
         }
 
-        try {
-
-        } catch (){
-
-        }
-
         printLog(
                 client,
-                String.format("Join Room [senderId(%d) -> receiverId(%d)] Session Id: %s%n",
-                        user.getId(), targetId, client.getSessionId())
+                String.format("Join Room [senderId(%s) -> receiverId(%d)] Session Id: %s%n",
+                        user.getEmail(), channelId, client.getSessionId())
         );
     }
 
     @Override
     public void chat(SocketIOClient client, ChatRequest chatRequest) {
+        if(!client.getAllRooms().contains(chatRequest.getChannelId())) {
+            clientDisconnect(client, 401, "Invalid Connection");
+            return;
+        }
+
+        User user = client.get("user");
+        if(user == null) {
+            clientDisconnect(client, 403, "Invalid Connection");
+            return;
+        }
+
+        Chat chat = chatRepository.save(
+                Chat.builder()
+                        .message(chatRequest.getMessage())
+                        .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                        .build()
+        );
+
+        User target;
+        try {
+            if()
+        }
 
     }
 

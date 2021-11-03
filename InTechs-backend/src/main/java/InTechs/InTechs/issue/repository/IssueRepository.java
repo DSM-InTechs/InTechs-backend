@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.mongodb.repository.Query;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -22,6 +21,5 @@ public interface IssueRepository extends MongoRepository<Issue, String> {
 
     List<Issue> findByEndDate(String endDate);
 
-    List<Issue> findByProjectIdAndUsersInOrStateInOrTagsIn(int projectId, Collection<List<User>> users, Collection<State> state, Collection<Set<Tag>> tags);
-
+    List<Issue> findByProjectIdOrUsersContainingOrStateInOrTagsContaining(int projectId, List<User> users, List<State> state, Set<Tag> tags);
 }

@@ -8,6 +8,7 @@ import InTechs.InTechs.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -28,10 +29,11 @@ public class CalendarController {
 
     @GetMapping ("/{projectId}/calendar/filter")
     public List<CalendarResponse> getFilterCalendar(@PathVariable int projectId,
-                                                    @RequestParam(required = false) Collection<List<User>> users,
-                                                    @RequestParam(required = false) Collection<State> states,
-                                                    @RequestParam(required = false) Collection<Set<Tag>> tags) {
-        return calendarService.getFilterCalendar(projectId, users, states, tags);
+                                                    @RequestParam(required = false) String[] email,
+                                                    @RequestParam(required = false) String[] states,
+                                                    @RequestParam(required = false) String[] tags) {
+
+        return calendarService.getFilterCalendar(projectId, email, states, tags);
     }
 
     @GetMapping("/{projectId}/calendar/{deadline}")

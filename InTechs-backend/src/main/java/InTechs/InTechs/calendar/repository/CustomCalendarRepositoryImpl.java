@@ -1,7 +1,6 @@
 package InTechs.InTechs.calendar.repository;
 
 import InTechs.InTechs.issue.entity.Issue;
-import InTechs.InTechs.issue.value.State;
 import InTechs.InTechs.issue.value.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -25,12 +24,20 @@ public class CustomCalendarRepositoryImpl implements CustomCalendarRepository {
                 Issue.class);
     }
 
-    public List<Issue> findByProjectIdAndTag(int projectId, String writer, State state, Set<Tag> tags) {
+    @Override
+    public List<Issue> findByProjectId(int projectId, String user, String state, String tags) {
         return mongoTemplate.find(query(where("projectId").is(projectId)
-                .and("tags.tag").is(tags)
+                        .and("tag").is(tags)
+                        .orOperator(where("writer").is(user),
+                                (where("state")).is(state))),
+                Issue.class);
+    }
+
+    public List<Issue> findByProjectIdAndTag(int projectId, String[] writer, String[] state, Set<Tag> tags) {
+        return mongoTemplate.find(query(where("projectId").is(projectId)
+                .and("tag").is(tags)
                 .orOperator(where("writer").is(writer),
                         (where("state")).is(state))),
                 Issue.class);
     }
-
 }

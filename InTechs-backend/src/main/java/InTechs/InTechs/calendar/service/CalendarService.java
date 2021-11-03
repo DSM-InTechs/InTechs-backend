@@ -14,7 +14,7 @@ public interface CalendarService {
 
     List<CalendarResponse> getCalendar(int projectId, int year, int month);
 
-    List<CalendarResponse> getFilterCalendar(int projectId, Collection<List<User>> users, Collection<State> state, Collection<Set<Tag>> tags);
+    List<CalendarResponse> getFilterCalendar(int projectId, String[] users, String[] states, String[] tags);
 
     List<CalendarResponse> getDeadLine(int projectId, String date);
 

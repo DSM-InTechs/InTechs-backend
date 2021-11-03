@@ -1,20 +1,17 @@
 package InTechs.InTechs.calendar.service;
 
-import InTechs.InTechs.calendar.payload.request.FilterRequest;
 import InTechs.InTechs.calendar.payload.response.CalendarResponse;
-import InTechs.InTechs.exception.exceptions.IssueNotFoundException;
 import InTechs.InTechs.issue.entity.Issue;
 import InTechs.InTechs.calendar.repository.CustomCalendarRepository;
 import InTechs.InTechs.issue.repository.IssueRepository;
 import InTechs.InTechs.issue.value.State;
 import InTechs.InTechs.issue.value.Tag;
 import InTechs.InTechs.user.entity.User;
+import InTechs.InTechs.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +20,7 @@ public class CalendarServiceImpl implements CalendarService {
 
     private final CustomCalendarRepository customCalendarRepository;
     private final IssueRepository issueRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<CalendarResponse> getCalendar(int projectId, int year, int month) {
@@ -37,23 +35,24 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
-    public List<CalendarResponse> getFilterCalendar(int projectId, Collection<List<User>> users, Collection<State> state, Collection<Set<Tag>> tags) {
-        List<Issue> issues = issueRepository.findByProjectIdAndUsersInOrStateInOrTagsIn(projectId, users, state, tags);
+    public List<CalendarResponse> getFilterCalendar(int projectId, String[] emails, String[] states, String[] tags) {
+        
+        List<User> users = Arrays.stream(Optional.ofNullable(emails).orElse(new String[0]))
+                .map(this::getUser)
+                .collect(Collectors.toList());
+
+        List<State> state = Arrays.stream(Optional.ofNullable(states).orElse(new String[0]))
+                .map(State::valueOf)
+                .collect(Collectors.toList());
+
+        Set<Tag> tag = Arrays.stream(Optional.ofNullable(tags).orElse(new String[0]))
+                .map(Tag::valueOf)
+                .collect(Collectors.toSet());
+
+        List<Issue> issues = issueRepository.findByProjectIdOrUsersContainingOrStateInOrTagsContaining(projectId, users, state, tag);
 
         return buildCalendar(issues);
     }
-
-    /*
-    private List<CalendarResponse> geFilterCalendar(int projectId, FilterRequest filterRequest) {
-
-        Set<Tag> tags = filterRequest.getTags();
-        State state = filterRequest.getState();
-        String name = filterRequest.getName();
-
-        List<Issue> issues = customCalendarRepository.findByProjectIdAndTag(projectId, name, state, tags);
-
-        return buildCalendar(issues);
-    }*/
 
     @Override
     public List<CalendarResponse> getDeadLine(int projectId, String date) {
@@ -75,5 +74,10 @@ public class CalendarServiceImpl implements CalendarService {
                         .tags(issue.getTags())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    private User getUser(String email) {
+        return userRepository.findByEmail(email)
+                .orElse(null);
     }
 }

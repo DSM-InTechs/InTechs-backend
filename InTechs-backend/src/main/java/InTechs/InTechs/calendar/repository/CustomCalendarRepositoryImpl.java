@@ -1,11 +1,9 @@
 package InTechs.InTechs.calendar.repository;
 
 import InTechs.InTechs.issue.entity.Issue;
-import InTechs.InTechs.issue.value.State;
 import InTechs.InTechs.issue.value.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,6 +21,15 @@ public class CustomCalendarRepositoryImpl implements CustomCalendarRepository {
     public List<Issue> findProjectAndEndDate(int projectId, String date) {
         return mongoTemplate.find(query(where("projectId").is(projectId)
                 .and("endDate").regex(date)),
+                Issue.class);
+    }
+
+    @Override
+    public List<Issue> findByProjectId(int projectId, String user, String state, String tags) {
+        return mongoTemplate.find(query(where("projectId").is(projectId)
+                        .and("tag").is(tags)
+                        .orOperator(where("writer").is(user),
+                                (where("state")).is(state))),
                 Issue.class);
     }
 

@@ -1,16 +1,11 @@
 package InTechs.InTechs.user.payload.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Setter
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TokenRequest {
 
-    private String refreshToken;
+    private final String refreshToken;
 
 }

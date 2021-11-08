@@ -6,6 +6,6 @@ import com.corundumstudio.socketio.SocketIOClient;
 public interface SocketService {
     void connect(SocketIOClient client);
     void disConnect(SocketIOClient client);
-    void joinChannel(SocketIOClient client, int channelId);
+    void joinChannel(SocketIOClient client, String channelId);
     void chat(SocketIOClient client, ChatRequest chatRequest);
 }

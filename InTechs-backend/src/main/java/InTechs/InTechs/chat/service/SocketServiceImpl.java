@@ -1,10 +1,9 @@
 package InTechs.InTechs.chat.service;
 
-import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.payload.request.ChatRequest;
+import InTechs.InTechs.chat.payload.response.ChatResponse;
 import InTechs.InTechs.chat.payload.response.ErrorResponse;
 import InTechs.InTechs.chat.repository.ChannelRepository;
-import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.security.JwtTokenProvider;
 import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.user.repository.UserRepository;
@@ -15,7 +14,6 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @Service
@@ -24,7 +22,7 @@ public class SocketServiceImpl implements SocketService {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    private final ChatRepository chatRepository;
+    private final ChatService chatService;
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
 
@@ -58,7 +56,7 @@ public class SocketServiceImpl implements SocketService {
     }
 
     @Override
-    public void joinChannel(SocketIOClient client, int channelId) {
+    public void joinChannel(SocketIOClient client, String channelId) {
         User user = client.get("user");
 
         if(user == null) {
@@ -67,7 +65,6 @@ public class SocketServiceImpl implements SocketService {
         }
 
         boolean exisUser = channelRepository.existsByChannelIdAndUsers(channelId, user);
-
         if(!exisUser) {
             clientDisconnect(client, 401, "Invalid Room");
             return;
@@ -75,7 +72,7 @@ public class SocketServiceImpl implements SocketService {
 
         printLog(
                 client,
-                String.format("Join Room [senderId(%s) -> receiverId(%d)] Session Id: %s%n",
+                String.format("Join Room [senderId(%s) -> receiverId(%s)] Session Id: %s%n",
                         user.getEmail(), channelId, client.getSessionId())
         );
     }
@@ -88,25 +85,23 @@ public class SocketServiceImpl implements SocketService {
         }
 
         User user = client.get("user");
-        if(user == null) {
-            clientDisconnect(client, 403, "Invalid Connection");
-            return;
-        }
+        chatService.sendChat(
+                user,
+                chatRequest.getMessage(),
+                chatRequest.getChannelId()
+        );
 
-        Chat chat = chatRepository.save(
-                Chat.builder()
+        server.getRoomOperations(chatRequest.getChannelId()).sendEvent(
+                "send",
+                client,
+                ChatResponse.builder()
+                        .sender(user.getName())
                         .message(chatRequest.getMessage())
-                        .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                        .isMine(false)
                         .build()
         );
 
-        User target;
-        try {
-            if()
-        }
-
     }
-
 
     @SneakyThrows
     private void printLog(SocketIOClient client, String content) {

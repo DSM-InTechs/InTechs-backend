@@ -16,9 +16,13 @@ public class ChatResponse {
 
     private final int channelId;
 
-    private final String name;
+    private final String sender;
 
     private final String message;
+
+    private final Boolean isMine;
+
+    private final String imageName;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime time;

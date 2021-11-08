@@ -1,5 +1,6 @@
 package InTechs.InTechs.chat.entity;
 
+import InTechs.InTechs.project.entity.Project;
 import InTechs.InTechs.user.entity.User;
 import lombok.Builder;
 import lombok.Data;
@@ -15,12 +16,19 @@ import java.util.List;
 public class Channel {
 
     @Id
-    private int channelId;
+    private int id;
+
+    private String channelId;
 
     private String name;
 
     @DBRef(lazy = true)
     private List<User> users;
+
+    @DBRef(lazy = true)
+    private List<Chat> Chats;
+
+    private int projectId;
 
     public Channel updateName(String name) {
         this.name = name;

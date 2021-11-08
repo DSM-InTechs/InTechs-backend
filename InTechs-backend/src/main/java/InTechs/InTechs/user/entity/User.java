@@ -36,7 +36,7 @@ public class User {
     private String name;
     private String fileName;
 
-    private Boolean isActive = false;
+    private Boolean isActive;
 
     @DBRef(lazy = true)
     private List<Project> project;

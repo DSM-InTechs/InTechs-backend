@@ -1,15 +1,12 @@
 package InTechs.InTechs.chat.service;
 
-import InTechs.InTechs.chat.entity.Channel;
 import InTechs.InTechs.chat.entity.Chat;
-import InTechs.InTechs.chat.payload.request.ChannelRequest;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
 import InTechs.InTechs.chat.repository.ChannelRepository;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
 import InTechs.InTechs.file.FileUploader;
-import InTechs.InTechs.file.S3FileUploader;
 import InTechs.InTechs.security.auth.AuthenticationFacade;
 import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.user.repository.UserRepository;
@@ -59,7 +56,7 @@ public class ChatServiceImpl implements ChatService {
     @SneakyThrows
     @Override
     public void sendChat(User user, String channelId, String message) {
-        boolean existsChannel = channelRepository.existsByChannelIdAndUsers(channelId, user);
+        boolean existsChannel = channelRepository.existsByChannelIdAndUsersContaining(channelId, user);
 
         if(!existsChannel) throw new ChatChannelNotFoundException();
 
@@ -70,14 +67,6 @@ public class ChatServiceImpl implements ChatService {
                         .channelId(channelId)
                 .build()
         );
-    }
-
-    @Override
-    public void updateChannel(String channelId, ChannelRequest channelRequest) {
-        Channel channel = channelRepository.findById(channelId)
-                .orElseThrow(ChatChannelNotFoundException::new);
-
-        channelRepository.save(channel.updateName(channelRequest.getNewName()));
     }
 
     private User findUser() {

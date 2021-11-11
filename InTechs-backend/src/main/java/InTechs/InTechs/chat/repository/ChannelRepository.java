@@ -1,4 +1,4 @@
-package InTechs.InTechs.user.repository;
+package InTechs.InTechs.chat.repository;
 
 import InTechs.InTechs.chat.entity.Channel;
 import InTechs.InTechs.user.entity.User;
@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends MongoRepository<User, String> {
-    Optional<User> findByEmail(String email);
+public interface ChannelRepository extends MongoRepository<Channel, String> {
 
-    User findByEmailAndChannels(String email,Channel channel);
+    Boolean existsByChannelIdAndUsersContaining(String channelId, User user);
+
 }

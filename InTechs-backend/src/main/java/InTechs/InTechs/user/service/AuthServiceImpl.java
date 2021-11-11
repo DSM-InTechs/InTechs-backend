@@ -39,14 +39,14 @@ public class AuthServiceImpl implements AuthService {
                     throw new UserAlreadyException();
                 });
 
-        userRepository.save(
-                User.builder()
-                        .name(signUpRequest.getName())
-                        .email(signUpRequest.getEmail())
-                        .password(passwordEncoder.encode(signUpRequest.getPassword()))
-                        .isActive(false)
-                        .build()
-        );
+         User user = User.builder()
+                 .name(signUpRequest.getName())
+                 .email(signUpRequest.getEmail())
+                 .password(signUpRequest.getPassword())
+                 .isActive(false)
+                 .build();
+
+        userRepository.save(user);
     }
 
     @Override

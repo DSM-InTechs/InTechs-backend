@@ -51,7 +51,7 @@ public class SocketServiceImpl implements SocketService {
     public void disConnect(SocketIOClient client) {
         printLog(
                 client,
-                String.format("Socket Disconnected, Sesstion Id: %s%n", client.getSessionId())
+                String.format("Socket Disconnected, Session Id: %s%n", client.getSessionId())
         );
     }
 
@@ -64,15 +64,16 @@ public class SocketServiceImpl implements SocketService {
             return;
         }
 
-        boolean exisUser = channelRepository.existsByChannelIdAndUsers(channelId, user);
-        if(!exisUser) {
+        boolean exitsUser = channelRepository.existsByChannelIdAndUsersContaining(channelId, user);
+        if(!exitsUser) {
             clientDisconnect(client, 401, "Invalid Room");
             return;
         }
 
+        client.joinRoom(channelId);
         printLog(
                 client,
-                String.format("Join Room [senderId(%s) -> receiverId(%s)] Session Id: %s%n",
+                String.format("Join Room [senderId(%s) -> Channel Id(%s)] Session Id: %s%n",
                         user.getEmail(), channelId, client.getSessionId())
         );
     }
@@ -87,13 +88,12 @@ public class SocketServiceImpl implements SocketService {
         User user = client.get("user");
         chatService.sendChat(
                 user,
-                chatRequest.getMessage(),
-                chatRequest.getChannelId()
+                chatRequest.getChannelId(),
+                chatRequest.getMessage()
         );
 
         server.getRoomOperations(chatRequest.getChannelId()).sendEvent(
                 "send",
-                client,
                 ChatResponse.builder()
                         .sender(user.getName())
                         .message(chatRequest.getMessage())

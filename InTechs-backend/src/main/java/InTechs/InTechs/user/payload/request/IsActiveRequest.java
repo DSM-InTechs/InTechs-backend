@@ -3,9 +3,11 @@ package InTechs.InTechs.user.payload.request;
 import lombok.*;
 
 @Getter
-@RequiredArgsConstructor
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class IsActiveRequest {
 
-    private final Boolean isActive;
+    private Boolean isActive;
 
 }

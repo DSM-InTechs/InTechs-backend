@@ -16,10 +16,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-import lombok.*;
-
-@Data
+@Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Document(collection = "user")
 public class User {
 

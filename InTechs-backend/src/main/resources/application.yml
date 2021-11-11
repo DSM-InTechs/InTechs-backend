@@ -1,5 +1,7 @@
 server:
   port: 8009
+  socket:
+    port: 8010
 
 spring:
   redis:
@@ -20,8 +22,7 @@ spring:
       enabled: true
 
 image:
-  upload:
-    dir: ${IMAGE:C:\Users\user\Desktop\오목눈이}
+  user: ${USER_BASIC_IMAGE}
 
 cloud:
   aws:
@@ -30,18 +31,18 @@ cloud:
     region:
       static: ap-northeast-2
     s3:
-      bucket: ${BUCKET:}
+      bucket: ${BUCKET}
     credentials:
-      access-key: ${AWS_ACCESS_KEY:}
-      secret-key: ${AWS_SECRET_KEY:}
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
 
 logging.level.com.amazonaws.util.EC2MetadataUtils: error
 
 auth:
   jwt:
     exp:
-      access: ${ACCESS_TOKEN_EXP:3600}
-      refresh: ${REFRESH_TOKEN_EXP:10000}
-    secret: ${SECRET_KEY:}
-    header: ${HEADER:Authorization}
-    prefix: ${PREFIX:Bearer}
+      access: ${ACCESS_TOKEN_EXP}
+      refresh: ${REFRESH_TOKEN_EXP}
+    secret: ${SECRET_KEY}
+    header: ${HEADER}
+    prefix: ${PREFIX}

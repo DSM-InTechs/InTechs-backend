@@ -35,8 +35,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation "it.ozimov:embedded-redis:0.7.2"
 	implementation 'javax.xml.bind:jaxb-api'
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws'
+
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.0'
+	implementation 'com.corundumstudio.socketio:netty-socketio:1.7.18'
 	implementation group: 'com.google.firebase', name: 'firebase-admin', version: '7.1.0'
 }
 

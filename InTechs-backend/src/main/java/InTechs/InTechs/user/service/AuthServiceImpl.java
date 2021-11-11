@@ -34,18 +34,19 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void SignUp(SignUpRequest signUpRequest) {
-        userRepository.findByEmail(signUpRequest.getEmail())
+         userRepository.findByEmail(signUpRequest.getEmail())
                 .ifPresent(user -> {
                     throw new UserAlreadyException();
                 });
 
-        userRepository.save(
-                User.builder()
-                        .name(signUpRequest.getName())
-                        .email(signUpRequest.getEmail())
-                        .password(passwordEncoder.encode(signUpRequest.getPassword()))
-                        .build()
-        );
+         User user = User.builder()
+                 .name(signUpRequest.getName())
+                 .email(signUpRequest.getEmail())
+                 .password(signUpRequest.getPassword())
+                 .isActive(false)
+                 .build();
+
+        userRepository.save(user);
     }
 
     @Override

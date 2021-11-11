@@ -1,20 +1,15 @@
 package InTechs.InTechs.calendar.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
-@Document(collection = "calendar")
-@Getter
+@Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Document(collection = "calendar")
 public class Calendar {
 
     @Id

@@ -1,5 +1,7 @@
 package InTechs.InTechs.user.entity;
 
+import InTechs.InTechs.chat.entity.Channel;
+import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.project.entity.Project;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,16 +16,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@EqualsAndHashCode
-@Document(collection = "user")
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Document(collection = "user")
 public class User {
 
     @Id
@@ -37,27 +34,31 @@ public class User {
     @NotBlank
     @Size(max = 15)
     private String name;
-
-    @Size(max = 100)
-    private String image;
+    private String fileName;
 
     private Boolean isActive;
 
     @DBRef(lazy = true)
     private List<Project> project;
 
+    @DBRef(lazy = true)
+    private List<Channel> channels;
+
+    @DBRef(lazy = true)
+    private List<Chat> Chats;
+
     public User updateActive(boolean isActive) {
         this.isActive = isActive;
         return this;
     }
 
-    public User updateImage(String image) {
-        this.image = image;
-        return  this;
-    }
-
     public User updateName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public User updateFileName(String fileName) {
+        this.fileName = fileName;
         return this;
     }
 }

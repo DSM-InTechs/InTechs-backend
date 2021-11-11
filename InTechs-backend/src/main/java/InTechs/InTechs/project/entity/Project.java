@@ -1,5 +1,7 @@
 package InTechs.InTechs.project.entity;
 
+import InTechs.InTechs.chat.entity.Channel;
+import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.issue.value.Tag;
 import InTechs.InTechs.project.value.Image;
 import InTechs.InTechs.issue.entity.Issue;
@@ -44,6 +46,12 @@ public class Project {
     @DBRef(lazy = true)
     private List<Issue> issues = new ArrayList<>();
     private Set<Tag> tags = new HashSet<>();
+
+    @DBRef(lazy = true)
+    private List<Channel> channels;
+
+    @DBRef(lazy = true)
+    private List<Chat> chats;
 
     public void addUser(User user){
         this.users.add(user);

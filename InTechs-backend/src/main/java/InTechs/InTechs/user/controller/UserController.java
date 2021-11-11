@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -19,12 +20,12 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{userEmail}")
-    public ProfileResponse getProfile(@PathVariable String userEmail) {
+    public ProfileResponse getProfile(@PathVariable String userEmail) throws IOException {
         return userService.getProfile(userEmail);
     }
 
     @GetMapping("/user")
-    public MyPageResponse getMyPage() {
+    public MyPageResponse getMyPage() throws IOException {
         return userService.getMyPage();
     }
 
@@ -40,6 +41,7 @@ public class UserController {
 
     @PatchMapping("/user/active")
     public void updateActive(@RequestBody @Valid IsActiveRequest isActiveRequest) {
+        System.out.println(isActiveRequest);
         userService.updateActive(isActiveRequest);
     }
 

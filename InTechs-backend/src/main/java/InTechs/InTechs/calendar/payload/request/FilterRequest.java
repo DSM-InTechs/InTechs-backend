@@ -2,21 +2,16 @@ package InTechs.InTechs.calendar.payload.request;
 
 import InTechs.InTechs.issue.value.State;
 import InTechs.InTechs.issue.value.Tag;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
-@Setter
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class FilterRequest {
 
-    private Set<Tag> tags;
-    private State state;
-    private String name;
+    private final Set<Tag> tags;
+    private final State state;
+    private final String name;
 
 }

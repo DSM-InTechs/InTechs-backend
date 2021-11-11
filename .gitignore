@@ -22,3 +22,7 @@ InTechs-backend/build/resources/main/application.yml
 *.MF
 
 *.jar
+
+InTechs-backend/.idea/modules/InTechs-backend.InTechs-backend.test.iml
+
+*.iml

@@ -1,13 +1,16 @@
 package InTechs.InTechs.chat.payload.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChatRequest {
 
-    private final String channelId;
-    private final String message;
+    private String channelId;
+    private String message;
 
 }

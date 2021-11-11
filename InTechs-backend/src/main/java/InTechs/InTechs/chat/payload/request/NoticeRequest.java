@@ -1,12 +1,13 @@
 package InTechs.InTechs.chat.payload.request;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @Getter
-@RequiredArgsConstructor
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class NoticeRequest {
 
-    private final boolean notice;
+    private Boolean notice;
 
 }

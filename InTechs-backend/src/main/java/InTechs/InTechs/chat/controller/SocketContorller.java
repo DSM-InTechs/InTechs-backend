@@ -12,9 +12,9 @@ import javax.annotation.PostConstruct;
 @RequiredArgsConstructor
 public class SocketContorller {
 
-    private SocketIOServer server;
+    private final SocketIOServer server;
 
-    private SocketService socketService;
+    private final SocketService socketService;
 
     @PostConstruct
     public void SocketMapping() {

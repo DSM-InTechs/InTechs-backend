@@ -12,6 +12,6 @@ import java.util.Optional;
 @Repository
 public interface ChannelRepository extends MongoRepository<Channel, String> {
 
-    Boolean existsByChannelIdAndUsers(String channelId, User user);
+    Boolean existsByChannelIdAndUsersContaining(String channelId, User user);
 
 }

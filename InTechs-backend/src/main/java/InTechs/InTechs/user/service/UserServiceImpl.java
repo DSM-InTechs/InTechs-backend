@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateActive(IsActiveRequest isActiveRequest) {
-        boolean isActive = isActiveRequest.getIsActive();
+        Boolean isActive = isActiveRequest.getIsActive();
 
         userRepository.save(findUser().updateActive(isActive));
     }

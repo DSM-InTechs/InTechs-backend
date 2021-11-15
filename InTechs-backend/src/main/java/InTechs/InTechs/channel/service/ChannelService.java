@@ -1,6 +1,6 @@
-package InTechs.InTechs.chat.service;
+package InTechs.InTechs.channel.service;
 
-import InTechs.InTechs.chat.payload.request.ChannelRequest;
+import InTechs.InTechs.channel.payload.request.ChannelRequest;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
 
 import java.util.List;

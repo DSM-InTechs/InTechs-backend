@@ -1,6 +1,6 @@
 package InTechs.InTechs.project.entity;
 
-import InTechs.InTechs.chat.entity.Channel;
+import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.issue.value.Tag;
 import InTechs.InTechs.project.value.Image;
@@ -15,8 +15,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import java.awt.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

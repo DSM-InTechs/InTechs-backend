@@ -1,5 +1,6 @@
-package InTechs.InTechs.chat.entity;
+package InTechs.InTechs.channel.entity;
 
+import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.user.entity.User;
 import lombok.Builder;
 import lombok.Data;
@@ -7,7 +8,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -24,7 +24,7 @@ public class Channel {
     private List<User> users;
 
     @DBRef(lazy = true)
-    private List<Chat> Chats;
+    private List<Chat> chats;
 
     private int projectId;
 
@@ -39,6 +39,12 @@ public class Channel {
 
     public void deleteUser(User user) {
         this.users.remove(user);
+    }
+
+    public void addChat(Chat chat) {this.chats.add(chat);}
+
+    public void deleteChat(Chat chat) {
+        this.chats.remove(chat);
     }
 
 }

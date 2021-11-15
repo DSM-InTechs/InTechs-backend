@@ -8,4 +8,5 @@ public interface SocketService {
     void disConnect(SocketIOClient client);
     void joinChannel(SocketIOClient client, String channelId);
     void chat(SocketIOClient client, ChatRequest chatRequest);
+    void messageDelete(SocketIOClient client, String id);
 }

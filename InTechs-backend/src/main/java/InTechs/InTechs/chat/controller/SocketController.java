@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 
 @Component
 @RequiredArgsConstructor
-public class SocketContorller {
+public class SocketController {
 
     private final SocketIOServer server;
 
@@ -26,6 +26,9 @@ public class SocketContorller {
 
         server.addEventListener("send", ChatRequest.class,
                 (client, data, ackSender) -> socketService.chat(client, data));
+
+        server.addEventListener("delete", String.class,
+                ((client, data, ackSender) -> socketService.messageDelete(client, data)));
     }
 
 }

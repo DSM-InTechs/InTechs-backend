@@ -1,5 +1,6 @@
-package InTechs.InTechs.chat.entity;
+package InTechs.InTechs.channel.entity;
 
+import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.user.entity.User;
 import lombok.Builder;
 import lombok.Data;
@@ -7,7 +8,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data

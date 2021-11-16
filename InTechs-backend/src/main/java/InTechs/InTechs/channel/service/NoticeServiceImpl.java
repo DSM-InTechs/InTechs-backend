@@ -1,16 +1,12 @@
-package InTechs.InTechs.chat.service;
+package InTechs.InTechs.channel.service;
 
 import InTechs.InTechs.chat.entity.Chat;
-import InTechs.InTechs.chat.payload.request.NoticeRequest;
-import InTechs.InTechs.chat.payload.response.ChatResponse;
+import InTechs.InTechs.channel.payload.request.NoticeRequest;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

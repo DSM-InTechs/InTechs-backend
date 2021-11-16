@@ -1,16 +1,13 @@
-package InTechs.InTechs.chat.controller;
+package InTechs.InTechs.channel.controller;
 
-import InTechs.InTechs.chat.payload.request.NoticeRequest;
-import InTechs.InTechs.chat.payload.response.ChatResponse;
-import InTechs.InTechs.chat.service.NoticeService;
+import InTechs.InTechs.channel.payload.request.NoticeRequest;
+import InTechs.InTechs.channel.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/chat")
+@RequestMapping("/channel")
 public class NoticeController {
 
     private final NoticeService noticeService;
@@ -21,6 +18,5 @@ public class NoticeController {
 
         noticeService.updateNotice(chatId, noticeRequest);
     }
-
 
 }

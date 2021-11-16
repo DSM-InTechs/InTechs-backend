@@ -3,7 +3,7 @@ package InTechs.InTechs.chat.service;
 import InTechs.InTechs.chat.payload.request.ChatRequest;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
 import InTechs.InTechs.chat.payload.response.ErrorResponse;
-import InTechs.InTechs.chat.repository.ChannelRepository;
+import InTechs.InTechs.channel.repository.ChannelRepository;
 import InTechs.InTechs.security.JwtTokenProvider;
 import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.user.repository.UserRepository;

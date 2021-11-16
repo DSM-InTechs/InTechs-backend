@@ -1,7 +1,7 @@
-package InTechs.InTechs.chat.controller;
+package InTechs.InTechs.channel.controller;
 
-import InTechs.InTechs.chat.payload.request.ChannelRequest;
-import InTechs.InTechs.chat.service.ChannelService;
+import InTechs.InTechs.channel.payload.request.ChannelRequest;
+import InTechs.InTechs.channel.service.ChannelService;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

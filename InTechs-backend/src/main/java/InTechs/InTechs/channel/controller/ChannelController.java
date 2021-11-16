@@ -44,7 +44,7 @@ public class ChannelController {
         channelService.exitChannel(channelId);
     }
 
-    @GetMapping("/{channelId}")
+    @GetMapping("/{channelId}/users")
     public List<ProfileResponse> getProfiles(@PathVariable  String channelId) {
         return channelService.getProfiles(channelId);
     }

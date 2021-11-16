@@ -1,8 +1,8 @@
-package InTechs.InTechs.chat.service;
+package InTechs.InTechs.channel.service;
 
 import InTechs.InTechs.chat.entity.Chat;
-import InTechs.InTechs.chat.payload.request.NoticeRequest;
-import InTechs.InTechs.chat.payload.response.NoticeResponse;
+import InTechs.InTechs.channel.payload.request.NoticeRequest;
+import InTechs.InTechs.channel.payload.response.NoticeResponse;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;

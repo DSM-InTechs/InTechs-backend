@@ -2,7 +2,7 @@ package InTechs.InTechs.chat.service;
 
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
-import InTechs.InTechs.chat.repository.ChannelRepository;
+import InTechs.InTechs.channel.repository.ChannelRepository;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;

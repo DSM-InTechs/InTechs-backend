@@ -1,9 +1,7 @@
-package InTechs.InTechs.chat.service;
+package InTechs.InTechs.channel.service;
 
-import InTechs.InTechs.chat.payload.request.NoticeRequest;
-import InTechs.InTechs.chat.payload.response.ChatResponse;
-import InTechs.InTechs.chat.payload.response.NoticeResponse;
-import org.bson.types.ObjectId;
+import InTechs.InTechs.channel.payload.request.NoticeRequest;
+import InTechs.InTechs.channel.payload.response.NoticeResponse;
 
 import java.util.List;
 

@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 
 @Component
 @RequiredArgsConstructor
-public class SocketContorller {
+public class SocketController {
 
     private final SocketIOServer server;
 

@@ -1,12 +1,13 @@
 package InTechs.InTechs.chat.service;
 
-import InTechs.InTechs.chat.entity.Channel;
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.payload.request.NoticeRequest;
-import InTechs.InTechs.chat.payload.response.ChatResponse;
-import InTechs.InTechs.chat.repository.ChannelRepository;
+import InTechs.InTechs.chat.payload.response.NoticeResponse;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
+import InTechs.InTechs.exception.exceptions.UserNotFoundException;
+import InTechs.InTechs.user.entity.User;
+import InTechs.InTechs.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 public class NoticeServiceImpl implements NoticeService {
 
     private final ChatRepository chatRepository;
-    private final ChannelRepository channelRepository;
+    private final UserRepository userRepository;
 
     @Override
     public void updateNotice(String chatId, NoticeRequest noticeRequest) {
@@ -32,20 +33,29 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public ChatResponse currentNotice(String channelId) {
+    public NoticeResponse currentNotice(String channelId) {
         Chat notice = chatRepository.findTop1ByChannelIdOrderByTime(channelId);
 
-        return ChatResponse.builder()
-                    .sender(notice.getSender())
+        User user = userRepository.findByEmail(notice.getSender())
+                .orElseThrow(UserNotFoundException::new);
+
+        return NoticeResponse.builder()
+                    .name(user.getName())
                     .time(notice.getTime())
                     .message(notice.getMessage())
                 .build();
     }
 
     @Override
-    public List<ChatResponse> noticeList(String channelId) {
+    public List<NoticeResponse> noticeList(String channelId) {
 
-        return null;
+        return chatRepository.findByChannelIdAndNoticeIsTrue(channelId).stream()
+                .map(chat -> NoticeResponse.builder()
+                        .name(chat.getSender())
+                        .time(chat.getTime())
+                        .message(chat.getMessage())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 }

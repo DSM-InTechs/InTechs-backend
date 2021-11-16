@@ -12,7 +12,8 @@ public enum ExceptionMessage {
     PROJECT_NOT_FOUND(404, "PROJECT_NOT_FOUND"),
     ISSUE_NOT_FOUND(404, "ISSUE_NOT_FOUND"),
     CHAT_CHANNEL_NOT_FOUND(404, "CHAT_CHANNEL_NOT_FOUND"),
-    USER_ALREADY(409, "USER_ALREADY");
+    USER_ALREADY(409, "USER_ALREADY"),
+    TARGET_TOKEN_NOT_FOUND(404, "TARGET_TOKEN_NOT_FOUND");
 
     private final int status;
     private final String message;

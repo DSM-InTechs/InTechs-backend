@@ -4,17 +4,21 @@ import InTechs.InTechs.chat.payload.request.ChatRequest;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
 import InTechs.InTechs.chat.payload.response.ErrorResponse;
 import InTechs.InTechs.channel.repository.ChannelRepository;
+import InTechs.InTechs.exception.exceptions.FirebaseException;
+import InTechs.InTechs.notification.NotificationService;
 import InTechs.InTechs.security.JwtTokenProvider;
 import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.user.repository.UserRepository;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +26,7 @@ public class SocketServiceImpl implements SocketService {
 
     private final JwtTokenProvider jwtTokenProvider;
 
+    private final NotificationService notificationService;
     private final ChatService chatService;
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
@@ -91,6 +96,12 @@ public class SocketServiceImpl implements SocketService {
                 chatRequest.getChannelId(),
                 chatRequest.getMessage()
         );
+
+        try {
+            notificationService.sendTargetsMessage(new ArrayList<String>(), "Intechs 메세지가 왔습니다.", chatRequest.getMessage(),user.getFileName());
+        } catch (FirebaseMessagingException e) {
+            throw new FirebaseException();
+        }
 
         server.getRoomOperations(chatRequest.getChannelId()).sendEvent(
                 "send",

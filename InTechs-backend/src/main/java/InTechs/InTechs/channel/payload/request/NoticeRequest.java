@@ -1,4 +1,4 @@
-package InTechs.InTechs.channel.payload;
+package InTechs.InTechs.channel.payload.request;
 
 import lombok.*;
 

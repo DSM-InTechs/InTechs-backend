@@ -31,5 +31,5 @@ public class NoticeController {
     public NoticeResponse currentNotice(@PathVariable String channelId) {
         return noticeService.currentNotice(channelId);
     }
-
+  
 }

@@ -101,6 +101,15 @@ public class SocketServiceImpl implements SocketService {
                 chatRequest.getMessage()
         );
 
+        server.getRoomOperations(chatRequest.getChannelId()).sendEvent(
+                "send",
+                ChatResponse.builder()
+                        .sender(user.getName())
+                        .message(chatRequest.getMessage())
+                        .isMine(false)
+                        .build()
+        );
+
         Channel channel = channelRepository.findById(chatRequest.getChannelId()).orElseThrow(ChatChannelNotFoundException::new); // 머지 후 채널 익셉션으로 변경
         List<String> targetTokens = channel.getUsers().stream().filter(ChannelUser::isNotificationAllow).map(tu -> tu.getUser().getTargetToken()).collect(Collectors.toList());
 
@@ -110,14 +119,6 @@ public class SocketServiceImpl implements SocketService {
             throw new FirebaseException();
         }
 
-        server.getRoomOperations(chatRequest.getChannelId()).sendEvent(
-                "send",
-                ChatResponse.builder()
-                        .sender(user.getName())
-                        .message(chatRequest.getMessage())
-                        .isMine(false)
-                        .build()
-        );
 
     }
 

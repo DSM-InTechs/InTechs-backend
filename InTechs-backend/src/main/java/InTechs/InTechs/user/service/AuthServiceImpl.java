@@ -51,9 +51,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenResponse SignIn(SignInRequest signInRequest) {
-        userRepository.findByEmail(signInRequest.getEmail())
-                .filter(user -> passwordEncoder.matches(signInRequest.getPassword(), user.getPassword()))
+        User user = userRepository.findByEmail(signInRequest.getEmail())
+                .filter(u -> passwordEncoder.matches(signInRequest.getPassword(), u.getPassword()))
                 .orElseThrow(UserNotFoundException::new);
+
+        user.updateTargetToken(signInRequest.getTargetToken());
 
         RefreshToken refreshToken = refreshTokenRepository.save(
                 RefreshToken.builder()

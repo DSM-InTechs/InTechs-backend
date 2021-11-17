@@ -47,9 +47,15 @@ public class User {
     @DBRef(lazy = true)
     private List<Chat> Chats;
 
+    private String targetToken; // TargetToken
+
     public User updateActive(boolean isActive) {
         this.isActive = isActive;
         return this;
+    }
+
+    public void updateTargetToken(String targetToken){
+        this.targetToken = targetToken;
     }
 
     public User updateName(String name) {

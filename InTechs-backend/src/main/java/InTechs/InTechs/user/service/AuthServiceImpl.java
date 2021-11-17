@@ -56,6 +56,7 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(UserNotFoundException::new);
 
         user.updateTargetToken(signInRequest.getTargetToken());
+        userRepository.save(user);
 
         RefreshToken refreshToken = refreshTokenRepository.save(
                 RefreshToken.builder()

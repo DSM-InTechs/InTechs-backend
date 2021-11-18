@@ -3,6 +3,7 @@ package InTechs.InTechs.channel.service;
 import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.channel.payload.request.ChannelRequest;
 import InTechs.InTechs.channel.repository.ChannelRepository;
+import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
 import InTechs.InTechs.file.FileUploader;
@@ -11,6 +12,7 @@ import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
 import InTechs.InTechs.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -24,6 +26,7 @@ public class ChannelServiceImpl implements ChannelService {
 
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
+    private final ChatRepository chatRepository;
 
     private final AuthenticationFacade authenticationFacade;
 
@@ -58,6 +61,11 @@ public class ChannelServiceImpl implements ChannelService {
                 .orElseThrow(ChatChannelNotFoundException::new);
 
         channelRepository.delete(channel);
+    }
+
+    @Override
+    public void readChat(String channelId, Pageable pageable){
+        chatRepository.findChatByChannelId(channelId,pageable);
     }
 
     @Override

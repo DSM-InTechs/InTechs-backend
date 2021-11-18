@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 
 @Builder
 public class ChatResponse {
-    private ObjectId id;
-    private String message;
-    private LocalDateTime time;
-    private String sender;
-    private boolean notice;
+    final private ObjectId id;
+    final private String message;
+    final private LocalDateTime time;
+    final private String sender;
+    final private boolean notice;
 }

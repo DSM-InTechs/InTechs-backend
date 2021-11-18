@@ -1,6 +1,7 @@
 package InTechs.InTechs.channel.service;
 
 import InTechs.InTechs.channel.payload.request.ChannelRequest;
+import InTechs.InTechs.channel.payload.response.ChatsResponse;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
 import org.springframework.data.domain.Pageable;
 
@@ -20,6 +21,6 @@ public interface ChannelService {
 
     void exitChannel(String channelId);
 
-    void readChat(String channelId, Pageable pageable);
+    ChatsResponse readChat(String channelId, Pageable pageable);
 
 }

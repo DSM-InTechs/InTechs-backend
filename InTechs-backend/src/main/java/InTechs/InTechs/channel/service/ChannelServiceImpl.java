@@ -2,7 +2,10 @@ package InTechs.InTechs.channel.service;
 
 import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.channel.payload.request.ChannelRequest;
+import InTechs.InTechs.channel.payload.response.ChatResponse;
+import InTechs.InTechs.channel.payload.response.ChatsResponse;
 import InTechs.InTechs.channel.repository.ChannelRepository;
+import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
@@ -15,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -64,8 +68,21 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
-    public void readChat(String channelId, Pageable pageable){
-        chatRepository.findChatByChannelId(channelId,pageable);
+    public ChatsResponse readChat(String channelId, Pageable pageable){
+        List<Chat> chatList = chatRepository.findChatByChannelId(channelId,pageable);
+        //Chat noticeChat = chatRepository.findByNoticeTrueAndChannelId(channelId);
+        List<ChatResponse> chats = new ArrayList<>();
+        for(Chat c : chatList){
+            chats.add(ChatResponse.builder()
+                            .id(c.getId())
+                            .message(c.getMessage())
+                            .sender(c.getSender()).build());
+        }
+        return ChatsResponse.builder()
+                .chats(chats)
+                .channelId(channelId)
+                .build();
+
     }
 
     @Override

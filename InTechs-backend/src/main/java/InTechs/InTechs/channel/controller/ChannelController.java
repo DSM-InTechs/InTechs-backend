@@ -5,6 +5,8 @@ import InTechs.InTechs.channel.payload.response.ChatsResponse;
 import InTechs.InTechs.channel.service.ChannelService;
 import InTechs.InTechs.channel.payload.request.ChannelRequest;
 import InTechs.InTechs.channel.service.ChannelService;
+import InTechs.InTechs.channel.payload.request.ChannelRequest;
+import InTechs.InTechs.channel.service.ChannelService;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

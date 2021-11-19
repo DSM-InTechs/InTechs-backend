@@ -2,6 +2,8 @@ package InTechs.InTechs.channel.entity;
 
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.user.entity.User;
+import InTechs.InTechs.chat.entity.Chat;
+import InTechs.InTechs.user.entity.ChannelUser;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -20,8 +22,7 @@ public class Channel {
 
     private String name;
 
-    @DBRef(lazy = true)
-    private List<User> users;
+    private List<ChannelUser> users;
 
     @DBRef(lazy = true)
     private List<Chat> chats;
@@ -33,11 +34,11 @@ public class Channel {
         return this;
     }
 
-    public void addUser(User user) {
+    public void addUser(ChannelUser user) {
         this.users.add(user);
     }
 
-    public void deleteUser(User user) {
+    public void deleteUser(ChannelUser user) {
         this.users.remove(user);
     }
 

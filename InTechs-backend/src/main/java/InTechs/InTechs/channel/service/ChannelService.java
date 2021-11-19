@@ -3,6 +3,7 @@ package InTechs.InTechs.channel.service;
 import InTechs.InTechs.channel.payload.request.ChannelRequest;
 import InTechs.InTechs.channel.payload.request.ChannelRequest;
 import InTechs.InTechs.channel.payload.response.ChatsResponse;
+import InTechs.InTechs.channel.payload.request.ChannelRequest;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
 import org.springframework.data.domain.Pageable;
 

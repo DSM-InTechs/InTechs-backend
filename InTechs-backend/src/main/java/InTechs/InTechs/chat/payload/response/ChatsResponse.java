@@ -1,4 +1,4 @@
-package InTechs.InTechs.channel.payload.response;
+package InTechs.InTechs.chat.payload.response;
 
 import lombok.Builder;
 import lombok.Getter;

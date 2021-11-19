@@ -4,6 +4,7 @@ import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
 import InTechs.InTechs.channel.repository.ChannelRepository;
+import InTechs.InTechs.chat.payload.response.Sender;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
@@ -44,10 +45,9 @@ public class ChatServiceImpl implements ChatService {
 
             chatResponses.add(
                     ChatResponse.builder()
-                            .sender(sender.getName())
+                            .sender(Sender.builder().email(sender.getEmail()).image(imageUrl(findUser().getFileName())).name(sender.getName()).build())
                             .message(chat.getMessage())
                             .isMine(user.getEmail().equals(sender.getEmail()))
-                            .imageName(imageUrl(findUser().getFileName()))
                             .build()
             );
         }

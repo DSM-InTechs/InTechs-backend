@@ -74,15 +74,20 @@ public class ChannelServiceImpl implements ChannelService {
         List<ChatResponse> chats = new ArrayList<>();
         for(Chat c : chatList){
             chats.add(ChatResponse.builder()
-                            .id(c.getId())
+                            .id(c.getId().toString())
                             .message(c.getMessage())
-                            .sender(c.getSender()).build());
+                            .sender(c.getSender())
+                            .time(c.getTime()).build());
         }
         return ChatsResponse.builder()
-                .chats(chats)
                 .channelId(channelId)
+                .notice(ChatResponse.builder()
+                                .id(String.valueOf(noticeChat.getId()))
+                                .message(noticeChat.getMessage())
+                                .sender(noticeChat.getSender())
+                                .time(noticeChat.getTime()).build())
+                .chats(chats)
                 .build();
-
     }
 
     @Override

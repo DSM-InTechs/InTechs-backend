@@ -1,13 +1,14 @@
 package InTechs.InTechs.channel.payload.response;
 
 import lombok.Builder;
-import org.bson.types.ObjectId;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Builder
 public class ChatResponse {
-    final private ObjectId id;
+    final private String id;
     final private String message;
     final private LocalDateTime time;
     final private String sender;

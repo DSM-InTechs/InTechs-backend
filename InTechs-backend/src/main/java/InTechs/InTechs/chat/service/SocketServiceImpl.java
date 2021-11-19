@@ -116,6 +116,7 @@ public class SocketServiceImpl implements SocketService {
         try {
             notificationService.sendTargetsMessage(targetTokens, "Intechs 메세지가 왔습니다.", chatRequest.getMessage(),user.getFileName());
         } catch (FirebaseMessagingException e) {
+            e.printStackTrace();
             throw new FirebaseException();
         }
     }

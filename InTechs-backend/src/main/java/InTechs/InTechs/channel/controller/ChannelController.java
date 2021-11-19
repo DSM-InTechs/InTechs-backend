@@ -3,8 +3,6 @@ package InTechs.InTechs.channel.controller;
 import InTechs.InTechs.channel.payload.request.ChannelRequest;
 import InTechs.InTechs.channel.payload.response.ChatsResponse;
 import InTechs.InTechs.channel.service.ChannelService;
-import InTechs.InTechs.channel.payload.request.ChannelRequest;
-import InTechs.InTechs.channel.service.ChannelService;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -53,7 +51,7 @@ public class ChannelController {
         return channelService.getProfiles(channelId);
     }
 
-    @GetMapping("/{channelId}/chat")
+    @GetMapping("/{channelId}")
     public ChatsResponse readChannelChat(@PathVariable String channelId, final Pageable pageable){
         return channelService.readChat(channelId, pageable);
     }

@@ -69,8 +69,8 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     public ChatsResponse readChat(String channelId, Pageable pageable){
-        List<Chat> chatList = chatRepository.findChatByChannelId(channelId,pageable);
-        //Chat noticeChat = chatRepository.findByNoticeTrueAndChannelId(channelId);
+        List<Chat> chatList = chatRepository.findByChannelId(channelId,pageable);
+        Chat noticeChat = chatRepository.findByNoticeTrueAndChannelId(channelId).orElseGet(()->Chat.builder().build());
         List<ChatResponse> chats = new ArrayList<>();
         for(Chat c : chatList){
             chats.add(ChatResponse.builder()

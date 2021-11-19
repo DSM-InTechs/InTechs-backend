@@ -5,8 +5,7 @@ import InTechs.InTechs.chat.payload.request.ChatRequest;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
 import InTechs.InTechs.chat.payload.response.ErrorResponse;
 import InTechs.InTechs.channel.repository.ChannelRepository;
-import InTechs.InTechs.channel.repository.ChannelRepository;
-import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
+import InTechs.InTechs.exception.exceptions.ChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.FirebaseException;
 import InTechs.InTechs.notification.NotificationService;
 import InTechs.InTechs.security.JwtTokenProvider;
@@ -111,7 +110,7 @@ public class SocketServiceImpl implements SocketService {
                         .build()
         );
 
-        Channel channel = channelRepository.findById(chatRequest.getChannelId()).orElseThrow(ChatChannelNotFoundException::new); // 머지 후 채널 익셉션으로 변경
+        Channel channel = channelRepository.findById(chatRequest.getChannelId()).orElseThrow(ChannelNotFoundException::new);
         List<String> targetTokens = channel.getUsers().stream().filter(ChannelUser::isNotificationAllow).map(tu -> tu.getUser().getTargetToken()).collect(Collectors.toList());
 
         try {

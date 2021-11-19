@@ -1,8 +1,6 @@
 package InTechs.InTechs.channel.entity;
 
 import InTechs.InTechs.chat.entity.Chat;
-import InTechs.InTechs.user.entity.User;
-import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.user.entity.ChannelUser;
 import lombok.Builder;
 import lombok.Data;

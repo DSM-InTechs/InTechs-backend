@@ -24,7 +24,7 @@ public class Channel {
     private List<User> users;
 
     @DBRef(lazy = true)
-    private List<Chat> Chats;
+    private List<Chat> chats;
 
     private int projectId;
 
@@ -39,6 +39,12 @@ public class Channel {
 
     public void deleteUser(User user) {
         this.users.remove(user);
+    }
+
+    public void addChat(Chat chat) {this.chats.add(chat);}
+
+    public void deleteChat(Chat chat) {
+        this.chats.remove(chat);
     }
 
 }

@@ -2,6 +2,7 @@ package InTechs.InTechs.user.entity;
 
 import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.chat.entity.Chat;
+import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.project.entity.Project;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,9 +44,6 @@ public class User {
 
     @DBRef(lazy = true)
     private List<Channel> channels;
-
-    @DBRef(lazy = true)
-    private List<Chat> Chats;
 
     public User updateActive(boolean isActive) {
         this.isActive = isActive;

@@ -3,6 +3,13 @@ package InTechs.InTechs.channel.service;
 import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.channel.payload.request.ChannelRequest;
 import InTechs.InTechs.channel.repository.ChannelRepository;
+import InTechs.InTechs.channel.entity.Channel;
+import InTechs.InTechs.channel.payload.request.ChannelRequest;
+import InTechs.InTechs.channel.payload.response.ChatResponse;
+import InTechs.InTechs.channel.payload.response.ChatsResponse;
+import InTechs.InTechs.channel.repository.ChannelRepository;
+import InTechs.InTechs.chat.entity.Chat;
+import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
 import InTechs.InTechs.file.FileUploader;
@@ -11,8 +18,10 @@ import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
 import InTechs.InTechs.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -24,6 +33,7 @@ public class ChannelServiceImpl implements ChannelService {
 
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
+    private final ChatRepository chatRepository;
 
     private final AuthenticationFacade authenticationFacade;
 
@@ -58,6 +68,29 @@ public class ChannelServiceImpl implements ChannelService {
                 .orElseThrow(ChatChannelNotFoundException::new);
 
         channelRepository.delete(channel);
+    }
+
+    @Override
+    public ChatsResponse readChat(String channelId, Pageable pageable){
+        List<Chat> chatList = chatRepository.findByChannelId(channelId,pageable);
+        Chat noticeChat = chatRepository.findByNoticeTrueAndChannelId(channelId).orElseGet(()->Chat.builder().build());
+        List<ChatResponse> chats = new ArrayList<>();
+        for(Chat c : chatList){
+            chats.add(ChatResponse.builder()
+                            .id(c.getId().toString())
+                            .message(c.getMessage())
+                            .sender(c.getSender())
+                            .time(c.getTime()).build());
+        }
+        return ChatsResponse.builder()
+                .channelId(channelId)
+                .notice(ChatResponse.builder()
+                                .id(String.valueOf(noticeChat.getId()))
+                                .message(noticeChat.getMessage())
+                                .sender(noticeChat.getSender())
+                                .time(noticeChat.getTime()).build())
+                .chats(chats)
+                .build();
     }
 
     @Override

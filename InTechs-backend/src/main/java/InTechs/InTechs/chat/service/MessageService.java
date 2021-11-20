@@ -87,9 +87,23 @@ public class MessageService {
         return fileUrl;
     }
 
-    public void messageSearch(String channelId, String message){
-        List<Chat> chats = chatRepository.findAllByChannelIdAndMessageContaining(channelId, message);
-
+    public List<ChatResponse> messageSearch(String email, String channelId, String message){
+        List<Chat> chats = chatRepository.findAllByChannelIdAndMessageContaining(channelId, message).stream().filter((c)-> !c.isDeleted()).collect(Collectors.toList());
+        List<ChatResponse> chatResponses = new ArrayList<>();
+        for(Chat c:chats){
+            chatResponses.add(ChatResponse.builder()
+                                        .id(c.getId().toString())
+                                        .message(c.getMessage())
+                                        .sender(SenderResponse.builder()
+                                                    .email(c.getSender().getEmail())
+                                                    .name("아이쿠")
+                                                    .image("얼른").build())
+                                        .time(c.getTime())
+                                        .isMine(c.getSender().getEmail().equals(email))
+                                        .isDelete(c.isDeleted())
+                                        .build());
+        }
+        return chatResponses;
     }
 
 

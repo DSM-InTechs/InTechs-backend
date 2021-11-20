@@ -3,6 +3,7 @@ package InTechs.InTechs.chat.controller;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
 import InTechs.InTechs.chat.payload.response.ChatsResponse;
 import InTechs.InTechs.chat.service.MessageService;
+import InTechs.InTechs.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 public class MessageController {
     private final MessageService messageService;
+    private final AuthenticationFacade authenticationFacade;
 
     @GetMapping
     public ChatsResponse readChannelChat(@PathVariable String channelId, final Pageable pageable){
@@ -25,7 +27,7 @@ public class MessageController {
 
     @GetMapping("/{message}")
     public List<ChatResponse> messageSearch(@PathVariable String channelId, @PathVariable String message){
-        return messageService.messageSearch(channelId, message);
+        return messageService.messageSearch(authenticationFacade.getUserEmail(), channelId, message);
     }
 
 }

@@ -53,14 +53,17 @@ public class MessageService {
     public ChatsResponse readChat(String channelId, Pageable pageable){
         List<Chat> chatList = chatRepository.findByChannelId(channelId,pageable);
         Chat noticeChat = chatRepository.findByNoticeTrueAndChannelId(channelId).orElseGet(()->Chat.builder().build());
-        User noticeSender = userRepository.findById(noticeChat.getSender().getEmail()).orElseThrow(UserNotFoundException::new);
+
+        User noticeSender = new User();
+        if(noticeChat.getSender()!=null){
+            noticeSender = userRepository.findById(noticeChat.getSender().getEmail()).orElseThrow(UserNotFoundException::new);
+        }
         List<ChatResponse> chats = new ArrayList<>();
         for(Chat c : chatList){
-            User sender = userRepository.findById(c.getSender().getEmail()).orElseThrow(UserNotFoundException::new); // chat에 Sender저장해서 해결하기
             chats.add(ChatResponse.builder()
                     .id(c.getId().toString())
                     .message(c.getMessage())
-                    .sender(SenderResponse.builder().email(sender.getEmail()).name(sender.getName()).image(sender.getFileName()).build())
+                    .sender(SenderResponse.builder().email(c.getSender().getEmail()).name(c.getSender().getName()).image(c.getSender().getImage()).build())
                     .time(c.getTime()).build());
         }
         return ChatsResponse.builder()
@@ -69,7 +72,7 @@ public class MessageService {
                         .id(String.valueOf(noticeChat.getId()))
                         .message(noticeChat.getMessage())
                         .sender(SenderResponse.builder()
-                                .email(noticeChat.getSender().getEmail())
+                                .email(noticeSender.getEmail())
                                 .name(noticeSender.getName())
                                 .image(imageUrl(noticeSender.getFileName())).build())
                         .time(noticeChat.getTime()).build())

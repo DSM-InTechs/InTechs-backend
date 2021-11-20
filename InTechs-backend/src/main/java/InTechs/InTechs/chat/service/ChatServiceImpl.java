@@ -2,9 +2,10 @@ package InTechs.InTechs.chat.service;
 
 import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.chat.entity.Chat;
+import InTechs.InTechs.chat.entity.Sender;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
 import InTechs.InTechs.channel.repository.ChannelRepository;
-import InTechs.InTechs.chat.payload.response.Sender;
+import InTechs.InTechs.chat.payload.response.SenderResponse;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
@@ -40,12 +41,12 @@ public class ChatServiceImpl implements ChatService {
 
         List<ChatResponse> chatResponses = new ArrayList<>();
         for(Chat chat : chatList) {
-            User sender = userRepository.findByEmail(chat.getSender())
+            User sender = userRepository.findByEmail(chat.getSender().getEmail())
                     .orElseThrow(UserNotFoundException::new);
 
             chatResponses.add(
                     ChatResponse.builder()
-                            .sender(Sender.builder().email(sender.getEmail()).image(imageUrl(findUser().getFileName())).name(sender.getName()).build())
+                            .sender(SenderResponse.builder().email(sender.getEmail()).image(imageUrl(findUser().getFileName())).name(sender.getName()).build())
                             .message(chat.getMessage())
                             .isMine(user.getEmail().equals(sender.getEmail()))
                             .build()
@@ -63,7 +64,10 @@ public class ChatServiceImpl implements ChatService {
         if(!existsChannel) throw new ChatChannelNotFoundException();
 
         Chat chat = Chat.builder()
-                .sender(user.getEmail())
+                .sender(Sender.builder()
+                                .email(user.getEmail())
+                                .name(user.getName())
+                                .image(user.getEmail()).build())
                 .message(message)
                 .channelId(channelId)
                 .build();

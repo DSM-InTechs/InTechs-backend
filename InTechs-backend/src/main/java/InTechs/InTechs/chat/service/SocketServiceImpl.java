@@ -5,6 +5,7 @@ import InTechs.InTechs.chat.payload.request.ChatRequest;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
 import InTechs.InTechs.chat.payload.response.ErrorResponse;
 import InTechs.InTechs.channel.repository.ChannelRepository;
+import InTechs.InTechs.chat.payload.response.SenderResponse;
 import InTechs.InTechs.exception.exceptions.ChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.FirebaseException;
 import InTechs.InTechs.notification.NotificationService;
@@ -104,7 +105,11 @@ public class SocketServiceImpl implements SocketService {
         server.getRoomOperations(chatRequest.getChannelId()).sendEvent(
                 "send",
                 ChatResponse.builder()
-                        .sender(user.getName())
+                        .sender(SenderResponse.builder()
+                                .email(user.getEmail())
+                                .name(user.getName())
+                                .image(user.getFileName())
+                                .build())
                         .message(chatRequest.getMessage())
                         .isMine(false)
                         .build()

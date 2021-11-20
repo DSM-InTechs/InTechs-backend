@@ -7,7 +7,7 @@ import InTechs.InTechs.chat.payload.request.ChatDeleteRequest;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
 import InTechs.InTechs.chat.payload.response.ChatsResponse;
 import InTechs.InTechs.chat.payload.response.ErrorResponse;
-import InTechs.InTechs.chat.payload.response.Sender;
+import InTechs.InTechs.chat.payload.response.SenderResponse;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
 import InTechs.InTechs.file.FileUploader;
@@ -23,11 +23,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 // 메세지에 이모티콘
 // 메세지 수정
 // 메세지 삭제
-// 메세지 검색 기능
 @RequiredArgsConstructor
 @Service
 public class MessageService {
@@ -53,14 +53,14 @@ public class MessageService {
     public ChatsResponse readChat(String channelId, Pageable pageable){
         List<Chat> chatList = chatRepository.findByChannelId(channelId,pageable);
         Chat noticeChat = chatRepository.findByNoticeTrueAndChannelId(channelId).orElseGet(()->Chat.builder().build());
-        User noticeSender = userRepository.findById(noticeChat.getSender()).orElseThrow(UserNotFoundException::new);
+        User noticeSender = userRepository.findById(noticeChat.getSender().getEmail()).orElseThrow(UserNotFoundException::new);
         List<ChatResponse> chats = new ArrayList<>();
         for(Chat c : chatList){
-            User sender = userRepository.findById(c.getSender()).orElseThrow(UserNotFoundException::new); // chat에 Sender저장해서 해결하기
+            User sender = userRepository.findById(c.getSender().getEmail()).orElseThrow(UserNotFoundException::new); // chat에 Sender저장해서 해결하기
             chats.add(ChatResponse.builder()
                     .id(c.getId().toString())
                     .message(c.getMessage())
-                    .sender(Sender.builder().email(sender.getEmail()).name(sender.getName()).image(sender.getFileName()).build())
+                    .sender(SenderResponse.builder().email(sender.getEmail()).name(sender.getName()).image(sender.getFileName()).build())
                     .time(c.getTime()).build());
         }
         return ChatsResponse.builder()
@@ -68,8 +68,8 @@ public class MessageService {
                 .notice(ChatResponse.builder()
                         .id(String.valueOf(noticeChat.getId()))
                         .message(noticeChat.getMessage())
-                        .sender(Sender.builder()
-                                .email(noticeChat.getSender())
+                        .sender(SenderResponse.builder()
+                                .email(noticeChat.getSender().getEmail())
                                 .name(noticeSender.getName())
                                 .image(imageUrl(noticeSender.getFileName())).build())
                         .time(noticeChat.getTime()).build())

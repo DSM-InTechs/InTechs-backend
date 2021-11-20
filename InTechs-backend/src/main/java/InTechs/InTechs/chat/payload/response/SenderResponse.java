@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class Sender {
+public class SenderResponse {
     private String email;
     private String name;
     private String image;

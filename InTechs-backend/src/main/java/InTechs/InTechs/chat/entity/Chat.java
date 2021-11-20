@@ -24,11 +24,13 @@ public class Chat {
 
     private LocalDateTime time;
 
-    private String sender;
+    private Sender sender;
 
     private boolean notice;
 
     private String channelId;
+
+    private boolean isDeleted;
 
     public Chat updateNotice(boolean notice) {
         this.notice = notice;

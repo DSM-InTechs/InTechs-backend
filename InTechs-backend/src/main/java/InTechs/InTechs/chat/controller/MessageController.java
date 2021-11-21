@@ -22,7 +22,7 @@ public class MessageController {
 
     @GetMapping
     public ChatsResponse readChannelChat(@PathVariable String channelId, final Pageable pageable){
-        return messageService.readChat(channelId, pageable);
+        return messageService.readChat(authenticationFacade.getUserEmail(), channelId, pageable);
     }
 
     @GetMapping("/{message}")

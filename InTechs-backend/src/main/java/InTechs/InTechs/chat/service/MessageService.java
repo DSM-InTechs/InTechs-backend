@@ -50,21 +50,13 @@ public class MessageService {
         //server.getRoomOperations(req.getChannelId()).sendEvent("delete");
     }
 
-    public ChatsResponse readChat(String channelId, Pageable pageable){
-        List<Chat> chatList = chatRepository.findByChannelId(channelId,pageable);
+    public ChatsResponse readChat(String email, String channelId, Pageable pageable){
+        List<Chat> chats = chatRepository.findByChannelId(channelId,pageable);
         Chat noticeChat = chatRepository.findByNoticeTrueAndChannelId(channelId).orElseGet(()->Chat.builder().build());
 
         User noticeSender = new User();
         if(noticeChat.getSender()!=null){
             noticeSender = userRepository.findById(noticeChat.getSender().getEmail()).orElseThrow(UserNotFoundException::new);
-        }
-        List<ChatResponse> chats = new ArrayList<>();
-        for(Chat c : chatList){
-            chats.add(ChatResponse.builder()
-                    .id(c.getId().toString())
-                    .message(c.getMessage())
-                    .sender(SenderResponse.builder().email(c.getSender().getEmail()).name(c.getSender().getName()).image(c.getSender().getImage()).build())
-                    .time(c.getTime()).build());
         }
         return ChatsResponse.builder()
                 .channelId(channelId)
@@ -76,7 +68,7 @@ public class MessageService {
                                 .name(noticeSender.getName())
                                 .image(imageUrl(noticeSender.getFileName())).build())
                         .time(noticeChat.getTime()).build())
-                .chats(chats)
+                .chats(chatResponsesCreate(chats, email))
                 .build();
     }
 
@@ -92,23 +84,26 @@ public class MessageService {
 
     public List<ChatResponse> messageSearch(String email, String channelId, String message){
         List<Chat> chats = chatRepository.findAllByChannelIdAndMessageContaining(channelId, message).stream().filter((c)-> !c.isDeleted()).collect(Collectors.toList());
+        return chatResponsesCreate(chats, email);
+    }
+
+    private List<ChatResponse> chatResponsesCreate(List<Chat> chats, String email){
         List<ChatResponse> chatResponses = new ArrayList<>();
         for(Chat c:chats){
             chatResponses.add(ChatResponse.builder()
-                                        .id(c.getId().toString())
-                                        .message(c.getMessage())
-                                        .sender(SenderResponse.builder()
-                                                    .email(c.getSender().getEmail())
-                                                    .name("아이쿠")
-                                                    .image("얼른").build())
-                                        .time(c.getTime())
-                                        .isMine(c.getSender().getEmail().equals(email))
-                                        .isDelete(c.isDeleted())
-                                        .build());
+                    .id(c.getId().toString())
+                    .message(c.getMessage())
+                    .sender(SenderResponse.builder()
+                            .email(c.getSender().getEmail())
+                            .name(c.getSender().getName())
+                            .image(c.getSender().getImage()).build())
+                    .time(c.getTime())
+                    .isMine(c.getSender().getEmail().equals(email))
+                    .isDelete(c.isDeleted())
+                    .build());
         }
         return chatResponses;
     }
-
 
 
     // class로 따로 빼기?

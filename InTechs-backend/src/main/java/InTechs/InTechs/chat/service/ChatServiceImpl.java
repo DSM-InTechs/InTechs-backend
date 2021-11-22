@@ -1,6 +1,5 @@
 package InTechs.InTechs.chat.service;
 
-import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.entity.Sender;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
@@ -63,21 +62,16 @@ public class ChatServiceImpl implements ChatService {
 
         if(!existsChannel) throw new ChatChannelNotFoundException();
 
-        Chat chat = Chat.builder()
-                .sender(Sender.builder()
-                                .email(user.getEmail())
-                                .name(user.getName())
-                                .image(user.getEmail()).build())
-                .message(message)
-                .channelId(channelId)
-                .build();
 
-        Channel channel = channelRepository.findById(channelId).orElseThrow(ChannelNotFoundException::new);
 
-        channel.addChat(chat);
-        channelRepository.save(channel);
-
-        chatRepository.save(chat);
+        chatRepository.save(Chat.builder()
+                                .sender(Sender.builder()
+                                    .email(user.getEmail())
+                                    .name(user.getName())
+                                    .image(user.getEmail()).build())
+                                .message(message)
+                                .channelId(channelId)
+                                .build());
     }
 
     private User findUser() {

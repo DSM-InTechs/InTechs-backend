@@ -14,6 +14,7 @@ import InTechs.InTechs.file.FileUploader;
 import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.user.repository.UserRepository;
 import com.corundumstudio.socketio.SocketIOClient;
+import com.corundumstudio.socketio.SocketIOServer;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Pageable;
@@ -27,11 +28,11 @@ import java.util.stream.Collectors;
 
 // 메세지에 이모티콘
 // 메세지 수정
-// 메세지 삭제
 @RequiredArgsConstructor
 @Service
 public class MessageService {
     private final ChatRepository chatRepository;
+    private final SocketIOServer server;
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
     private final FileUploader fileUploader;
@@ -41,13 +42,9 @@ public class MessageService {
             clientDisconnect(client, 401, "Invalid Connection");
             return;
         }
-
-        Channel channel = channelRepository.findById(req.getChannelId()).orElseThrow();
-        channel.deleteChat(chatRepository.findById(req.getMessageId()).orElseThrow());
-
         chatRepository.deleteById(req.getMessageId());
 
-        //server.getRoomOperations(req.getChannelId()).sendEvent("delete");
+        server.getRoomOperations(req.getChannelId()).sendEvent("delete");
     }
 
     public ChatsResponse readChat(String email, String channelId, Pageable pageable){

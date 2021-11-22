@@ -22,9 +22,6 @@ public class Channel {
 
     private List<ChannelUser> users;
 
-    @DBRef(lazy = true)
-    private List<Chat> chats;
-
     private int projectId;
 
     public Channel updateName(String name) {
@@ -38,12 +35,6 @@ public class Channel {
 
     public void deleteUser(ChannelUser user) {
         this.users.remove(user);
-    }
-
-    public void addChat(Chat chat) {this.chats.add(chat);}
-
-    public void deleteChat(Chat chat) {
-        this.chats.remove(chat);
     }
 
 }

@@ -62,18 +62,13 @@ public class ChatServiceImpl implements ChatService {
 
         if(!existsChannel) throw new ChatChannelNotFoundException();
 
-        Chat chat = Chat.builder()
+
+
+        chatRepository.save(Chat.builder()
                 .sender(user.getEmail())
                 .message(message)
                 .channelId(channelId)
-                .build();
-
-        Channel channel = channelRepository.findById(channelId).orElseThrow(ChannelNotFoundException::new);
-
-        channel.addChat(chat);
-        channelRepository.save(channel);
-
-        chatRepository.save(chat);
+                .build());
     }
 
     private User findUser() {

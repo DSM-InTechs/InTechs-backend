@@ -108,7 +108,7 @@ public class SocketServiceImpl implements SocketService {
                         .sender(SenderResponse.builder()
                                 .email(user.getEmail())
                                 .name(user.getName())
-                                .image(user.getFileName())
+                                .image(user.getFileUrl())
                                 .build())
                         .message(chatRequest.getMessage())
                         .isMine(false)
@@ -119,7 +119,7 @@ public class SocketServiceImpl implements SocketService {
         List<String> targetTokens = channel.getUsers().stream().filter(ChannelUser::isNotificationAllow).map(tu -> tu.getUser().getTargetToken()).collect(Collectors.toList());
 
         try {
-            notificationService.sendTargetsMessage(targetTokens, "Intechs 메세지가 왔습니다.", chatRequest.getMessage(),user.getFileName());
+            notificationService.sendTargetsMessage(targetTokens, "Intechs 메세지가 왔습니다.", chatRequest.getMessage(),user.getFileUrl());
         } catch (FirebaseMessagingException e) {
             e.printStackTrace();
             throw new FirebaseException();

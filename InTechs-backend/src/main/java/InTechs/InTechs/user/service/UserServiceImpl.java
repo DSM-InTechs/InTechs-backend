@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
         return ProfileResponse.builder()
                 .email(user.getEmail())
                 .name(user.getName())
-                .image(imageUrl(user.getFileName()))
+                .image(imageUrl(user.getFileUrl()))
                 .isActive(user.getIsActive())
                 .build();
     }
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
         return MyPageResponse.builder()
                 .name(findUser().getName())
                 .email(findUser().getEmail())
-                .image(imageUrl(findUser().getFileName()))
+                .image(imageUrl(findUser().getFileUrl()))
                 .build();
     }
 

@@ -34,7 +34,7 @@ public class ProjectListService {
                     ProjectUserResponse.builder()
                             .email(user.getEmail())
                             .name(user.getName())
-                            .imageUri(getImage(user.getFileName()))
+                            .imageUri(getImage(user.getFileUrl()))
                             .isActive(user.getIsActive()).build();
             userListResponse.add(userResponse);
         }
@@ -52,7 +52,7 @@ public class ProjectListService {
                     UserResponse.builder()
                             .email(user.getEmail())
                             .name(user.getName())
-                            .image(getImage(user.getFileName())).build();
+                            .image(getImage(user.getFileUrl())).build();
             userTagList.add(userTagResponse);
         }
         return userTagList;

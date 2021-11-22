@@ -63,7 +63,7 @@ public class MessageService {
                         .sender(SenderResponse.builder()
                                 .email(noticeSender.getEmail())
                                 .name(noticeSender.getName())
-                                .image(imageUrl(noticeSender.getFileName())).build())
+                                .image(imageUrl(noticeSender.getFileUrl())).build())
                         .time(noticeChat.getTime()).build())
                 .chats(chatResponsesCreate(chats, email))
                 .build();

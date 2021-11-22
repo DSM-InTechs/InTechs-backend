@@ -26,7 +26,6 @@ public class ChannelServiceImpl implements ChannelService {
 
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
-    private final ChatRepository chatRepository;
 
     private final AuthenticationFacade authenticationFacade;
 
@@ -75,7 +74,7 @@ public class ChannelServiceImpl implements ChannelService {
                .map(user -> ProfileResponse.builder()
                        .name(user.getUser().getName())
                        .email(user.getUser().getEmail())
-                       .image(imageUrl(user.getUser().getFileName()))
+                       .image(imageUrl(user.getUser().getFileUrl()))
                .build()).collect(Collectors.toList());
     }
 

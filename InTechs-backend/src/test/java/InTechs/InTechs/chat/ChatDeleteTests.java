@@ -18,10 +18,6 @@ public class ChatDeleteTests {
     MessageService messageService;
     @Autowired
     ChatRepository chatRepository;
-    @Test
-    public void chatDelete(){
-        messageService.messageDelete("6198ffcca3450e6e6a87eaaf");
-    }
 
     @Test
     public void dirtyCheckingTest(){
@@ -35,7 +31,7 @@ public class ChatDeleteTests {
 
         chatRepository.save(chat);
 
-        messageService.messageDelete(chat.getId().toString());
+        //messageService.messageDelete(chat.getId().toString());
 
         Chat c = chatRepository.findById(chat.getId().toString()).orElseThrow();
         assertThat(c.isDeleted()).isEqualTo(true);

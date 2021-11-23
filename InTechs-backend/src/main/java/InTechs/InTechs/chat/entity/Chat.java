@@ -37,4 +37,8 @@ public class Chat {
         return this;
     }
 
+    public void messageDelete(){
+        this.isDeleted = true;
+    }
+
 }

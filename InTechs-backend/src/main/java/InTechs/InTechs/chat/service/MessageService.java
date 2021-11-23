@@ -1,7 +1,5 @@
 package InTechs.InTechs.chat.service;
 
-import InTechs.InTechs.channel.entity.Channel;
-import InTechs.InTechs.channel.repository.ChannelRepository;
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.payload.request.ChatDeleteRequest;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
@@ -9,6 +7,7 @@ import InTechs.InTechs.chat.payload.response.ChatsResponse;
 import InTechs.InTechs.chat.payload.response.ErrorResponse;
 import InTechs.InTechs.chat.payload.response.SenderResponse;
 import InTechs.InTechs.chat.repository.ChatRepository;
+import InTechs.InTechs.exception.exceptions.MessageNotFoundException;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
 import InTechs.InTechs.file.FileUploader;
 import InTechs.InTechs.user.entity.User;
@@ -33,7 +32,6 @@ import java.util.stream.Collectors;
 public class MessageService {
     private final ChatRepository chatRepository;
     private final SocketIOServer server;
-    private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
     private final FileUploader fileUploader;
 
@@ -42,9 +40,10 @@ public class MessageService {
             clientDisconnect(client, 401, "Invalid Connection");
             return;
         }
-        chatRepository.deleteById(req.getMessageId());
 
-        server.getRoomOperations(req.getChannelId()).sendEvent("delete");
+        chatRepository.findById(req.getMessageId()).orElseThrow(MessageNotFoundException::new).messageDelete();
+
+        server.getRoomOperations(req.getChannelId()).sendEvent("delete",req.getChannelId());
     }
 
     public ChatsResponse readChat(String email, String channelId, Pageable pageable){

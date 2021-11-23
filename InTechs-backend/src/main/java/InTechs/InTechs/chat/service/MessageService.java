@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -41,9 +42,15 @@ public class MessageService {
             return;
         }
 
-        chatRepository.findById(req.getMessageId()).orElseThrow(MessageNotFoundException::new).messageDelete();
+        changeMessageDelete(req.getMessageId());
 
         server.getRoomOperations(req.getChannelId()).sendEvent("delete",req.getChannelId());
+    }
+
+    private void changeMessageDelete(String messageId){
+        Chat chat = chatRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
+        chat.messageDelete();
+        chatRepository.save(chat);
     }
 
     public ChatsResponse readChat(String email, String channelId, Pageable pageable){

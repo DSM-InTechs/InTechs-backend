@@ -8,7 +8,7 @@ import InTechs.InTechs.channel.repository.ChannelRepository;
 import InTechs.InTechs.chat.payload.response.SenderResponse;
 import InTechs.InTechs.exception.exceptions.ChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.FirebaseException;
-import InTechs.InTechs.notification.NotificationService;
+import InTechs.InTechs.notification.service.NotificationSendService;
 import InTechs.InTechs.security.JwtTokenProvider;
 import InTechs.InTechs.user.entity.ChannelUser;
 import InTechs.InTechs.user.entity.User;
@@ -31,7 +31,7 @@ public class SocketServiceImpl implements SocketService {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    private final NotificationService notificationService;
+    private final NotificationSendService notificationService;
     private final ChatService chatService;
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;

@@ -35,7 +35,6 @@ public class ChannelServiceImpl implements ChannelService {
 
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
-    private final ChatRepository chatRepository;
 
     private final AuthenticationFacade authenticationFacade;
 

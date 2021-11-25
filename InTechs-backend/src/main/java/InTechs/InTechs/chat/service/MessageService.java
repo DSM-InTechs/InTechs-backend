@@ -1,7 +1,5 @@
 package InTechs.InTechs.chat.service;
 
-import InTechs.InTechs.channel.entity.Channel;
-import InTechs.InTechs.channel.repository.ChannelRepository;
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.payload.request.ChatDeleteRequest;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
@@ -9,15 +7,18 @@ import InTechs.InTechs.chat.payload.response.ChatsResponse;
 import InTechs.InTechs.chat.payload.response.ErrorResponse;
 import InTechs.InTechs.chat.payload.response.SenderResponse;
 import InTechs.InTechs.chat.repository.ChatRepository;
+import InTechs.InTechs.exception.exceptions.MessageNotFoundException;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
 import InTechs.InTechs.file.FileUploader;
 import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.user.repository.UserRepository;
 import com.corundumstudio.socketio.SocketIOClient;
+import com.corundumstudio.socketio.SocketIOServer;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,12 +28,11 @@ import java.util.stream.Collectors;
 
 // 메세지에 이모티콘
 // 메세지 수정
-// 메세지 삭제
 @RequiredArgsConstructor
 @Service
 public class MessageService {
     private final ChatRepository chatRepository;
-    private final ChannelRepository channelRepository;
+    private final SocketIOServer server;
     private final UserRepository userRepository;
     private final FileUploader fileUploader;
 
@@ -42,12 +42,15 @@ public class MessageService {
             return;
         }
 
-        Channel channel = channelRepository.findById(req.getChannelId()).orElseThrow();
-        channel.deleteChat(chatRepository.findById(req.getMessageId()).orElseThrow());
+        changeMessageDelete(req.getMessageId());
 
-        chatRepository.deleteById(req.getMessageId());
+        server.getRoomOperations(req.getChannelId()).sendEvent("delete",req.getChannelId());
+    }
 
-        //server.getRoomOperations(req.getChannelId()).sendEvent("delete");
+    private void changeMessageDelete(String messageId){
+        Chat chat = chatRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
+        chat.messageDelete();
+        chatRepository.save(chat);
     }
 
     public ChatsResponse readChat(String email, String channelId, Pageable pageable){

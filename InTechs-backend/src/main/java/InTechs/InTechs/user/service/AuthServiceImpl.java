@@ -32,6 +32,9 @@ public class AuthServiceImpl implements AuthService {
     @Value("${auth.jwt.prefix}")
     private String tokenType;
 
+    @Value("${image.user}")
+    private String baseImage;
+
     @Override
     public void SignUp(SignUpRequest signUpRequest) {
          userRepository.findByEmail(signUpRequest.getEmail())
@@ -42,7 +45,8 @@ public class AuthServiceImpl implements AuthService {
          User user = User.builder()
                  .name(signUpRequest.getName())
                  .email(signUpRequest.getEmail())
-                 .password(signUpRequest.getPassword())
+                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
+                 .fileUrl(baseImage)
                  .isActive(false)
                  .build();
 
@@ -51,9 +55,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenResponse SignIn(SignInRequest signInRequest) {
-        userRepository.findByEmail(signInRequest.getEmail())
-                .filter(user -> passwordEncoder.matches(signInRequest.getPassword(), user.getPassword()))
+        User user = userRepository.findByEmail(signInRequest.getEmail())
+                .filter(u -> passwordEncoder.matches(signInRequest.getPassword(), u.getPassword()))
                 .orElseThrow(UserNotFoundException::new);
+
+        user.updateTargetToken(signInRequest.getTargetToken());
 
         RefreshToken refreshToken = refreshTokenRepository.save(
                 RefreshToken.builder()

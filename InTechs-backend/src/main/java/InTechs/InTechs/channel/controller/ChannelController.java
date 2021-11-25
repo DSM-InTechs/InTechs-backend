@@ -1,11 +1,14 @@
 package InTechs.InTechs.channel.controller;
 
 import InTechs.InTechs.channel.payload.request.ChannelRequest;
+import InTechs.InTechs.channel.payload.response.ChannelResponse;
 import InTechs.InTechs.channel.service.ChannelService;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -23,7 +26,7 @@ public class ChannelController {
 
     @PatchMapping("/{channelId}")
     public void updateChannelName(@PathVariable String channelId,
-                                  @RequestBody ChannelRequest channelRequest) {
+                                  @ModelAttribute @Valid ChannelRequest channelRequest) throws IOException {
 
         channelService.updateChannel(channelId, channelRequest);
     }
@@ -47,6 +50,11 @@ public class ChannelController {
     @GetMapping("/{channelId}/users")
     public List<ProfileResponse> getProfiles(@PathVariable  String channelId) {
         return channelService.getProfiles(channelId);
+    }
+
+    @GetMapping("/channels")
+    public List<ChannelResponse> getChannels() {
+        return channelService.getChannels();
     }
 
 }

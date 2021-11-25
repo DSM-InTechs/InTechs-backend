@@ -1,6 +1,8 @@
 package InTechs.InTechs.chat.controller;
 
+import InTechs.InTechs.chat.payload.request.ChatDeleteRequest;
 import InTechs.InTechs.chat.payload.request.ChatRequest;
+import InTechs.InTechs.chat.service.MessageService;
 import InTechs.InTechs.chat.service.SocketService;
 import com.corundumstudio.socketio.SocketIOServer;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ public class SocketController {
     private final SocketIOServer server;
 
     private final SocketService socketService;
+    private final MessageService messageService;
 
     @PostConstruct
     public void SocketMapping() {
@@ -26,6 +29,9 @@ public class SocketController {
 
         server.addEventListener("send", ChatRequest.class,
                 (client, data, ackSender) -> socketService.chat(client, data));
+
+        server.addEventListener("delete", ChatDeleteRequest.class,
+                ((client, data, ackSender) -> messageService.messageDelete(client, data)));
     }
 
 }

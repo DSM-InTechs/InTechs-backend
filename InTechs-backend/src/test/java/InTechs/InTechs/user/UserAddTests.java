@@ -14,7 +14,7 @@ public class UserAddTests {
     public void userAdd(){
         User user = User.builder()
                 .email("t02@com")
-                .image("dd.jpg")
+                .fileName("dd.jpg")
                 .name("이름")
                 .password("dkssuddkssud")
                 .isActive(true)

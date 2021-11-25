@@ -1,6 +1,7 @@
 package InTechs.InTechs.channel.entity;
 
 import InTechs.InTechs.chat.entity.Chat;
+import InTechs.InTechs.user.entity.ChannelUser;
 import InTechs.InTechs.user.entity.User;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -20,16 +22,26 @@ public class Channel {
 
     private String name;
 
-    @DBRef(lazy = true)
     private List<User> users;
 
+    private List<ChannelUser> channelUsers;
+
     @DBRef(lazy = true)
-    private List<Chat> Chats;
+    private List<Chat> chats;
 
     private int projectId;
 
+    private String fileUrl;
+
+    private LocalDateTime time;
+
     public Channel updateName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public Channel updateFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
         return this;
     }
 
@@ -37,8 +49,16 @@ public class Channel {
         this.users.add(user);
     }
 
-    public void deleteUser(User user) {
+    public void deleteUser(ChannelUser user) {
         this.users.remove(user);
+    }
+
+    public void addChat(Chat chat) {
+        this.chats.add(chat);
+    }
+
+    public void deleteChat(Chat chat) {
+        this.chats.remove(chat);
     }
 
 }

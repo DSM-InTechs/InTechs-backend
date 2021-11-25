@@ -9,7 +9,6 @@ import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.user.repository.UserRepository;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,10 +20,10 @@ public class NoticeServiceImpl implements NoticeService {
 
     private final ChatRepository chatRepository;
     private final UserRepository userRepository;
-  
+
     @Override
     public void updateNotice(String chatId, NoticeRequest noticeRequest) {
-        Chat chat = chatRepository.findById(new ObjectId(chatId))
+        Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(ChatChannelNotFoundException::new);
 
         Boolean notice = noticeRequest.getNotice();
@@ -36,13 +35,13 @@ public class NoticeServiceImpl implements NoticeService {
     public NoticeResponse currentNotice(String channelId) {
         Chat notice = chatRepository.findTop1ByChannelIdOrderByTime(channelId);
 
-        User user = userRepository.findByEmail(notice.getSender())
+        User user = userRepository.findByEmail(notice.getSender().getEmail())
                 .orElseThrow(UserNotFoundException::new);
 
         return NoticeResponse.builder()
-                    .name(user.getName())
-                    .time(notice.getTime())
-                    .message(notice.getMessage())
+                .name(user.getName())
+                .time(notice.getTime())
+                .message(notice.getMessage())
                 .build();
     }
 
@@ -51,7 +50,7 @@ public class NoticeServiceImpl implements NoticeService {
 
         return chatRepository.findByChannelIdAndNoticeIsTrue(channelId).stream()
                 .map(chat -> NoticeResponse.builder()
-                        .name(chat.getSender())
+                        .name(chat.getSender().getEmail())
                         .time(chat.getTime())
                         .message(chat.getMessage())
                         .build())

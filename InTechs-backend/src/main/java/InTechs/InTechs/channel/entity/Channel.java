@@ -51,12 +51,12 @@ public class Channel {
     }
 
 
-    public void addChat(Chat chat) {
-        this.chats.add(chat);
-    }
-
-    public void deleteChat(Chat chat) {
-        this.chats.remove(chat);
-    }
+//    public void addChat(Chat chat) {
+//        this.chats.add(chat);
+//    }
+//
+//    public void deleteChat(Chat chat) {
+//        this.chats.remove(chat);
+//    }
 
 }

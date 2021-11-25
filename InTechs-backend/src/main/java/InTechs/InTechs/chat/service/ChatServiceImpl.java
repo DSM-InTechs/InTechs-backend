@@ -1,5 +1,6 @@
 package InTechs.InTechs.chat.service;
 
+import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.entity.ChatType;
 import InTechs.InTechs.chat.entity.Sender;
@@ -7,6 +8,7 @@ import InTechs.InTechs.chat.payload.response.ChatResponse;
 import InTechs.InTechs.channel.repository.ChannelRepository;
 import InTechs.InTechs.chat.payload.response.SenderResponse;
 import InTechs.InTechs.chat.repository.ChatRepository;
+import InTechs.InTechs.exception.exceptions.ChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
 import InTechs.InTechs.file.FileUploader;
@@ -92,7 +94,7 @@ public class ChatServiceImpl implements ChatService {
 
         Channel channel = channelRepository.findById(channelId).orElseThrow(ChannelNotFoundException::new);
 
-        channel.addChat(chat);
+        //channel.addChat(chat);
         channelRepository.save(channel);
 
         chatRepository.save(chat);
@@ -122,7 +124,7 @@ public class ChatServiceImpl implements ChatService {
 
 
         fileUploader.uploadFile(file, fileName);
-        channel.addChat(chat);
+        //channel.addChat(chat);
         chatRepository.save(chat);
     }
 
@@ -150,7 +152,7 @@ public class ChatServiceImpl implements ChatService {
 
 
         fileUploader.uploadFile(file, fileName);
-        channel.addChat(chat);
+        //channel.addChat(chat);
         chatRepository.save(chat);
     }
 }

@@ -32,6 +32,8 @@ public class Chat {
 
     private boolean isDeleted;
 
+    private ChatType chatType;
+
     public Chat updateNotice(boolean notice) {
         this.notice = notice;
         return this;

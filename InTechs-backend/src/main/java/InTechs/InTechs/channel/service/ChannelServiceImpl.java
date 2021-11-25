@@ -2,7 +2,11 @@ package InTechs.InTechs.channel.service;
 
 import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.channel.payload.request.ChannelRequest;
+import InTechs.InTechs.channel.payload.response.ChannelResponse;
 import InTechs.InTechs.channel.repository.ChannelRepository;
+import InTechs.InTechs.chat.entity.Chat;
+import InTechs.InTechs.chat.entity.ChatType;
+import InTechs.InTechs.chat.entity.Sender;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
@@ -12,13 +16,18 @@ import InTechs.InTechs.user.entity.ChannelUser;
 import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
 import InTechs.InTechs.user.repository.UserRepository;
+import com.corundumstudio.socketio.SocketIOServer;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static InTechs.InTechs.chat.entity.ChatType.INFO;
 
 @Service
 @RequiredArgsConstructor
@@ -31,30 +40,41 @@ public class ChannelServiceImpl implements ChannelService {
 
     private final FileUploader fileUploader;
 
+    private final SocketIOServer server;
+
+    @Value("${image.user}")
+    private String baseImage;
+
     @Override
     public void createChannel(int projectId, ChannelRequest channelRequest) {
+        User user = findUser();
         String channelId = UUID.randomUUID().toString();
-
-        ChannelUser channelUser = ChannelUser.builder()
-                .user(findUser())
-                .build();
 
         Channel channel = Channel.builder()
                 .projectId(projectId)
                 .channelId(channelId)
                 .name(channelRequest.getName())
-                .users(Collections.singletonList(channelUser))
+                .fileUrl(baseImage)
+                .users(Collections.singletonList(user))
                 .build();
 
         channelRepository.save(channel);
     }
 
     @Override
-    public void updateChannel(String channelId, ChannelRequest channelRequest) {
+    public void updateChannel(String channelId, ChannelRequest channelRequest) throws IOException {
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(ChatChannelNotFoundException::new);
 
+        MultipartFile file = channelRequest.getFileUrl();
+        String fileName = UUID.randomUUID().toString();
+
+        fileUploader.uploadFile(file, fileName);
+
+        String fileUrl = fileUploader.getObjectUrl(fileName);
+
         channelRepository.save(channel.updateName(channelRequest.getName()));
+        channelRepository.save(channel.updateFileUrl(fileUrl));
     }
 
     @Override
@@ -72,9 +92,9 @@ public class ChannelServiceImpl implements ChannelService {
 
        return channel.getUsers().stream()
                .map(user -> ProfileResponse.builder()
-                       .name(user.getUser().getName())
-                       .email(user.getUser().getEmail())
-                       .image(imageUrl(user.getUser().getFileUrl()))
+                       .name(user.getName())
+                       .email(user.getEmail())
+                       .image(user.getFileUrl())
                .build()).collect(Collectors.toList());
     }
 
@@ -86,8 +106,24 @@ public class ChannelServiceImpl implements ChannelService {
         User target = userRepository.findByEmail(targetEmail)
                 .orElseThrow(UserNotFoundException::new);
 
-        channel.addUser(ChannelUser.builder().user(target).build());
+        String addMessage = target.getName() + "님이 입장하셨습니다.";
+
+        channel.addUser(target);
         channelRepository.save(channel);
+
+        server.getRoomOperations(channelId).sendEvent(
+                "addUser",
+                addMessage);
+
+        Chat chat = Chat.builder()
+                .message(addMessage)
+                .channelId(channelId)
+                .time(LocalDateTime.now())
+                .chatType(ChatType.INFO)
+                .build();
+
+        chatRepository.save(chat);
+
     }
 
     @Override
@@ -99,18 +135,30 @@ public class ChannelServiceImpl implements ChannelService {
         channelRepository.save(channel);
     }
 
+    @Override
+    public List<ChannelResponse> getChannels() {
+        List<Channel> channels = channelRepository.findByUsersContains(findUser());
+        List<ChannelResponse> channelResponses = new ArrayList<>();
+
+        for(Channel channel : channels) {
+            Optional<Chat> chat = chatRepository.findTopByChannelIdOrderByTime(channel.getChannelId());
+            String lastChat = chat.map(Chat::getMessage).orElseThrow(ChatChannelNotFoundException::new);
+
+            channelResponses.add(
+                    ChannelResponse.builder()
+                            .id(channel.getChannelId())
+                            .name(channel.getName())
+                            .image(channel.getFileUrl())
+                            .message(lastChat)
+                            .build()
+            );
+        }
+        return channelResponses;
+    }
+
     private User findUser() {
         return userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
-    }
-
-    private String imageUrl(String fileName) {
-        String fileUrl = fileUploader.getObjectUrl(fileName);
-
-        if(fileUrl == null) {
-            fileUrl = fileUploader.getObjectUrl("인덱스 프로필.jpg");
-        }
-        return fileUrl;
     }
 
 }

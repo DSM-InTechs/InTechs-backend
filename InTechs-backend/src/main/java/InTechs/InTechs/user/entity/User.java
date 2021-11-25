@@ -35,6 +35,7 @@ public class User {
     @NotBlank
     @Size(max = 15)
     private String name;
+
     private String fileUrl;
 
     private Boolean isActive;
@@ -61,7 +62,7 @@ public class User {
         return this;
     }
 
-    public User updateFileName(String fileUrl) {
+    public User updateFileUrl(String fileUrl) {
         this.fileUrl = fileUrl;
         return this;
     }

@@ -101,7 +101,6 @@ public class MessageService {
                             .name(c.getSender().getName())
                             .image(c.getSender().getImage()).build())
                     .time(c.getTime())
-                    .isMine(c.getSender().getEmail().equals(email))
                     .isDelete(c.isDeleted())
                     .build());
         }

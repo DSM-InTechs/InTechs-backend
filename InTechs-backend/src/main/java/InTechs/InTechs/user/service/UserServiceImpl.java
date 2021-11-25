@@ -33,25 +33,25 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationFacade authenticationFacade;
 
     @Override
-    public ProfileResponse getProfile(String email) throws IOException {
+    public ProfileResponse getProfile(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
         return ProfileResponse.builder()
                 .email(user.getEmail())
                 .name(user.getName())
-                .image(imageUrl(user.getFileUrl()))
+                .image(user.getFileUrl())
                 .isActive(user.getIsActive())
                 .build();
     }
 
     @Override
-    public MyPageResponse getMyPage() throws IOException {
+    public MyPageResponse getMyPage() {
 
         return MyPageResponse.builder()
                 .name(findUser().getName())
                 .email(findUser().getEmail())
-                .image(imageUrl(findUser().getFileUrl()))
+                .image(findUser().getFileUrl())
                 .build();
     }
 
@@ -65,8 +65,10 @@ public class UserServiceImpl implements UserService {
 
         fileUploader.uploadFile(file, fileName);
 
+        String fileUrl = fileUploader.getObjectUrl(fileName);
+
         userRepository.save(findUser().updateName(name));
-        userRepository.save(findUser().updateFileName(fileName));
+        userRepository.save(findUser().updateFileUrl(fileUrl));
     }
 
     @Override
@@ -96,14 +98,5 @@ public class UserServiceImpl implements UserService {
     private User findUser() {
         return userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
-    }
-
-    private String imageUrl(String fileName) {
-        String fileUrl = fileUploader.getObjectUrl(fileName);
-
-        if(fileUrl == null) {
-            fileUrl = fileUploader.getObjectUrl("인덱스 프로필.jpg");
-        }
-        return fileUrl;
     }
 }

@@ -1,6 +1,7 @@
 package InTechs.InTechs.chat.service;
 
 import InTechs.InTechs.channel.entity.Channel;
+import InTechs.InTechs.chat.entity.Sender;
 import InTechs.InTechs.chat.payload.request.ChatRequest;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
 import InTechs.InTechs.chat.payload.response.ErrorResponse;
@@ -21,6 +22,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -105,21 +107,23 @@ public class SocketServiceImpl implements SocketService {
         server.getRoomOperations(chatRequest.getChannelId()).sendEvent(
                 "send",
                 ChatResponse.builder()
-                        .sender(SenderResponse.builder()
-                                .email(user.getEmail())
-                                .name(user.getName())
-                                .image(user.getFileName())
-                                .build())
-                        .message(chatRequest.getMessage())
-                        .isMine(false)
-                        .build()
+                .sender(SenderResponse.builder()
+                        .email(user.getEmail())
+                        .name(user.getName())
+                        .image(user.getFileUrl()).build())
+                .message(chatRequest.getMessage())
+                .id(chatRequest.getChannelId())
+                .isDelete(false)
+                .notice(false)
+                .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                .build()
         );
 
         Channel channel = channelRepository.findById(chatRequest.getChannelId()).orElseThrow(ChannelNotFoundException::new);
-        List<String> targetTokens = channel.getUsers().stream().filter(ChannelUser::isNotificationAllow).map(tu -> tu.getUser().getTargetToken()).collect(Collectors.toList());
+        List<String> targetTokens = channel.getChannelUsers().stream().filter(ChannelUser::isNotificationAllow).map(tu -> tu.getUser().getTargetToken()).collect(Collectors.toList());
 
         try {
-            notificationService.sendTargetsMessage(targetTokens, "Intechs 메세지가 왔습니다.", chatRequest.getMessage(),user.getFileName());
+            notificationService.sendTargetsMessage(targetTokens, "Intechs 메세지가 왔습니다.", chatRequest.getMessage(),user.getFileUrl());
         } catch (FirebaseMessagingException e) {
             e.printStackTrace();
             throw new FirebaseException();

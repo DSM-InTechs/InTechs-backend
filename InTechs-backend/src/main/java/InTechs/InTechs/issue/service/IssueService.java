@@ -123,7 +123,7 @@ public class IssueService {
                                         UserResponse.builder()
                                                 .name(user.getName())
                                                 .email(user.getEmail())
-                                                .image(getImage(user.getFileName()))
+                                                .image(getImage(user.getFileUrl()))
                                                 .build())
                                         .collect(Collectors.toList()))
                                 .tags(i.getTags())
@@ -155,7 +155,7 @@ public class IssueService {
                         UserResponse.builder()
                                 .email(user.getEmail())
                                 .name(user.getName())
-                                .image(getImage(user.getFileName()))
+                                .image(getImage(user.getFileUrl()))
                                 .build()).collect(Collectors.toList()))
                 .comments(issue.getComments().stream().map(this::commentResponseCreate).collect(Collectors.toList()))
                 .build();
@@ -178,6 +178,6 @@ public class IssueService {
                         .builder()
                         .email(comment.getUser().getEmail())
                         .name(comment.getUser().getName())
-                        .image(getImage(comment.getUser().getFileName())).build()).build();
+                        .image(getImage(comment.getUser().getFileUrl())).build()).build();
     }
 }

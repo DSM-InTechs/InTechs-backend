@@ -31,13 +31,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class IssueService {
-    @Value("${image.user}")
-    private String userBasicImage;
 
     private final IssueRepository issueRepository;
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
-    private final S3Service s3Service;
 
     public void issueCreate(String writer, int projectId, IssueCreateRequest issueRequest) {
         Project project = projectRepository.findById(projectId).orElseThrow(ProjectNotFoundException::new);
@@ -123,7 +120,7 @@ public class IssueService {
                                         UserResponse.builder()
                                                 .name(user.getName())
                                                 .email(user.getEmail())
-                                                .image(getImage(user.getFileUrl()))
+                                                .image(user.getFileUrl())
                                                 .build())
                                         .collect(Collectors.toList()))
                                 .tags(i.getTags())
@@ -155,18 +152,10 @@ public class IssueService {
                         UserResponse.builder()
                                 .email(user.getEmail())
                                 .name(user.getName())
-                                .image(getImage(user.getFileUrl()))
+                                .image(user.getFileUrl())
                                 .build()).collect(Collectors.toList()))
                 .comments(issue.getComments().stream().map(this::commentResponseCreate).collect(Collectors.toList()))
                 .build();
-    }
-
-    private String getImage(String fileName) {
-        final String folder = "/user";
-
-        if(fileName == null) return userBasicImage;
-
-        return s3Service.getFileUrl(fileName, folder);
     }
 
     private IssueCommentResponse commentResponseCreate(Comment comment){
@@ -178,6 +167,6 @@ public class IssueService {
                         .builder()
                         .email(comment.getUser().getEmail())
                         .name(comment.getUser().getName())
-                        .image(getImage(comment.getUser().getFileUrl())).build()).build();
+                        .image(comment.getUser().getFileUrl()).build()).build();
     }
 }

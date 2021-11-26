@@ -41,10 +41,4 @@ public class Channel {
         this.users.remove(user);
     }
 
-    public void notificationOnAndOff(User user){
-//        users.add(user.notificationOnAndOff());
-        // List에서 ChannelUser을 찾아서 그 채너유저의 notification과 반대되는 걸로 수정 후
-        // 다시 저장?
-    }
-
 }

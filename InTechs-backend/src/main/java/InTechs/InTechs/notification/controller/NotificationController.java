@@ -14,6 +14,6 @@ public class NotificationController {
     private final AuthenticationFacade authenticationFacade;
     @PatchMapping
     public void notificationOnAndOff(@PathVariable String channelId){
-        notificationService.notificationStateChange(authenticationFacade.getUserEmail());
+        notificationService.notificationStateChange(authenticationFacade.getUserEmail(), channelId);
     }
 }

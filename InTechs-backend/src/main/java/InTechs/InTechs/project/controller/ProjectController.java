@@ -31,7 +31,7 @@ public class ProjectController {
     }
 
     @GetMapping("/dashboard")
-    public DashboardResponse projectDashboard(@RequestHeader("Authorization") String token, @PathVariable int projectId){
+    public DashboardResponse projectDashboard(@PathVariable int projectId){
         return dashboardService.projectDashboard(projectId, authenticationFacade.getUserEmail());
     }
 

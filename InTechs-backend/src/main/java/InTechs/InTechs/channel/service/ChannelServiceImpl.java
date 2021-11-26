@@ -3,12 +3,12 @@ package InTechs.InTechs.channel.service;
 import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.channel.payload.request.ChannelRequest;
 import InTechs.InTechs.channel.repository.ChannelRepository;
-import InTechs.InTechs.chat.repository.ChatRepository;
+
 import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
 import InTechs.InTechs.file.FileUploader;
 import InTechs.InTechs.security.auth.AuthenticationFacade;
-import InTechs.InTechs.user.entity.ChannelUser;
+
 import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
 import InTechs.InTechs.user.repository.UserRepository;
@@ -35,15 +35,12 @@ public class ChannelServiceImpl implements ChannelService {
     public void createChannel(int projectId, ChannelRequest channelRequest) {
         String channelId = UUID.randomUUID().toString();
 
-        ChannelUser channelUser = ChannelUser.builder()
-                .user(findUser())
-                .build();
-
         Channel channel = Channel.builder()
                 .projectId(projectId)
                 .channelId(channelId)
                 .name(channelRequest.getName())
-                .users(Collections.singletonList(channelUser))
+                .users(Collections.singletonList(findUser()))
+                .notificationOnUsers(Collections.singletonList(findUser()))
                 .build();
 
         channelRepository.save(channel);
@@ -72,9 +69,9 @@ public class ChannelServiceImpl implements ChannelService {
 
        return channel.getUsers().stream()
                .map(user -> ProfileResponse.builder()
-                       .name(user.getUser().getName())
-                       .email(user.getUser().getEmail())
-                       .image(imageUrl(user.getUser().getFileUrl()))
+                       .name(user.getName())
+                       .email(user.getEmail())
+                       .image(imageUrl(user.getFileUrl()))
                .build()).collect(Collectors.toList());
     }
 
@@ -83,10 +80,8 @@ public class ChannelServiceImpl implements ChannelService {
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(ChatChannelNotFoundException::new);
 
-        User target = userRepository.findByEmail(targetEmail)
-                .orElseThrow(UserNotFoundException::new);
-
-        channel.addUser(ChannelUser.builder().user(target).build());
+        channel.addUser(userRepository.findByEmail(targetEmail)
+                                    .orElseThrow(UserNotFoundException::new));
         channelRepository.save(channel);
     }
 
@@ -95,7 +90,7 @@ public class ChannelServiceImpl implements ChannelService {
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(ChatChannelNotFoundException::new);
 
-        channel.deleteUser(ChannelUser.builder().user(findUser()).build());
+        channel.deleteUser(findUser());
         channelRepository.save(channel);
     }
 

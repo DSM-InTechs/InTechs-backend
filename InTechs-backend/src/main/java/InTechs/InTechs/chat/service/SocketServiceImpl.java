@@ -10,7 +10,7 @@ import InTechs.InTechs.exception.exceptions.ChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.FirebaseException;
 import InTechs.InTechs.notification.service.NotificationSendService;
 import InTechs.InTechs.security.JwtTokenProvider;
-import InTechs.InTechs.user.entity.ChannelUser;
+
 import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.user.repository.UserRepository;
 import com.corundumstudio.socketio.SocketIOClient;
@@ -116,7 +116,7 @@ public class SocketServiceImpl implements SocketService {
         );
 
         Channel channel = channelRepository.findById(chatRequest.getChannelId()).orElseThrow(ChannelNotFoundException::new);
-        List<String> targetTokens = channel.getUsers().stream().filter(ChannelUser::isNotificationAllow).map(tu -> tu.getUser().getTargetToken()).collect(Collectors.toList());
+        List<String> targetTokens = channel.getUsers().stream().map(User::getTargetToken).collect(Collectors.toList());
 
         try {
             notificationService.sendTargetsMessage(targetTokens, "Intechs 메세지가 왔습니다.", chatRequest.getMessage(),user.getFileUrl());

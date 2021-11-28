@@ -1,5 +1,6 @@
 package InTechs.InTechs.channel.entity;
 
+import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.user.entity.ChannelUser;
 import InTechs.InTechs.user.entity.User;
@@ -22,9 +23,11 @@ public class Channel {
 
     private String name;
 
-    private List<User> users;
+    @DBRef
+    private List<User> notificationOnUsers;
 
-    private List<ChannelUser> channelUsers;
+    @DBRef
+    private List<User> users;
 
     private int projectId;
 
@@ -46,8 +49,16 @@ public class Channel {
         this.users.add(user);
     }
 
-    public void deleteUser(ChannelUser user) {
+    public void deleteUser(User user) {
         this.users.remove(user);
+    }
+
+    public void notificationOff(User user){
+        this.notificationOnUsers.remove(user);
+    }
+
+    public void notificationOn(User user){
+        this.notificationOnUsers.add(user);
     }
 
 

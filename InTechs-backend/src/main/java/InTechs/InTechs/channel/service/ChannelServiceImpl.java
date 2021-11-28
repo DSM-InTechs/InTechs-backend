@@ -57,6 +57,7 @@ public class ChannelServiceImpl implements ChannelService {
                 .name(channelRequest.getName())
                 .fileUrl(baseImage)
                 .users(Collections.singletonList(user))
+                .notificationOnUsers(Collections.singletonList(findUser()))
                 .build();
 
         channelRepository.save(channel);
@@ -132,7 +133,7 @@ public class ChannelServiceImpl implements ChannelService {
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(ChatChannelNotFoundException::new);
 
-        channel.deleteUser(ChannelUser.builder().user(findUser()).build());
+        channel.deleteUser(findUser());
         channelRepository.save(channel);
     }
 

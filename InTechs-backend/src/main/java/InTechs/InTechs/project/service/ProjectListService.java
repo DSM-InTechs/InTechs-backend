@@ -1,7 +1,6 @@
 package InTechs.InTechs.project.service;
 
 import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
-import InTechs.InTechs.file.S3Service;
 import InTechs.InTechs.issue.value.Tag;
 import InTechs.InTechs.project.entity.Project;
 import InTechs.InTechs.project.payload.response.ProjectUserResponse;
@@ -9,7 +8,6 @@ import InTechs.InTechs.project.payload.response.UserResponse;
 import InTechs.InTechs.project.repository.ProjectRepository;
 import InTechs.InTechs.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

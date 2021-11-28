@@ -3,7 +3,7 @@ package InTechs.InTechs.issue.service;
 import InTechs.InTechs.comment.entity.Comment;
 import InTechs.InTechs.exception.exceptions.IssueNotFoundException;
 import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
-import InTechs.InTechs.file.S3Service;
+
 import InTechs.InTechs.issue.entity.Issue;
 import InTechs.InTechs.issue.payload.request.IssueCreateRequest;
 import InTechs.InTechs.issue.payload.request.IssueFilterRequest;
@@ -20,7 +20,6 @@ import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.IteratorUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

@@ -18,6 +18,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class ProjectListService {
+
     private final ProjectRepository projectRepository;
 
     public List<ProjectUserResponse> projectUserList(int projectId){
@@ -28,7 +29,7 @@ public class ProjectListService {
                     ProjectUserResponse.builder()
                             .email(user.getEmail())
                             .name(user.getName())
-                            .imageUri(user.getImage())
+                            .imageUri(user.getFileUrl())
                             .isActive(user.getIsActive()).build();
             userListResponse.add(userResponse);
         }
@@ -45,7 +46,8 @@ public class ProjectListService {
             UserResponse userTagResponse =
                     UserResponse.builder()
                             .email(user.getEmail())
-                            .name(user.getName()).build();
+                            .name(user.getName())
+                            .image(user.getFileUrl()).build();
             userTagList.add(userTagResponse);
         }
         return userTagList;

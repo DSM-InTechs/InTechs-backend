@@ -1,7 +1,9 @@
 package InTechs.InTechs.issue.service;
 
+import InTechs.InTechs.comment.entity.Comment;
 import InTechs.InTechs.exception.exceptions.IssueNotFoundException;
 import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
+
 import InTechs.InTechs.issue.entity.Issue;
 import InTechs.InTechs.issue.payload.request.IssueCreateRequest;
 import InTechs.InTechs.issue.payload.request.IssueFilterRequest;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class IssueService {
+
     private final IssueRepository issueRepository;
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
@@ -116,9 +119,11 @@ public class IssueService {
                                         UserResponse.builder()
                                                 .name(user.getName())
                                                 .email(user.getEmail())
+                                                .image(user.getFileUrl())
                                                 .build())
                                         .collect(Collectors.toList()))
                                 .tags(i.getTags())
+                                .comments(i.getComments().stream().map(this::commentResponseCreate).collect(Collectors.toList()))
                                 .build()
                 )
         );
@@ -146,17 +151,21 @@ public class IssueService {
                         UserResponse.builder()
                                 .email(user.getEmail())
                                 .name(user.getName())
+                                .image(user.getFileUrl())
                                 .build()).collect(Collectors.toList()))
-                .comments(issue.getComments().stream().map(comment ->
-                        IssueCommentResponse.builder()
-                                .id(comment.getId().toString())
-                                .content(comment.getContent())
-                                .createAt(comment.getCreateAt())
-                                .user(UserResponse
-                                        .builder()
-                                        .email(comment.getUser().getEmail())
-                                        .name(comment.getUser().getName()).build())
-                                .build()).collect(Collectors.toList()))
+                .comments(issue.getComments().stream().map(this::commentResponseCreate).collect(Collectors.toList()))
                 .build();
+    }
+
+    private IssueCommentResponse commentResponseCreate(Comment comment){
+        return IssueCommentResponse.builder()
+                .id(comment.getId().toString())
+                .content(comment.getContent())
+                .createAt(comment.getCreateAt())
+                .user(UserResponse
+                        .builder()
+                        .email(comment.getUser().getEmail())
+                        .name(comment.getUser().getName())
+                        .image(comment.getUser().getFileUrl()).build()).build();
     }
 }

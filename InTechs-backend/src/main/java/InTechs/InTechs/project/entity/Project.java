@@ -1,5 +1,7 @@
 package InTechs.InTechs.project.entity;
 
+import InTechs.InTechs.channel.entity.Channel;
+import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.issue.value.Tag;
 import InTechs.InTechs.project.value.Image;
 import InTechs.InTechs.issue.entity.Issue;
@@ -13,8 +15,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import java.awt.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -44,6 +44,12 @@ public class Project {
     @DBRef(lazy = true)
     private List<Issue> issues = new ArrayList<>();
     private Set<Tag> tags = new HashSet<>();
+
+    @DBRef(lazy = true)
+    private List<Channel> channels;
+
+    @DBRef(lazy = true)
+    private List<Chat> chats;
 
     public void addUser(User user){
         this.users.add(user);

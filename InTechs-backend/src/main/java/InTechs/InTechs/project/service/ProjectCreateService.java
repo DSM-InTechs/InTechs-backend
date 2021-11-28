@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -52,16 +51,14 @@ public class ProjectCreateService {
         return String.valueOf(number);
     }
 
-    private int createProjectNumber(){
+    public int createProjectNumber(){
         final int len = 6;
-
-        Random rand = new Random();
 
         StringBuilder id= new StringBuilder();
 
         for(int i = 0; i< len; i++){
-            String ran = Integer.toString(rand.nextInt(10));
-            id.append(ran);
+            int num = (int)(Math.random()*9)+1;
+            id.append(num);
         }
 
         return Integer.parseInt(id.toString());

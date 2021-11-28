@@ -21,8 +21,8 @@ public class S3Service {
         amazonS3Client.putObject(new PutObjectRequest(bucket+folder, fileName, inputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
     }
 
-    public String getFileUrl(String fileName){
-        return String.valueOf(amazonS3Client.getUrl(bucket, fileName));
+    public String getFileUrl(String fileName, String folder){
+        return String.valueOf(amazonS3Client.getUrl(bucket+folder, fileName));
     }
 
     public void deleteFile(String folder, String oriName){

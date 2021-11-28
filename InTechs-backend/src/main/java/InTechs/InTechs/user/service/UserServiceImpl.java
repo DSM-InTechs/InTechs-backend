@@ -33,36 +33,25 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationFacade authenticationFacade;
 
     @Override
-    public ProfileResponse getProfile(String email) throws IOException {
+    public ProfileResponse getProfile(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
-
-        String fileUrl = fileUploader.getObjectUrl(user.getFileName());
-
-        if(fileUrl == null) {
-            fileUrl = fileUploader.getObjectUrl("인덱스 프로필.jpg");
-        }
 
         return ProfileResponse.builder()
                 .email(user.getEmail())
                 .name(user.getName())
-                .image(fileUrl)
+                .image(user.getFileUrl())
                 .isActive(user.getIsActive())
                 .build();
     }
 
     @Override
-    public MyPageResponse getMyPage() throws IOException {
-        String fileUrl = fileUploader.getObjectUrl(findUser().getFileName());
-
-        if(fileUrl == null) {
-            fileUrl = fileUploader.getObjectUrl("인덱스 프로필.jpg");
-        }
+    public MyPageResponse getMyPage() {
 
         return MyPageResponse.builder()
                 .name(findUser().getName())
                 .email(findUser().getEmail())
-                .image(fileUrl)
+                .image(findUser().getFileUrl())
                 .build();
     }
 
@@ -76,8 +65,10 @@ public class UserServiceImpl implements UserService {
 
         fileUploader.uploadFile(file, fileName);
 
+        String fileUrl = fileUploader.getObjectUrl(fileName);
+
         userRepository.save(findUser().updateName(name));
-        userRepository.save(findUser().updateFileName(fileName));
+        userRepository.save(findUser().updateFileUrl(fileUrl));
     }
 
     @Override
@@ -94,7 +85,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateActive(IsActiveRequest isActiveRequest) {
-        boolean isActive = isActiveRequest.getIsActive();
+        Boolean isActive = isActiveRequest.getIsActive();
 
         userRepository.save(findUser().updateActive(isActive));
     }
@@ -108,5 +99,4 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
     }
-
 }

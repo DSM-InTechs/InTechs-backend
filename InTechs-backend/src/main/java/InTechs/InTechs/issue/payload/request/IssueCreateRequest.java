@@ -2,7 +2,7 @@ package InTechs.InTechs.issue.payload.request;
 
 import InTechs.InTechs.issue.value.State;
 import InTechs.InTechs.issue.value.Tag;
-import InTechs.InTechs.user.entity.User;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;

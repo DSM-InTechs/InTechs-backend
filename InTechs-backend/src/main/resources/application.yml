@@ -31,7 +31,7 @@ cloud:
     region:
       static: ap-northeast-2
     s3:
-      bucket: ${BUCKET:in-techs}
+      bucket: ${BUCKET}
     credentials:
       access-key: ${AWS_ACCESS_KEY:}
       secret-key: ${AWS_SECRET_KEY:}
@@ -43,6 +43,6 @@ auth:
     exp:
       access: ${ACCESS_TOKEN_EXP:3600}
       refresh: ${REFRESH_TOKEN_EXP:10000}
-    secret: ${SECRET_KEY:asdfgiegipznvpN35}
+    secret: ${SECRET_KEY:}
     header: ${HEADER:Authorization}
     prefix: ${PREFIX:Bearer}

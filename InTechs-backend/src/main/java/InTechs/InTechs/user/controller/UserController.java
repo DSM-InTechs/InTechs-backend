@@ -41,6 +41,7 @@ public class UserController {
 
     @PatchMapping("/user/active")
     public void updateActive(@RequestBody @Valid IsActiveRequest isActiveRequest) {
+        System.out.println(isActiveRequest);
         userService.updateActive(isActiveRequest);
     }
 

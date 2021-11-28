@@ -23,4 +23,5 @@ public class IssueFilterResponse {
     private int projectId;
     private List<UserResponse> users;
     private Set<Tag> tags;
+    private List<IssueCommentResponse> comments;
 }

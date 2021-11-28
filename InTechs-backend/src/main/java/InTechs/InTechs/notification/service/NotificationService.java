@@ -26,11 +26,13 @@ public class NotificationService {
     public void notificationStateChange(String email, String channelId){
        Channel channel =  channelRepository.findById(channelId).orElseThrow(ChannelNotFoundException::new);
        User user = userRepository.findById(email).orElseThrow(UserNotFoundException::new);
+
        if (channel.getNotificationOnUsers().contains(user)){
-           channel.getNotificationOnUsers().remove(user);
+           channel.notificationOff(user);
        } else {
-           channel.getNotificationOnUsers().add(user);
+           channel.notificationOn(user);
        }
+
        channelRepository.save(channel);
     }
 }

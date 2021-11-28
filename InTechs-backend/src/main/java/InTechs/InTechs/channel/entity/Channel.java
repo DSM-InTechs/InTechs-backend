@@ -41,4 +41,12 @@ public class Channel {
         this.users.remove(user);
     }
 
+    public void notificationOff(User user){
+        this.notificationOnUsers.remove(user);
+    }
+
+    public void notificationOn(User user){
+        this.notificationOnUsers.add(user);
+    }
+
 }

@@ -20,7 +20,8 @@ public class ProjectDashboardService {
     private final UserRepository userRepository;
 
     public DashboardResponse projectDashboard(int projectId, String userId){
-        long userCount = projectRepository.findById(projectId).map(Project::getName).stream().count(); // 프로젝트에 속한 유저 수
+        int userCount = projectRepository.findById(projectId).map(Project::getUsers).orElseThrow(ProjectNotFoundException::new).size();
+
         long unresolved = issueRepository.countByStateAndProjectId(IN_PROGRESS, projectId)+issueRepository.countByStateAndProjectId(READY, projectId);
         long resolved = issueRepository.countByStateAndProjectId(DONE, projectId);
         ;

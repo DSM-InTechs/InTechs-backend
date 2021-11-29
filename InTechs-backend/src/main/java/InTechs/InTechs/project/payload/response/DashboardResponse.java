@@ -9,6 +9,6 @@ import lombok.ToString;
 @Builder
 @Getter
 public class DashboardResponse {
-    long userCount;
+    int userCount;
     IssuesCountInfo issuesCount;
 }

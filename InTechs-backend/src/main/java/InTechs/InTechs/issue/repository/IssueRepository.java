@@ -17,7 +17,7 @@ public interface IssueRepository extends MongoRepository<Issue, String> {
     @Query("{projectId:?0, userIds:{$in:?1}")
     List<Issue> findProjectId(int projectId, List<String> userId);
     List<Issue> findAllByProjectId(int projectId);
-    Long countByStateAndProjectId(State state, int projectId);
+    int countByStateAndProjectId(State state, int projectId);
 
     List<Issue> findByEndDate(String endDate);
 

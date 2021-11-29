@@ -24,21 +24,22 @@ public class ProjectDashboardService {
         int userCount = projectRepository.findById(projectId).map(Project::getUsers).orElseThrow(ProjectNotFoundException::new).size();
         int unresolved = issueRepository.countByStateAndProjectId(IN_PROGRESS, projectId)+issueRepository.countByStateAndProjectId(READY, projectId);
         int resolved = issueRepository.countByStateAndProjectId(DONE, projectId);
-        int forMeAndUnresolved = 1;
 
-        long unresolved = issueRepository.countByStateAndProjectId(IN_PROGRESS, projectId)+issueRepository.countByStateAndProjectId(READY, projectId);
-        long resolved = issueRepository.countByStateAndProjectId(DONE, projectId);
-        ;
-        long myIssueCount = issueRepository.findAllByProjectId(projectId).stream().filter(
+        long forMe = issueRepository.findAllByProjectId(projectId).stream().filter(
                 (a)->a.getUsers().contains(
                         userRepository.findById(userId).orElseThrow(UserNotFoundException::new)
                 )).count();
 
+        long forMeAndUnresolved  = issueRepository.findAllByProjectId(projectId).stream().filter(
+                (a)->a.getUsers().contains(
+                        userRepository.findById(userId).orElseThrow(UserNotFoundException::new)
+                )).filter((a)->a.getState() != DONE).count();
+
         IssuesCountInfo issuesCountInfo = IssuesCountInfo.builder()
-                .forMe((int)myIssueCount)
+                .forMe(forMe)
                 .resolved(resolved)
                 .unresolved(unresolved)
-                .forMeAndUnresolved(myIssueCount+unresolved)
+                .forMeAndUnresolved(forMeAndUnresolved)
                 .build();
 
         return DashboardResponse.builder()

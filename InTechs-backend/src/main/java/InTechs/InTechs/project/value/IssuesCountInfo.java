@@ -8,8 +8,8 @@ import lombok.ToString;
 @ToString
 @Builder
 public class IssuesCountInfo {
-    int forMe;
     int resolved;
     int unresolved;
-    int forMeAndUnresolved;
+    long forMe;
+    long forMeAndUnresolved;
 }

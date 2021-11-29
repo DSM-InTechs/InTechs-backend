@@ -1,5 +1,6 @@
 package InTechs.InTechs.project.service;
 
+import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
 import InTechs.InTechs.issue.repository.IssueRepository;
 import InTechs.InTechs.project.entity.Project;
@@ -21,6 +22,9 @@ public class ProjectDashboardService {
 
     public DashboardResponse projectDashboard(int projectId, String userId){
         int userCount = projectRepository.findById(projectId).map(Project::getUsers).orElseThrow(ProjectNotFoundException::new).size();
+        int unresolved = issueRepository.countByStateAndProjectId(IN_PROGRESS, projectId)+issueRepository.countByStateAndProjectId(READY, projectId);
+        int resolved = issueRepository.countByStateAndProjectId(DONE, projectId);
+        int forMeAndUnresolved = 1;
 
         long unresolved = issueRepository.countByStateAndProjectId(IN_PROGRESS, projectId)+issueRepository.countByStateAndProjectId(READY, projectId);
         long resolved = issueRepository.countByStateAndProjectId(DONE, projectId);
@@ -31,7 +35,7 @@ public class ProjectDashboardService {
                 )).count();
 
         IssuesCountInfo issuesCountInfo = IssuesCountInfo.builder()
-                .forMe(myIssueCount)
+                .forMe((int)myIssueCount)
                 .resolved(resolved)
                 .unresolved(unresolved)
                 .forMeAndUnresolved(myIssueCount+unresolved)

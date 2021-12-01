@@ -1,7 +1,6 @@
 package InTechs.InTechs.project.service;
 
 import InTechs.InTechs.exception.exceptions.ProjectNotFoundException;
-import InTechs.InTechs.file.S3Service;
 import InTechs.InTechs.issue.value.Tag;
 import InTechs.InTechs.project.entity.Project;
 import InTechs.InTechs.project.payload.response.ProjectUserResponse;
@@ -9,7 +8,6 @@ import InTechs.InTechs.project.payload.response.UserResponse;
 import InTechs.InTechs.project.repository.ProjectRepository;
 import InTechs.InTechs.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,11 +18,8 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class ProjectListService {
-    @Value("${image.user}")
-    private String userBasicImage;
 
     private final ProjectRepository projectRepository;
-    private final S3Service s3Service;
 
     public List<ProjectUserResponse> projectUserList(int projectId){
         List<User> users = projectRepository.findById(projectId).map(Project::getUsers).orElseThrow(ProjectNotFoundException::new);
@@ -34,7 +29,7 @@ public class ProjectListService {
                     ProjectUserResponse.builder()
                             .email(user.getEmail())
                             .name(user.getName())
-                            .imageUri(getImage(user.getFileUrl()))
+                            .imageUri(user.getFileUrl())
                             .isActive(user.getIsActive()).build();
             userListResponse.add(userResponse);
         }
@@ -52,18 +47,10 @@ public class ProjectListService {
                     UserResponse.builder()
                             .email(user.getEmail())
                             .name(user.getName())
-                            .image(getImage(user.getFileUrl())).build();
+                            .image(user.getFileUrl()).build();
             userTagList.add(userTagResponse);
         }
         return userTagList;
 
-    }
-
-    private String getImage(String fileName) {
-        final String folder = "/user";
-
-        if(fileName == null) return userBasicImage;
-
-        return s3Service.getFileUrl(fileName, folder);
     }
 }

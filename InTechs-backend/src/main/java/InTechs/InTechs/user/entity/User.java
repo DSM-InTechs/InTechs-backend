@@ -1,8 +1,6 @@
 package InTechs.InTechs.user.entity;
 
 import InTechs.InTechs.channel.entity.Channel;
-import InTechs.InTechs.chat.entity.Chat;
-import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.project.entity.Project;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -20,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Document(collection = "user")
+@EqualsAndHashCode(exclude = "email")
 public class User {
 
     @Id
@@ -44,7 +43,7 @@ public class User {
     @DBRef(lazy = true)
     private List<Channel> channels;
 
-    private String targetToken; // TargetToken
+    private String targetToken;
 
     public User updateActive(boolean isActive) {
         this.isActive = isActive;

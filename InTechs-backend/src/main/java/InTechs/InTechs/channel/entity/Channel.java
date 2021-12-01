@@ -1,6 +1,7 @@
 package InTechs.InTechs.channel.entity;
 
 import InTechs.InTechs.user.entity.User;
+
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;

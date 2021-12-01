@@ -1,8 +1,8 @@
 package InTechs.InTechs.chat.service;
 
 import InTechs.InTechs.channel.entity.Channel;
-import InTechs.InTechs.chat.entity.Sender;
-import InTechs.InTechs.chat.payload.request.ChatRequest;
+import InTechs.InTechs.chat.entity.ChatType;
+import InTechs.InTechs.chat.payload.request.TextRequest;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
 import InTechs.InTechs.chat.payload.response.ErrorResponse;
 import InTechs.InTechs.channel.repository.ChannelRepository;
@@ -11,7 +11,6 @@ import InTechs.InTechs.exception.exceptions.ChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.FirebaseException;
 import InTechs.InTechs.notification.NotificationService;
 import InTechs.InTechs.security.JwtTokenProvider;
-import InTechs.InTechs.user.entity.ChannelUser;
 import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.user.repository.UserRepository;
 import com.corundumstudio.socketio.SocketIOClient;
@@ -55,7 +54,6 @@ public class SocketServiceImpl implements SocketService {
             client.set("user", user);
         } catch (Exception e) {
             clientDisconnect(client, 404, "Could not get user");
-            return;
         }
     }
 
@@ -91,8 +89,8 @@ public class SocketServiceImpl implements SocketService {
     }
 
     @Override
-    public void chat(SocketIOClient client, ChatRequest chatRequest) {
-        if(!client.getAllRooms().contains(chatRequest.getChannelId())) {
+    public void chat(SocketIOClient client, TextRequest textRequest) {
+        if(!client.getAllRooms().contains(textRequest.getChannelId())) {
             clientDisconnect(client, 401, "Invalid Connection");
             return;
         }
@@ -100,31 +98,32 @@ public class SocketServiceImpl implements SocketService {
         User user = client.get("user");
         chatService.sendChat(
                 user,
-                chatRequest.getChannelId(),
-                chatRequest.getMessage()
+                textRequest.getChannelId(),
+                textRequest.getMessage()
         );
 
-        server.getRoomOperations(chatRequest.getChannelId()).sendEvent(
+        server.getRoomOperations(textRequest.getChannelId()).sendEvent(
                 "send",
                 ChatResponse.builder()
-                .sender(SenderResponse.builder()
-                        .email(user.getEmail())
-                        .name(user.getName())
-                        .image(user.getFileUrl()).build())
-                .message(chatRequest.getMessage())
-                .id(chatRequest.getChannelId())
-                .isDelete(false)
-                .notice(false)
-                .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                .build()
+                    .sender(SenderResponse.builder()
+                            .email(user.getEmail())
+                            .name(user.getName())
+                            .image(user.getFileUrl()).build())
+                    .message(textRequest.getMessage())
+                    .chatType(ChatType.TEXT)
+                    .id(textRequest.getChannelId())
+                    .isDelete(false)
+                    .notice(false)
+                    .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                    .build()
 
         );
 
-        Channel channel = channelRepository.findById(chatRequest.getChannelId()).orElseThrow(ChannelNotFoundException::new);
-        List<String> targetTokens = channel.getChannelUsers().stream().filter(ChannelUser::isNotificationAllow).map(tu -> tu.getUser().getTargetToken()).collect(Collectors.toList());
+        Channel channel = channelRepository.findById(textRequest.getChannelId()).orElseThrow(ChannelNotFoundException::new);
+        List<String> targetTokens = channel.getUsers().stream().map(User::getTargetToken).collect(Collectors.toList());
 
         try {
-            notificationService.sendTargetsMessage(targetTokens, "Intechs 메세지가 왔습니다.", chatRequest.getMessage(),user.getFileUrl());
+            notificationService.sendTargetsMessage(targetTokens, "Intechs 메세지가 왔습니다.", textRequest.getMessage(),user.getFileUrl());
         } catch (FirebaseMessagingException e) {
             e.printStackTrace();
             throw new FirebaseException();

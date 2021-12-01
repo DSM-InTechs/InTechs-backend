@@ -16,6 +16,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Document(collection = "user")
 @EqualsAndHashCode(exclude = "email")
 public class User {
@@ -62,4 +63,5 @@ public class User {
         this.fileUrl = fileUrl;
         return this;
     }
+
 }

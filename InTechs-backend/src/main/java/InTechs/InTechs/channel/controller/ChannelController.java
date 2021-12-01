@@ -25,8 +25,8 @@ public class ChannelController {
     }
 
     @PatchMapping("/{channelId}")
-    public void updateChannelName(@PathVariable String channelId,
-                                  @ModelAttribute @Valid ChannelRequest channelRequest) throws IOException {
+    public void updateChannel(@PathVariable String channelId,
+                              @ModelAttribute @Valid ChannelRequest channelRequest) throws IOException {
 
         channelService.updateChannel(channelId, channelRequest);
     }

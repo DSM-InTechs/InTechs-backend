@@ -8,10 +8,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatRequest {
+public class TextRequest {
 
     private String channelId;
     private String message;
-    private ChatType chatType;
 
 }

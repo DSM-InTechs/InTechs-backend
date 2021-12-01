@@ -11,8 +11,6 @@ public interface ChannelService {
 
     void createChannel(int projectId, ChannelRequest channelRequest);
 
-    void createDirectMessage(int projectId, String email);
-
     void updateChannel(int projectId, String channelId, ChannelRequest channelRequest) throws IOException;
 
     void deleteChannel(int projectId, String channelId);

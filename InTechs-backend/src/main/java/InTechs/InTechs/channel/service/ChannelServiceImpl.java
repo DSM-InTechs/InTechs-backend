@@ -54,6 +54,7 @@ public class ChannelServiceImpl implements ChannelService {
                 .channelId(channelId)
                 .name(channelRequest.getName())
                 .fileUrl(baseImage)
+                .isDM(false)
                 .users(Collections.singletonList(user))
                 .notificationOnUsers(Collections.singletonList(user))
                 .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
@@ -61,27 +62,6 @@ public class ChannelServiceImpl implements ChannelService {
 
         channelRepository.save(channel);
         addUser(user, channelId);
-    }
-
-    @Override
-    public void createDirectMessage(int projectId, String email) {
-        User dmUser = userRepository.findByEmail(email)
-                .orElseThrow(UserNotFoundException::new);
-        String channelId = UUID.randomUUID().toString();
-
-        Channel channel = Channel.builder()
-                .projectId(projectId)
-                .channelId(channelId)
-                .name("DM")
-                .fileUrl(baseImage)
-                .users(Collections.singletonList(findUser()))
-                .notificationOnUsers(Collections.singletonList(findUser()))
-                .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                .build();
-
-        channelRepository.save(channel);
-        addUser(findUser(), channelId);
-        addUser(dmUser, channelId);
     }
 
     @Override
@@ -180,6 +160,7 @@ public class ChannelServiceImpl implements ChannelService {
             String channelName = channel.getName();
             String imageUrl = channel.getFileUrl();
             List<User> users = channel.getUsers();
+            boolean dm = channel.isDM();
             if (users.size() == 2) {
                 User targetUser = users.stream()
                         .filter(u -> !u.equals(user))
@@ -188,6 +169,7 @@ public class ChannelServiceImpl implements ChannelService {
 
                 channelName = targetUser.getName();
                 imageUrl = targetUser.getFileUrl();
+                dm = true;
             }
             channelResponses.add(
                     ChannelResponse.builder()
@@ -196,6 +178,7 @@ public class ChannelServiceImpl implements ChannelService {
                             .image(imageUrl)
                             .message(chat.getMessage())
                             .time(chat.getTime())
+                            .isDm(dm)
                             .build()
             );
         }

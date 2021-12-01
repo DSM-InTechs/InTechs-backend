@@ -19,6 +19,8 @@ public class ChannelResponse {
 
     private final String message;
 
+    private final boolean isDm;
+
     private final LocalDateTime time;
 
 }

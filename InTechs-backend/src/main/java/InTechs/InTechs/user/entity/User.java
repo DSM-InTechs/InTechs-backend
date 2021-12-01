@@ -4,10 +4,7 @@ import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.project.entity.Project;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -21,6 +18,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Document(collection = "user")
 public class User {
 
@@ -66,4 +64,5 @@ public class User {
         this.fileUrl = fileUrl;
         return this;
     }
+
 }

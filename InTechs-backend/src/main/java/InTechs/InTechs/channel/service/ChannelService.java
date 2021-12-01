@@ -9,18 +9,18 @@ import java.util.List;
 
 public interface ChannelService {
 
-    void updateChannel(String channelId, ChannelRequest channelRequest) throws IOException;
+    void updateChannel(int projectId, String channelId, ChannelRequest channelRequest) throws IOException;
 
     void createChannel(int projectId, ChannelRequest channelRequest);
 
-    void deleteChannel(String channelId);
+    void deleteChannel(int projectId, String channelId);
 
-    List<ProfileResponse> getProfiles(String channelId);
+    List<ProfileResponse> getProfiles(int projectId, String channelId);
 
-    void AddUser(String targetEmail, String channelId);
+    void AddUser(int projectId, String targetEmail, String channelId);
 
-    void exitChannel(String channelId);
+    void exitChannel(int projectId, String channelId);
 
-    List<ChannelResponse> getChannels();
+    List<ChannelResponse> getChannels(int projectId);
 
 }

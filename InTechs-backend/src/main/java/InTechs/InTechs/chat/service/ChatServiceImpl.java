@@ -40,37 +40,6 @@ public class  ChatServiceImpl implements ChatService {
     private final SocketIOServer socketIOServer;
 
 
-    @Override
-    public List<ChatResponse> getChatList(String channelId) {
-        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotFoundException::new);
-
-        List<Chat> chatList = chatRepository.findBySenderAndChannelId(user.getEmail(), channelId);
-
-        List<ChatResponse> chatResponses = new ArrayList<>();
-        for(Chat chat : chatList) {
-            User sender = userRepository.findByEmail(chat.getSender().getEmail())
-                    .orElseThrow(UserNotFoundException::new);
-
-            chatResponses.add(
-                    ChatResponse.builder()
-                            .sender(SenderResponse.builder()
-                                    .email(sender.getEmail())
-                                    .image(sender.getFileUrl())
-                                    .name(sender.getName())
-                                    .build())
-                            .message(chat.getMessage())
-                            .id(channelId)
-                            .isDelete(false)
-                            .notice(false)
-                            .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                            .build()
-            );
-        }
-
-        return chatResponses;
-    }
-
     @SneakyThrows
     @Override
     public void sendChat(User user, String channelId, String message) {

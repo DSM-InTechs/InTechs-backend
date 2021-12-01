@@ -1,7 +1,7 @@
 package InTechs.InTechs.chat.controller;
 
 import InTechs.InTechs.chat.payload.request.ChatDeleteRequest;
-import InTechs.InTechs.chat.payload.request.ChatRequest;
+import InTechs.InTechs.chat.payload.request.TextRequest;
 import InTechs.InTechs.chat.service.MessageService;
 import InTechs.InTechs.chat.service.SocketService;
 import com.corundumstudio.socketio.SocketIOServer;
@@ -27,7 +27,7 @@ public class SocketController {
         server.addEventListener("joinChannel", String.class,
                 (client, channel, ackSender) -> socketService.joinChannel(client, channel));
 
-        server.addEventListener("send", ChatRequest.class,
+        server.addEventListener("send", TextRequest.class,
                 (client, data, ackSender) -> socketService.chat(client, data));
 
         server.addEventListener("delete", ChatDeleteRequest.class,

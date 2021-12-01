@@ -25,14 +25,16 @@ public class NotificationSendService {
     public void sendTargetsMessage(List<String> targetTokens, String title, String body, String image) throws FirebaseMessagingException {
         Notification notification = Notification.builder().setTitle(title).setBody(body).setImage(image).build();
         MulticastMessage message = MulticastMessage.builder()
+
                 .setApnsConfig(ApnsConfig.builder()
                         .setAps(Aps.builder()
-                                .setAlert(ApsAlert.builder()
-                                        .setTitle(title)
-                                        .setBody(body)
-                                        .build())
-                                .setContentAvailable(true)
-                                .setMutableContent(false)
+                                .setBadge(42)
+//                                .setAlert(ApsAlert.builder()
+//                                        .setTitle(title)
+//                                        .setBody(body)
+//                                        .build())
+//                                .setContentAvailable(true)
+//                                .setMutableContent(false)
                                 .build())
                         .putCustomData("title", title)
                         .putCustomData("body", body).build())

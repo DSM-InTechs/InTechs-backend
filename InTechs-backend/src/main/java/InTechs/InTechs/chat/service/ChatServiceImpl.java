@@ -4,6 +4,7 @@ import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.entity.ChatType;
 import InTechs.InTechs.chat.entity.Sender;
+import InTechs.InTechs.chat.payload.request.FileRequest;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
 import InTechs.InTechs.channel.repository.ChannelRepository;
 import InTechs.InTechs.chat.payload.response.SenderResponse;
@@ -19,17 +20,15 @@ import com.corundumstudio.socketio.SocketIOServer;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ChatServiceImpl implements ChatService {
+public class  ChatServiceImpl implements ChatService {
 
     private final UserRepository userRepository;
     private final ChatRepository chatRepository;
@@ -94,65 +93,39 @@ public class ChatServiceImpl implements ChatService {
 
         Channel channel = channelRepository.findById(channelId).orElseThrow(ChannelNotFoundException::new);
 
-        //channel.addChat(chat);
         channelRepository.save(channel);
-
         chatRepository.save(chat);
     }
 
     @SneakyThrows
-    public void sendFile(User user, String channelId, MultipartFile file) {
-        Channel channel = channelRepository.findById(channelId).orElseThrow(ChannelNotFoundException::new);
-        String fileName = UUID.randomUUID().toString();
+    @Override
+    public void sendFile(String channelId, FileRequest fileRequest) {
+        String originFileName = fileRequest.getFile().getName();
+        ChatType chatType = ChatType.valueOf(fileRequest.getChatType());
 
         Sender sender = Sender.builder()
-                .email(user.getEmail())
-                .name(user.getName())
-                .image(user.getFileUrl())
+                .email(findUser().getEmail())
+                .name(findUser().getName())
+                .image(findUser().getFileUrl())
                 .build();
         Chat chat = Chat.builder()
                 .sender(sender)
-                .message(fileName)
+                .message(originFileName)
                 .channelId(channelId)
                 .isDeleted(false)
                 .notice(false)
-                .chatType(ChatType.FILE)
+                .chatType(chatType)
                 .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
+        String fileName = chat.getId().toString();
 
         socketIOServer.getRoomOperations(channelId).sendEvent("send-file", chat);
-
-
-        fileUploader.uploadFile(file, fileName);
-        //channel.addChat(chat);
+        fileUploader.uploadFile(fileRequest.getFile(), fileName);
         chatRepository.save(chat);
     }
 
-    @SneakyThrows
-    public void sendImage(User user, String channelId, MultipartFile file) {
-        Channel channel = channelRepository.findById(channelId).orElseThrow(ChannelNotFoundException::new);
-        String fileName = UUID.randomUUID().toString();
-
-        Sender sender = Sender.builder()
-                .email(user.getEmail())
-                .name(user.getName())
-                .image(user.getFileUrl())
-                .build();
-        Chat chat = Chat.builder()
-                .sender(sender)
-                .message(fileName)
-                .channelId(channelId)
-                .isDeleted(false)
-                .notice(false)
-                .chatType(ChatType.IMAGE)
-                .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                .build();
-
-        socketIOServer.getRoomOperations(channelId).sendEvent("send-image", chat);
-
-
-        fileUploader.uploadFile(file, fileName);
-        //channel.addChat(chat);
-        chatRepository.save(chat);
+    private User findUser() {
+        return userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
     }
 }

@@ -24,12 +24,6 @@ public class NoticeController {
         noticeService.updateNotice(projectId, channelId, chatId, noticeRequest);
     }
 
-    @GetMapping("/notice")
-    public NoticeResponse currentNotice(@PathVariable int projectId,
-                                        @PathVariable String channelId) {
-        return noticeService.currentNotice(projectId, channelId);
-    }
-
     @GetMapping("/notices")
     public List<NoticeResponse> getNotices(@PathVariable int projectId,
                                            @PathVariable String channelId) {

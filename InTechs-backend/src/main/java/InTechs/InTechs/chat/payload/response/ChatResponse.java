@@ -29,4 +29,8 @@ public class ChatResponse {
 
     private LocalDateTime time;
 
+    public String getTime() {
+        return time.toString();
+    }
+
 }

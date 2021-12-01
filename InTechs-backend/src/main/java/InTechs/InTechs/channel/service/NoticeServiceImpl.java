@@ -32,21 +32,6 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public NoticeResponse currentNotice(int projectId, String channelId) {
-        Chat notice = chatRepository.findTop1ByChannelIdOrderByTime(channelId)
-                .orElseThrow(RuntimeException::new);
-
-        User user = userRepository.findByEmail(notice.getSender().getEmail())
-                .orElseThrow(UserNotFoundException::new);
-
-        return NoticeResponse.builder()
-                .name(user.getName())
-                .time(notice.getTime())
-                .message(notice.getMessage())
-                .build();
-    }
-
-    @Override
     public List<NoticeResponse> noticeList(int projectId, String channelId) {
         return chatRepository.findByChannelIdAndNoticeIsTrue(channelId).stream()
                 .map(chat -> NoticeResponse.builder()

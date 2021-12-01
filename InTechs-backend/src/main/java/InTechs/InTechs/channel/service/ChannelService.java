@@ -1,7 +1,6 @@
 package InTechs.InTechs.channel.service;
 
 import InTechs.InTechs.channel.payload.request.ChannelRequest;
-import InTechs.InTechs.channel.payload.request.DirectRequest;
 import InTechs.InTechs.channel.payload.response.ChannelResponse;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
 

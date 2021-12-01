@@ -20,12 +20,12 @@ public class ChatDeleteTests {
     ChatRepository chatRepository;
 
     @Test
-    public void dirtyCheckingTest(){
+    public void chatCreateTest(){
         Chat chat = Chat.builder()
                 .message("테스트dd")
                 .time(LocalDateTime.now())
                 .sender(Sender.builder().email("tpsddej").name("Dddad").image("dfas").build())
-                .notice(false)
+                .notice(true)
                 .channelId("619757baa528e1194ea7dbc6")
                 .isDeleted(false).build();
 
@@ -34,7 +34,7 @@ public class ChatDeleteTests {
         //messageService.messageDelete(chat.getId().toString());
 
         Chat c = chatRepository.findById(chat.getId().toString()).orElseThrow();
-        assertThat(c.isDeleted()).isEqualTo(true);
+        assertThat(c.getChannelId()).isEqualTo("619757baa528e1194ea7dbc6");
 
     }
 }

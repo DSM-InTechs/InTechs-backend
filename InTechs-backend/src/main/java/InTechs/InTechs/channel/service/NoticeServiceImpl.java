@@ -22,7 +22,7 @@ public class NoticeServiceImpl implements NoticeService {
     private final UserRepository userRepository;
 
     @Override
-    public void updateNotice(String chatId, NoticeRequest noticeRequest) {
+    public void updateNotice(int projectId, String channelId, String chatId, NoticeRequest noticeRequest) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(ChatChannelNotFoundException::new);
 
@@ -32,7 +32,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public NoticeResponse currentNotice(String channelId) {
+    public NoticeResponse currentNotice(int projectId, String channelId) {
         Chat notice = chatRepository.findTop1ByChannelIdOrderByTime(channelId)
                 .orElseThrow(RuntimeException::new);
 
@@ -47,7 +47,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public List<NoticeResponse> noticeList(String channelId) {
+    public List<NoticeResponse> noticeList(int projectId, String channelId) {
         return chatRepository.findByChannelIdAndNoticeIsTrue(channelId).stream()
                 .map(chat -> NoticeResponse.builder()
                         .name(chat.getSender().getName())

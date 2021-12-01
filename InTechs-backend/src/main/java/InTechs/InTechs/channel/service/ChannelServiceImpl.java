@@ -63,8 +63,8 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
-    public void updateChannel(String channelId, ChannelRequest channelRequest) throws IOException {
-        Channel channel = channelRepository.findById(channelId)
+    public void updateChannel(int projectId, String channelId, ChannelRequest channelRequest) throws IOException {
+        Channel channel = channelRepository.findByProjectIdAndChannelId(projectId, channelId)
                 .orElseThrow(ChatChannelNotFoundException::new);
 
         MultipartFile file = channelRequest.getFileUrl();
@@ -79,16 +79,16 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
-    public void deleteChannel(String channelId) {
-        Channel channel = channelRepository.findById(channelId)
+    public void deleteChannel(int projectId, String channelId) {
+        Channel channel = channelRepository.findByProjectIdAndChannelId(projectId, channelId)
                 .orElseThrow(ChatChannelNotFoundException::new);
 
         channelRepository.delete(channel);
     }
 
     @Override
-    public List<ProfileResponse> getProfiles(String channelId) {
-        Channel channel = channelRepository.findById(channelId)
+    public List<ProfileResponse> getProfiles(int projectId, String channelId) {
+        Channel channel = channelRepository.findByProjectIdAndChannelId(projectId, channelId)
                 .orElseThrow(ChatChannelNotFoundException::new);
 
        return channel.getUsers().stream()
@@ -100,22 +100,23 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
-    public void AddUser(String targetEmail, String channelId) {
-        Channel channel = channelRepository.findById(channelId)
+    public void AddUser(int projectId, String targetEmail, String channelId) {
+        Channel channel = channelRepository.findByProjectIdAndChannelId(projectId, channelId)
                 .orElseThrow(ChatChannelNotFoundException::new);
 
         User target = userRepository.findByEmail(targetEmail)
                 .orElseThrow(UserNotFoundException::new);
 
         channel.addUser(target);
+        channel.notificationOn(target);
         channelRepository.save(channel);
 
         addUser(target, channelId);
     }
 
     @Override
-    public void exitChannel(String channelId) {
-        Channel channel = channelRepository.findById(channelId)
+    public void exitChannel(int projectId, String channelId) {
+        Channel channel = channelRepository.findByProjectIdAndChannelId(projectId, channelId)
                 .orElseThrow(ChatChannelNotFoundException::new);
 
         channel.deleteUser(findUser());
@@ -138,8 +139,8 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
-    public List<ChannelResponse> getChannels() {
-        List<Channel> channels = channelRepository.findByUsersContains(findUser());
+    public List<ChannelResponse> getChannels(int projectId) {
+        List<Channel> channels = channelRepository.findByProjectIdAndUsersContains(projectId, findUser());
         List<ChannelResponse> channelResponses = new ArrayList<>();
 
         for(Channel channel : channels) {
@@ -147,8 +148,6 @@ public class ChannelServiceImpl implements ChannelService {
                     .orElse(Chat.builder()
                                 .message("")
                                 .time(null).build());
-
-            System.out.println(chat);
 
             channelResponses.add(
                     ChannelResponse.builder()

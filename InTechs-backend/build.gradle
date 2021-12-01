@@ -19,7 +19,6 @@ repositories {
 }
 
 dependencies {
-	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -40,7 +39,7 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.0'
-	implementation 'com.corundumstudio.socketio:netty-socketio:1.7.18'
+	implementation 'com.corundumstudio.socketio:netty-socketio:1.7.19'
 	implementation group: 'com.google.firebase', name: 'firebase-admin', version: '7.1.0'
 }
 

@@ -2,15 +2,10 @@ package InTechs.InTechs.chat.service;
 
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.payload.request.ChatDeleteRequest;
-import InTechs.InTechs.chat.payload.response.ChatResponse;
-import InTechs.InTechs.chat.payload.response.ChatsResponse;
-import InTechs.InTechs.chat.payload.response.ErrorResponse;
-import InTechs.InTechs.chat.payload.response.SenderResponse;
+import InTechs.InTechs.chat.payload.response.*;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.MessageNotFoundException;
-import InTechs.InTechs.exception.exceptions.UserNotFoundException;
 import InTechs.InTechs.file.FileUploader;
-import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.user.repository.UserRepository;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
@@ -18,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -33,8 +27,6 @@ import java.util.stream.Collectors;
 public class MessageService {
     private final ChatRepository chatRepository;
     private final SocketIOServer server;
-    private final UserRepository userRepository;
-    private final FileUploader fileUploader;
 
     public void messageDelete(SocketIOClient client, ChatDeleteRequest req){
         if(!client.getAllRooms().contains(req.getChannelId())) {
@@ -56,33 +48,24 @@ public class MessageService {
     public ChatsResponse readChat(String email, String channelId, Pageable pageable){
         List<Chat> chats = chatRepository.findByChannelId(channelId,pageable);
         Chat noticeChat = chatRepository.findByNoticeTrueAndChannelId(channelId).orElseGet(()->Chat.builder().build());
-
-        User noticeSender = new User();
         if(noticeChat.getSender()!=null){
-            noticeSender = userRepository.findById(noticeChat.getSender().getEmail()).orElseThrow(UserNotFoundException::new);
+            return ChatsResponse.builder()
+                    .channelId(channelId)
+                    .notice(ChatResponse.builder()
+                            .id(String.valueOf(noticeChat.getId()))
+                            .message(noticeChat.getMessage())
+                            .sender(SenderResponse.builder()
+                                    .email(noticeChat.getSender().getEmail())
+                                    .name(noticeChat.getSender().getName())
+                                    .image(noticeChat.getSender().getImage()).build())
+                            .time(noticeChat.getTime()).build())
+                    .chats(chatResponsesCreate(chats, email))
+                    .build();
         }
         return ChatsResponse.builder()
                 .channelId(channelId)
-                .notice(ChatResponse.builder()
-                        .id(String.valueOf(noticeChat.getId()))
-                        .message(noticeChat.getMessage())
-                        .sender(SenderResponse.builder()
-                                .email(noticeSender.getEmail())
-                                .name(noticeSender.getName())
-                                .image(imageUrl(noticeSender.getFileUrl())).build())
-                        .time(noticeChat.getTime()).build())
                 .chats(chatResponsesCreate(chats, email))
                 .build();
-    }
-
-
-    private String imageUrl(String fileName) {
-        String fileUrl = fileUploader.getObjectUrl(fileName);
-
-        if(fileUrl == null) {
-            fileUrl = fileUploader.getObjectUrl("인덱스 프로필.jpg");
-        }
-        return fileUrl;
     }
 
     public List<ChatResponse> messageSearch(String email, String channelId, String message){

@@ -16,10 +16,8 @@ public interface ChatRepository extends MongoRepository<Chat, String> {
 
     List<Chat> findByChannelIdAndNoticeIsTrue(String channelId);
 
-    Chat findTop1ByChannelIdOrderByTime(String channelId);
-
     List<Chat> findAllByChannelIdAndMessageContaining(String channelId, String message);
 
-    Optional<Chat> findTopByChannelIdOrderByTime(String channelId);
+    Optional<Chat> findTop1ByChannelIdOrderByTime(String channelId);
 
 }

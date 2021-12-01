@@ -3,7 +3,7 @@ package InTechs.InTechs.chat.service;
 import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.chat.entity.ChatType;
 import InTechs.InTechs.chat.payload.request.TextRequest;
-import InTechs.InTechs.chat.payload.response.ChatResponse;
+import InTechs.InTechs.chat.payload.response.ChatSendResponse;
 import InTechs.InTechs.chat.payload.response.ErrorResponse;
 import InTechs.InTechs.channel.repository.ChannelRepository;
 import InTechs.InTechs.chat.payload.response.SenderResponse;
@@ -105,7 +105,7 @@ public class SocketServiceImpl implements SocketService {
 
         server.getRoomOperations(textRequest.getChannelId()).sendEvent(
                 "send",
-                ChatResponse.builder()
+                ChatSendResponse.builder()
                     .sender(SenderResponse.builder()
                             .email(user.getEmail())
                             .name(user.getName())

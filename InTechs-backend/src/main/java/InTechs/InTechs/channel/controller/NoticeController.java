@@ -10,26 +10,30 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/channel")
+@RequestMapping("/{projectId}/{channelId}")
 public class NoticeController {
 
     private final NoticeService noticeService;
 
     @PatchMapping("/{chatId}/notice")
-    public void setNotice(@PathVariable String chatId,
+    public void setNotice(@PathVariable int projectId,
+                          @PathVariable String channelId,
+                          @PathVariable String chatId,
                           @RequestBody NoticeRequest noticeRequest) {
 
-        noticeService.updateNotice(chatId, noticeRequest);
+        noticeService.updateNotice(projectId, channelId, chatId, noticeRequest);
     }
 
-    @GetMapping("/{channelId}/notice")
-    public NoticeResponse currentNotice(@PathVariable String channelId) {
-        return noticeService.currentNotice(channelId);
+    @GetMapping("/notice")
+    public NoticeResponse currentNotice(@PathVariable int projectId,
+                                        @PathVariable String channelId) {
+        return noticeService.currentNotice(projectId, channelId);
     }
 
-    @GetMapping("/{channelId}/notices")
-    public List<NoticeResponse> getNotices(@PathVariable String channelId) {
-        return noticeService.noticeList(channelId);
+    @GetMapping("/notices")
+    public List<NoticeResponse> getNotices(@PathVariable int projectId,
+                                           @PathVariable String channelId) {
+        return noticeService.noticeList(projectId, channelId);
     }
 
 }

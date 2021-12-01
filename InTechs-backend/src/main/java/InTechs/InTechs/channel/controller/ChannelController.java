@@ -13,48 +13,53 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/channel")
+@RequestMapping("/{projectId}")
 public class ChannelController {
 
     private final ChannelService channelService;
 
-    @PostMapping("/{projectId}")
+    @PostMapping
     public void createChannel(@PathVariable int projectId,
                               @RequestBody ChannelRequest channelRequest) {
         channelService.createChannel(projectId, channelRequest);
     }
 
     @PatchMapping("/{channelId}")
-    public void updateChannel(@PathVariable String channelId,
+    public void updateChannel(@PathVariable int projectId,
+                              @PathVariable String channelId,
                               @ModelAttribute @Valid ChannelRequest channelRequest) throws IOException {
 
-        channelService.updateChannel(channelId, channelRequest);
+        channelService.updateChannel(projectId, channelId, channelRequest);
     }
 
     @DeleteMapping("/{channelId}")
-    public void deleteChannel(@PathVariable String channelId) {
-        channelService.deleteChannel(channelId);
+    public void deleteChannel(@PathVariable int projectId,
+                              @PathVariable String channelId) {
+        channelService.deleteChannel(projectId, channelId);
     }
 
     @PostMapping("/{channelId}/{email}")
-    public void addUser(@PathVariable String channelId,
+    public void addUser(@PathVariable int projectId,
+                        @PathVariable String channelId,
                         @PathVariable String email) {
-        channelService.AddUser(email, channelId);
+        channelService.AddUser(projectId, email, channelId);
     }
 
     @PatchMapping("/{channelId}/user")
-    public void exitUser(@PathVariable String channelId) {
-        channelService.exitChannel(channelId);
+    public void exitUser(@PathVariable int projectId,
+                         @PathVariable String channelId) {
+        channelService.exitChannel(projectId, channelId);
     }
 
     @GetMapping("/{channelId}/users")
-    public List<ProfileResponse> getProfiles(@PathVariable  String channelId) {
-        return channelService.getProfiles(channelId);
+    public List<ProfileResponse> getProfiles(@PathVariable int projectId,
+                                             @PathVariable  String channelId) {
+        return channelService.getProfiles(projectId, channelId);
     }
 
     @GetMapping("/channels")
-    public List<ChannelResponse> getChannels() {
-        return channelService.getChannels();
+    public List<ChannelResponse> getChannels(@PathVariable int projectId) {
+        return channelService.getChannels(projectId);
     }
 
 }

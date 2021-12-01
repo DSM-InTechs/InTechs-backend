@@ -117,7 +117,6 @@ public class SocketServiceImpl implements SocketService {
                     .notice(false)
                     .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                     .build()
-
         );
       
         Channel channel = channelRepository.findById(textRequest.getChannelId()).orElseThrow(ChannelNotFoundException::new);

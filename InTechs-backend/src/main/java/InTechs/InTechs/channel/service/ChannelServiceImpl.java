@@ -6,13 +6,11 @@ import InTechs.InTechs.channel.payload.response.ChannelResponse;
 import InTechs.InTechs.channel.repository.ChannelRepository;
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.entity.ChatType;
-import InTechs.InTechs.chat.entity.Sender;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
 import InTechs.InTechs.file.FileUploader;
 import InTechs.InTechs.security.auth.AuthenticationFacade;
-import InTechs.InTechs.user.entity.ChannelUser;
 import InTechs.InTechs.user.entity.User;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
 import InTechs.InTechs.user.repository.UserRepository;
@@ -24,10 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static InTechs.InTechs.chat.entity.ChatType.INFO;
 
 @Service
 @RequiredArgsConstructor
@@ -57,9 +54,12 @@ public class ChannelServiceImpl implements ChannelService {
                 .name(channelRequest.getName())
                 .fileUrl(baseImage)
                 .users(Collections.singletonList(user))
+                .notificationOnUsers(Collections.singletonList(user))
+                .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
 
         channelRepository.save(channel);
+        addUser(user, channelId);
     }
 
     @Override
@@ -107,10 +107,69 @@ public class ChannelServiceImpl implements ChannelService {
         User target = userRepository.findByEmail(targetEmail)
                 .orElseThrow(UserNotFoundException::new);
 
-        String addMessage = target.getName() + "님이 입장하셨습니다.";
-
         channel.addUser(target);
         channelRepository.save(channel);
+
+        addUser(target, channelId);
+    }
+
+    @Override
+    public void exitChannel(String channelId) {
+        Channel channel = channelRepository.findById(channelId)
+                .orElseThrow(ChatChannelNotFoundException::new);
+
+        channel.deleteUser(findUser());
+        channelRepository.save(channel);
+
+        String exitMessage = findUser().getName() + "님이 퇴장하셨습니다.";
+
+        server.getRoomOperations(channelId).sendEvent(
+                "exitUser",
+                exitMessage);
+
+        Chat chat = Chat.builder()
+                .message(exitMessage)
+                .channelId(channelId)
+                .time(LocalDateTime.now())
+                .chatType(ChatType.INFO)
+                .build();
+
+        chatRepository.save(chat);
+    }
+
+    @Override
+    public List<ChannelResponse> getChannels() {
+        List<Channel> channels = channelRepository.findByUsersContains(findUser());
+        List<ChannelResponse> channelResponses = new ArrayList<>();
+
+        for(Channel channel : channels) {
+            Chat chat = chatRepository.findTop1ByChannelIdOrderByTime(channel.getChannelId())
+                    .orElse(Chat.builder()
+                                .message("")
+                                .time(null).build());
+
+            System.out.println(chat);
+
+            channelResponses.add(
+                    ChannelResponse.builder()
+                            .id(channel.getChannelId())
+                            .name(channel.getName())
+                            .image(channel.getFileUrl())
+                            .message(chat.getMessage())
+                            .time(chat.getTime())
+                            .build()
+            );
+        }
+        return channelResponses;
+    }
+
+    private User findUser() {
+        return userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
+    }
+
+    private void addUser(User user, String channelId) {
+        String addMessage = user.getName() + "님이 입장하셨습니다.";
 
         server.getRoomOperations(channelId).sendEvent(
                 "addUser",
@@ -124,42 +183,6 @@ public class ChannelServiceImpl implements ChannelService {
                 .build();
 
         chatRepository.save(chat);
-
-    }
-
-    @Override
-    public void exitChannel(String channelId) {
-        Channel channel = channelRepository.findById(channelId)
-                .orElseThrow(ChatChannelNotFoundException::new);
-
-        channel.deleteUser(ChannelUser.builder().user(findUser()).build());
-        channelRepository.save(channel);
-    }
-
-    @Override
-    public List<ChannelResponse> getChannels() {
-        List<Channel> channels = channelRepository.findByUsersContains(findUser());
-        List<ChannelResponse> channelResponses = new ArrayList<>();
-
-        for(Channel channel : channels) {
-            Optional<Chat> chat = chatRepository.findTopByChannelIdOrderByTime(channel.getChannelId());
-            String lastChat = chat.map(Chat::getMessage).orElseThrow(ChatChannelNotFoundException::new);
-
-            channelResponses.add(
-                    ChannelResponse.builder()
-                            .id(channel.getChannelId())
-                            .name(channel.getName())
-                            .image(channel.getFileUrl())
-                            .message(lastChat)
-                            .build()
-            );
-        }
-        return channelResponses;
-    }
-
-    private User findUser() {
-        return userRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotFoundException::new);
     }
 
 }

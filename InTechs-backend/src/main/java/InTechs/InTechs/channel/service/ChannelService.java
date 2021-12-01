@@ -1,7 +1,6 @@
 package InTechs.InTechs.channel.service;
 
 import InTechs.InTechs.channel.payload.request.ChannelRequest;
-import InTechs.InTechs.channel.payload.request.DirectRequest;
 import InTechs.InTechs.channel.payload.response.ChannelResponse;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
 
@@ -11,8 +10,6 @@ import java.util.List;
 public interface ChannelService {
 
     void createChannel(int projectId, ChannelRequest channelRequest);
-
-    void createDirectMessage(int projectId, String email);
 
     void updateChannel(int projectId, String channelId, ChannelRequest channelRequest) throws IOException;
 

@@ -31,6 +31,8 @@ public class Channel {
 
     private String fileUrl;
 
+    private boolean isDM;
+
     private LocalDateTime time;
 
     public Channel updateName(String name) {

@@ -6,6 +6,7 @@ import InTechs.InTechs.channel.payload.response.ChannelResponse;
 import InTechs.InTechs.channel.repository.ChannelRepository;
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.entity.ChatType;
+import InTechs.InTechs.chat.entity.Sender;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
@@ -60,6 +61,27 @@ public class ChannelServiceImpl implements ChannelService {
 
         channelRepository.save(channel);
         addUser(user, channelId);
+    }
+
+    @Override
+    public void createDirectMessage(int projectId, String email) {
+        User dmUser = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+        String channelId = UUID.randomUUID().toString();
+
+        Channel channel = Channel.builder()
+                .projectId(projectId)
+                .channelId(channelId)
+                .name("DM")
+                .fileUrl(baseImage)
+                .users(Collections.singletonList(findUser()))
+                .notificationOnUsers(Collections.singletonList(findUser()))
+                .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                .build();
+
+        channelRepository.save(channel);
+        addUser(findUser(), channelId);
+        addUser(dmUser, channelId);
     }
 
     @Override
@@ -129,6 +151,11 @@ public class ChannelServiceImpl implements ChannelService {
                 exitMessage);
 
         Chat chat = Chat.builder()
+                .sender(Sender.builder()
+                        .email(findUser().getEmail())
+                        .name(findUser().getName())
+                        .image(findUser().getFileUrl())
+                        .build())
                 .message(exitMessage)
                 .channelId(channelId)
                 .time(LocalDateTime.now())
@@ -140,6 +167,7 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     public List<ChannelResponse> getChannels(int projectId) {
+        User user = findUser();
         List<Channel> channels = channelRepository.findByProjectIdAndUsersContains(projectId, findUser());
         List<ChannelResponse> channelResponses = new ArrayList<>();
 
@@ -149,11 +177,23 @@ public class ChannelServiceImpl implements ChannelService {
                                 .message("")
                                 .time(null).build());
 
+            String channelName = channel.getName();
+            String imageUrl = channel.getFileUrl();
+            List<User> users = channel.getUsers();
+            if (users.size() == 2) {
+                User targetUser = users.stream()
+                        .filter(u -> !u.equals(user))
+                        .findFirst()
+                        .orElseThrow(UserNotFoundException::new);
+
+                channelName = targetUser.getName();
+                imageUrl = targetUser.getFileUrl();
+            }
             channelResponses.add(
                     ChannelResponse.builder()
                             .id(channel.getChannelId())
-                            .name(channel.getName())
-                            .image(channel.getFileUrl())
+                            .name(channelName)
+                            .image(imageUrl)
                             .message(chat.getMessage())
                             .time(chat.getTime())
                             .build()
@@ -175,6 +215,11 @@ public class ChannelServiceImpl implements ChannelService {
                 addMessage);
 
         Chat chat = Chat.builder()
+                .sender(Sender.builder()
+                        .email(user.getEmail())
+                        .name(user.getName())
+                        .image(user.getFileUrl())
+                        .build())
                 .message(addMessage)
                 .channelId(channelId)
                 .time(LocalDateTime.now())

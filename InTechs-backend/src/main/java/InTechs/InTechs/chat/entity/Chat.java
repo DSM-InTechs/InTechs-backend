@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
@@ -34,6 +35,8 @@ public class Chat {
 
     private ChatType chatType;
 
+    private List<Thread> threads;
+
     public Chat updateNotice(boolean notice) {
         this.notice = notice;
         return this;
@@ -41,6 +44,10 @@ public class Chat {
 
     public void messageDelete(){
         this.isDeleted = true;
+    }
+
+    public void addThread(Thread thread){
+        threads.add(thread);
     }
 
 }

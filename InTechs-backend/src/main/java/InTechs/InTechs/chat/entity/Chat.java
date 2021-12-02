@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -35,7 +36,7 @@ public class Chat {
 
     private ChatType chatType;
 
-    private List<Thread> threads;
+    private List<Thread> threads = new ArrayList<>();
 
     public Chat updateNotice(boolean notice) {
         this.notice = notice;

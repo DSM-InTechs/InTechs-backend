@@ -4,6 +4,7 @@ import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.channel.payload.request.ChannelRequest;
 import InTechs.InTechs.channel.payload.response.ChannelInfoResponse;
 import InTechs.InTechs.channel.payload.response.ChannelResponse;
+import InTechs.InTechs.channel.payload.response.ChannelUser;
 import InTechs.InTechs.channel.repository.ChannelRepository;
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.entity.ChatType;
@@ -196,7 +197,20 @@ public class ChannelServiceImpl implements ChannelService {
                     .image(channel.getFileUrl())
                     .isDm(channel.isDM())
                     .isNotification(notificationCheck(channel.getNotificationOnUsers()))
+                    .users(channelUserList(channel.getUsers()))
                     .build();
+    }
+
+    private List<ChannelUser> channelUserList(List<User> users){
+        List<ChannelUser> channelUsers = new ArrayList<>();
+        for(User u : users){
+            channelUsers.add(ChannelUser.builder()
+                                .email(u.getEmail())
+                                .name(u.getName())
+                                .image(u.getFileUrl())
+                                .isActive(u.getIsActive()).build());
+        }
+        return channelUsers;
     }
 
     private User findUser() {

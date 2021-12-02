@@ -4,6 +4,7 @@ import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.channel.payload.request.ChannelRequest;
 import InTechs.InTechs.channel.payload.response.ChannelInfoResponse;
 import InTechs.InTechs.channel.payload.response.ChannelResponse;
+import InTechs.InTechs.channel.payload.response.ChannelUser;
 import InTechs.InTechs.channel.repository.ChannelRepository;
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.entity.ChatType;

@@ -8,6 +8,7 @@ import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChatNotFoundException;
 import InTechs.InTechs.user.entity.User;
 import com.corundumstudio.socketio.SocketIOClient;
+import com.corundumstudio.socketio.SocketIOServer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ThreadService {
     private final ChatRepository chatRepository;
+    private final SocketIOServer server;
+
 
     public void thread(SocketIOClient client, ThreadRequest req){
         User user = client.get("user");
@@ -25,6 +28,10 @@ public class ThreadService {
                 user,
                 req.getChatId(),
                 req.getMessage()
+        );
+
+        server.getRoomOperations(req.getChannelId()).sendEvent(
+                "thread"
         );
 
     }

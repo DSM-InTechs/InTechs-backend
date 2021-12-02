@@ -2,12 +2,14 @@ package InTechs.InTechs.channel.service;
 
 import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.channel.payload.request.ChannelRequest;
+import InTechs.InTechs.channel.payload.response.ChannelInfoResponse;
 import InTechs.InTechs.channel.payload.response.ChannelResponse;
 import InTechs.InTechs.channel.repository.ChannelRepository;
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.entity.ChatType;
 import InTechs.InTechs.chat.entity.Sender;
 import InTechs.InTechs.chat.repository.ChatRepository;
+import InTechs.InTechs.exception.exceptions.ChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.UserNotFoundException;
 import InTechs.InTechs.file.FileUploader;
@@ -185,6 +187,18 @@ public class ChannelServiceImpl implements ChannelService {
         return channelResponses;
     }
 
+    @Override
+    public ChannelInfoResponse channelInfo(String channelId) {
+        Channel channel = channelRepository.findById(channelId).orElseThrow(ChannelNotFoundException::new);
+        return ChannelInfoResponse.builder()
+                    .id(channel.getChannelId())
+                    .name(channel.getName())
+                    .image(channel.getFileUrl())
+                    .isDm(channel.isDM())
+                    .isNotification(notificationCheck(channel.getNotificationOnUsers()))
+                    .build();
+    }
+
     private User findUser() {
         return userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
@@ -212,4 +226,8 @@ public class ChannelServiceImpl implements ChannelService {
         chatRepository.save(chat);
     }
 
+    private boolean notificationCheck(List<User> users){
+        User user = userRepository.findById(authenticationFacade.getUserEmail()).orElseThrow(UserNotFoundException::new);
+        return users.contains(user);
+    }
 }

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 public class Thread {
-    private final LocalDateTime time;
-    private final Sender sender;
     private final String message;
+    private final Sender sender;
+    private final LocalDateTime time;
 }

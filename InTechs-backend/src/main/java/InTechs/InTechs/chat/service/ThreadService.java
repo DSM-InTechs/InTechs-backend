@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +35,7 @@ public class ThreadService {
                 Thread.builder()
                         .message(message)
                         .sender(Sender.builder().email(user.getEmail()).name(user.getName()).image(user.getFileUrl()).build())
-                        .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                        .time(LocalDateTime.now())
                         .build()
         );
         chatRepository.save(chat);

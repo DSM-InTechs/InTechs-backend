@@ -58,7 +58,10 @@ public class MessageService {
                                     .email(noticeChat.getSender().getEmail())
                                     .name(noticeChat.getSender().getName())
                                     .image(noticeChat.getSender().getImage()).build())
-                            .time(noticeChat.getTime()).build())
+                            .time(noticeChat.getTime())
+                            .isDelete(noticeChat.isDeleted())
+                            .isMine(email.equals(noticeChat.getSender().getEmail()))
+                            .chatType(noticeChat.getChatType()).build())
                     .chats(chatResponsesCreate(chats, email))
                     .build();
         }
@@ -85,6 +88,8 @@ public class MessageService {
                             .image(c.getSender().getImage()).build())
                     .time(c.getTime())
                     .isDelete(c.isDeleted())
+                    .isMine(email.equals(c.getSender().getEmail()))
+                    .chatType(c.getChatType())
                     .build());
         }
         return chatResponses;

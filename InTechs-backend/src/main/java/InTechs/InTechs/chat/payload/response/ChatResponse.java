@@ -1,5 +1,6 @@
 package InTechs.InTechs.chat.payload.response;
 
+import InTechs.InTechs.chat.entity.ChatType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,4 +17,5 @@ public class ChatResponse {
     private final SenderResponse sender;
     private final Boolean isMine;
     private final boolean isDelete;
+    private final ChatType chatType;
 }

@@ -1,6 +1,7 @@
 package InTechs.InTechs.channel.service;
 
 import InTechs.InTechs.channel.payload.request.ChannelRequest;
+import InTechs.InTechs.channel.payload.response.ChannelInfoResponse;
 import InTechs.InTechs.channel.payload.response.ChannelResponse;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
 
@@ -22,5 +23,7 @@ public interface ChannelService {
     void exitChannel(int projectId, String channelId);
 
     List<ChannelResponse> getChannels(int projectId);
+
+    ChannelInfoResponse channelInfo(String channelId);
 
 }

@@ -1,0 +1,44 @@
+package InTechs.InTechs.chat.service;
+
+import InTechs.InTechs.chat.entity.Chat;
+import InTechs.InTechs.chat.entity.Sender;
+import InTechs.InTechs.chat.entity.Thread;
+import InTechs.InTechs.chat.payload.request.ThreadRequest;
+import InTechs.InTechs.chat.repository.ChatRepository;
+import InTechs.InTechs.exception.exceptions.ChatNotFoundException;
+import InTechs.InTechs.user.entity.User;
+import com.corundumstudio.socketio.SocketIOClient;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
+@Service
+@RequiredArgsConstructor
+public class ThreadService {
+    private final ChatRepository chatRepository;
+
+    public void thread(SocketIOClient client, ThreadRequest req){
+        User user = client.get("user");
+
+        createThread(
+                user,
+                req.getChatId(),
+                req.getMessage()
+        );
+
+    }
+
+    private void createThread(User user, String chatId, String message){
+        Chat chat = chatRepository.findById(chatId).orElseThrow(ChatNotFoundException::new);
+        chat.addThread(
+                Thread.builder()
+                        .message(message)
+                        .sender(Sender.builder().email(user.getEmail()).name(user.getName()).image(user.getFileUrl()).build())
+                        .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                        .build()
+        );
+        chatRepository.save(chat);
+    }
+}

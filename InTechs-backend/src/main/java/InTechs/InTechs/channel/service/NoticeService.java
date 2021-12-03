@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface NoticeService {
 
-    void updateNotice(int projectId, String channelId, String chatId, NoticeRequest noticeRequest);
+    void updateNotice(String chatId, NoticeRequest noticeRequest);
 
-    List<NoticeResponse> noticeList(int projectId, String channelId);
+    List<NoticeResponse> noticeList(String channelId);
 
 }

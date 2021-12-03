@@ -196,7 +196,7 @@ public class ChannelServiceImpl implements ChannelService {
     public ChannelInfoResponse channelInfo(String channelId) {
         Channel channel = channelRepository.findById(channelId).orElseThrow(ChannelNotFoundException::new);
 
-        if (channel.isDM()) {
+        if (channel.getIsDM()) {
             return dmInfo(channel, authenticationFacade.getUserEmail());
         } else {
             return channelInfo(channel);
@@ -212,7 +212,7 @@ public class ChannelServiceImpl implements ChannelService {
                 .id(channel.getChannelId())
                 .name(partner.getName())
                 .image(partner.getFileUrl())
-                .isDm(channel.isDM())
+                .isDm(channel.getIsDM())
                 .isNotification(notificationCheck(channel.getNotificationOnUsers()))
                 .users(channelUserList(channel.getUsers()))
                 .build();
@@ -223,7 +223,7 @@ public class ChannelServiceImpl implements ChannelService {
                 .id(channel.getChannelId())
                 .name(channel.getName())
                 .image(channel.getFileUrl())
-                .isDm(channel.isDM())
+                .isDm(channel.getIsDM())
                 .isNotification(notificationCheck(channel.getNotificationOnUsers()))
                 .users(channelUserList(channel.getUsers()))
                 .build();

@@ -1,6 +1,7 @@
 package InTechs.InTechs.chat.payload.response;
 
 import InTechs.InTechs.chat.entity.ChatType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class ChatSendResponse {
 
     private ChatType chatType;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime time;
 
     public String getTime() {

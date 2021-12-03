@@ -201,10 +201,13 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     public ChannelInfoResponse dmInfo(Channel channel, String email){
+        User user = userRepository.findById(email).orElseThrow(UserNotFoundException::new);
+        User partner = channel.getUsers().stream().filter((u)-> !u.getEmail().equals(user.getEmail())).collect(Collectors.toList()).get(0);
+
         return ChannelInfoResponse.builder()
                 .id(channel.getChannelId())
-                .name(channel.getName())
-                .image(channel.getFileUrl())
+                .name(partner.getName())
+                .image(partner.getFileUrl())
                 .isDm(channel.isDM())
                 .isNotification(notificationCheck(channel.getNotificationOnUsers()))
                 .users(channelUserList(channel.getUsers()))

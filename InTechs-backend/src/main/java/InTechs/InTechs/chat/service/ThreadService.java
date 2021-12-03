@@ -31,7 +31,11 @@ public class ThreadService {
         );
 
         server.getRoomOperations(req.getChannelId()).sendEvent(
-                "thread"
+                "thread", ThreadResponse.builder()
+                        .chatId(req.getChatId())
+                        .message(req.getMessage())
+                        .sender(SenderResponse.builder().email(user.getEmail()).name(user.getName()).image(user.getFileUrl()).build())
+                        .build()
         );
 
     }

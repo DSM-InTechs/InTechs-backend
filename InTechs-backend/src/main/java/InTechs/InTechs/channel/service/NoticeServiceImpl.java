@@ -19,10 +19,9 @@ import java.util.stream.Collectors;
 public class NoticeServiceImpl implements NoticeService {
 
     private final ChatRepository chatRepository;
-    private final UserRepository userRepository;
 
     @Override
-    public void updateNotice(int projectId, String channelId, String chatId, NoticeRequest noticeRequest) {
+    public void updateNotice(String chatId, NoticeRequest noticeRequest) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(ChatChannelNotFoundException::new);
 
@@ -32,7 +31,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public List<NoticeResponse> noticeList(int projectId, String channelId) {
+    public List<NoticeResponse> noticeList(String channelId) {
         return chatRepository.findByChannelIdAndNoticeIsTrue(channelId).stream()
                 .map(chat -> NoticeResponse.builder()
                         .name(chat.getSender().getName())

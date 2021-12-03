@@ -191,14 +191,35 @@ public class ChannelServiceImpl implements ChannelService {
     @Override
     public ChannelInfoResponse channelInfo(String channelId) {
         Channel channel = channelRepository.findById(channelId).orElseThrow(ChannelNotFoundException::new);
+
+        if (channel.isDM()) {
+            return dmInfo(channel, authenticationFacade.getUserEmail());
+        } else {
+            return channelInfo(channel);
+        }
+
+    }
+
+    public ChannelInfoResponse dmInfo(Channel channel, String email){
         return ChannelInfoResponse.builder()
-                    .id(channel.getChannelId())
-                    .name(channel.getName())
-                    .image(channel.getFileUrl())
-                    .isDm(channel.isDM())
-                    .isNotification(notificationCheck(channel.getNotificationOnUsers()))
-                    .users(channelUserList(channel.getUsers()))
-                    .build();
+                .id(channel.getChannelId())
+                .name(channel.getName())
+                .image(channel.getFileUrl())
+                .isDm(channel.isDM())
+                .isNotification(notificationCheck(channel.getNotificationOnUsers()))
+                .users(channelUserList(channel.getUsers()))
+                .build();
+
+    }
+    private ChannelInfoResponse channelInfo(Channel channel){
+        return ChannelInfoResponse.builder()
+                .id(channel.getChannelId())
+                .name(channel.getName())
+                .image(channel.getFileUrl())
+                .isDm(channel.isDM())
+                .isNotification(notificationCheck(channel.getNotificationOnUsers()))
+                .users(channelUserList(channel.getUsers()))
+                .build();
     }
 
     private List<ChannelUser> channelUserList(List<User> users){

@@ -1,6 +1,8 @@
 package InTechs.InTechs.channel.controller;
 
 import InTechs.InTechs.channel.payload.request.ChannelRequest;
+import InTechs.InTechs.channel.payload.request.UpdateChannelRequest;
+import InTechs.InTechs.channel.payload.response.ChannelIdResponse;
 import InTechs.InTechs.channel.payload.response.ChannelResponse;
 import InTechs.InTechs.channel.service.ChannelService;
 import InTechs.InTechs.user.payload.response.ProfileResponse;
@@ -19,17 +21,17 @@ public class ChannelController {
     private final ChannelService channelService;
 
     @PostMapping
-    public void createChannel(@PathVariable int projectId,
-                              @RequestBody ChannelRequest channelRequest) {
-        channelService.createChannel(projectId, channelRequest);
+    public ChannelIdResponse createChannel(@PathVariable int projectId,
+                                @RequestBody ChannelRequest channelRequest) {
+        return channelService.createChannel(projectId, channelRequest);
     }
 
     @PatchMapping("/{channelId}")
     public void updateChannel(@PathVariable int projectId,
                               @PathVariable String channelId,
-                              @ModelAttribute @Valid ChannelRequest channelRequest) throws IOException {
+                              @ModelAttribute @Valid UpdateChannelRequest updateChannelRequest) throws IOException {
 
-        channelService.updateChannel(projectId, channelId, channelRequest);
+        channelService.updateChannel(projectId, channelId, updateChannelRequest);
     }
 
     @DeleteMapping("/{channelId}")

@@ -63,8 +63,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public ObjectMapper objectMapper() {
-//        return new ObjectMapper().registerModule(new JSR310Module());
-//    }
 }

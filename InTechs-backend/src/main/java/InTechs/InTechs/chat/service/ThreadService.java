@@ -4,6 +4,9 @@ import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.entity.Sender;
 import InTechs.InTechs.chat.entity.Thread;
 import InTechs.InTechs.chat.payload.request.ThreadRequest;
+import InTechs.InTechs.chat.payload.response.ErrorResponse;
+import InTechs.InTechs.chat.payload.response.SenderResponse;
+import InTechs.InTechs.chat.payload.response.ThreadResponse;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChatNotFoundException;
 import InTechs.InTechs.user.entity.User;
@@ -22,6 +25,11 @@ public class ThreadService {
 
 
     public void thread(SocketIOClient client, ThreadRequest req){
+        if(!client.getAllRooms().contains(req.getChannelId())) {
+            client.sendEvent("ERROR", new ErrorResponse(401, "Invalid Connection"));
+            client.disconnect();
+            return;
+        }
         User user = client.get("user");
 
         createThread(

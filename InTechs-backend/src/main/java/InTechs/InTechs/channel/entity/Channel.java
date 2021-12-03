@@ -31,7 +31,7 @@ public class Channel {
 
     private String fileUrl;
 
-    private boolean isDM;
+    private Boolean isDM;
 
     private LocalDateTime time;
 

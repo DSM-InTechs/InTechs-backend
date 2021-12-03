@@ -14,6 +14,6 @@ public class ChannelRequest {
 
     private String name;
 
-    private MultipartFile fileUrl;
+    private Boolean isDM;
 
 }

@@ -2,6 +2,8 @@ package InTechs.InTechs.channel.service;
 
 import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.channel.payload.request.ChannelRequest;
+import InTechs.InTechs.channel.payload.request.UpdateChannelRequest;
+import InTechs.InTechs.channel.payload.response.ChannelIdResponse;
 import InTechs.InTechs.channel.payload.response.ChannelInfoResponse;
 import InTechs.InTechs.channel.payload.response.ChannelResponse;
 import InTechs.InTechs.channel.payload.response.ChannelUser;
@@ -48,7 +50,7 @@ public class ChannelServiceImpl implements ChannelService {
     private String baseImage;
 
     @Override
-    public void createChannel(int projectId, ChannelRequest channelRequest) {
+    public ChannelIdResponse createChannel(int projectId, ChannelRequest channelRequest) {
         User user = findUser();
         String channelId = UUID.randomUUID().toString();
 
@@ -57,7 +59,7 @@ public class ChannelServiceImpl implements ChannelService {
                 .channelId(channelId)
                 .name(channelRequest.getName())
                 .fileUrl(baseImage)
-                .isDM(false)
+                .isDM(channelRequest.getIsDM())
                 .users(Collections.singletonList(user))
                 .notificationOnUsers(Collections.singletonList(user))
                 .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
@@ -65,21 +67,25 @@ public class ChannelServiceImpl implements ChannelService {
 
         channelRepository.save(channel);
         addUser(user, channelId);
+
+        return ChannelIdResponse.builder()
+                .channelId(channel.getChannelId())
+                .build();
     }
 
     @Override
-    public void updateChannel(int projectId, String channelId, ChannelRequest channelRequest) throws IOException {
+    public void updateChannel(int projectId, String channelId, UpdateChannelRequest updateChannelRequest) throws IOException {
         Channel channel = channelRepository.findByProjectIdAndChannelId(projectId, channelId)
                 .orElseThrow(ChatChannelNotFoundException::new);
 
-        MultipartFile file = channelRequest.getFileUrl();
+        MultipartFile file = updateChannelRequest.getFile();
         String fileName = UUID.randomUUID().toString();
 
         fileUploader.uploadFile(file, fileName);
 
         String fileUrl = fileUploader.getObjectUrl(fileName);
 
-        channelRepository.save(channel.updateName(channelRequest.getName()));
+        channelRepository.save(channel.updateName(updateChannelRequest.getName()));
         channelRepository.save(channel.updateFileUrl(fileUrl));
     }
 
@@ -163,8 +169,7 @@ public class ChannelServiceImpl implements ChannelService {
             String channelName = channel.getName();
             String imageUrl = channel.getFileUrl();
             List<User> users = channel.getUsers();
-            boolean dm = channel.isDM();
-            if (users.size() == 2) {
+            if (channel.getIsDM()) {
                 User targetUser = users.stream()
                         .filter(u -> !u.equals(user))
                         .findFirst()
@@ -172,7 +177,6 @@ public class ChannelServiceImpl implements ChannelService {
 
                 channelName = targetUser.getName();
                 imageUrl = targetUser.getFileUrl();
-                dm = true;
             }
             channelResponses.add(
                     ChannelResponse.builder()
@@ -181,7 +185,7 @@ public class ChannelServiceImpl implements ChannelService {
                             .image(imageUrl)
                             .message(chat.getMessage())
                             .time(chat.getTime())
-                            .isDm(dm)
+                            .isDM(channel.getIsDM())
                             .build()
             );
         }
@@ -195,7 +199,7 @@ public class ChannelServiceImpl implements ChannelService {
                     .id(channel.getChannelId())
                     .name(channel.getName())
                     .image(channel.getFileUrl())
-                    .isDm(channel.isDM())
+                    .isDm(channel.getIsDM())
                     .isNotification(notificationCheck(channel.getNotificationOnUsers()))
                     .users(channelUserList(channel.getUsers()))
                     .build();
@@ -244,4 +248,5 @@ public class ChannelServiceImpl implements ChannelService {
         User user = userRepository.findById(authenticationFacade.getUserEmail()).orElseThrow(UserNotFoundException::new);
         return users.contains(user);
     }
+
 }

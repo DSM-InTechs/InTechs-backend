@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -67,8 +68,11 @@ public class  ChatServiceImpl implements ChatService {
     @SneakyThrows
     @Override
     public void sendFile(String channelId, FileRequest fileRequest) {
-        String originFileName = fileRequest.getFile().getName();
+        String fileName = UUID.randomUUID().toString();
         ChatType chatType = ChatType.valueOf(fileRequest.getChatType());
+
+        fileUploader.uploadFile(fileRequest.getFile(), fileName);
+        String fileUrl = fileUploader.getObjectUrl(fileName);
 
         Sender sender = Sender.builder()
                 .email(findUser().getEmail())
@@ -77,17 +81,15 @@ public class  ChatServiceImpl implements ChatService {
                 .build();
         Chat chat = Chat.builder()
                 .sender(sender)
-                .message(originFileName)
+                .message(fileUrl)
                 .channelId(channelId)
                 .isDeleted(false)
                 .notice(false)
                 .chatType(chatType)
                 .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
-        String fileName = chat.getId().toString();
 
         socketIOServer.getRoomOperations(channelId).sendEvent("send-file", chat);
-        fileUploader.uploadFile(fileRequest.getFile(), fileName);
         chatRepository.save(chat);
     }
 

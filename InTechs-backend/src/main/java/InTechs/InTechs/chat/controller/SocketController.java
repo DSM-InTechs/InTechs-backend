@@ -1,6 +1,7 @@
 package InTechs.InTechs.chat.controller;
 
 import InTechs.InTechs.chat.payload.request.ChatDeleteRequest;
+import InTechs.InTechs.chat.payload.request.ChatUpdateRequest;
 import InTechs.InTechs.chat.payload.request.TextRequest;
 import InTechs.InTechs.chat.service.MessageService;
 import InTechs.InTechs.chat.service.SocketService;
@@ -32,6 +33,9 @@ public class SocketController {
 
         server.addEventListener("delete", ChatDeleteRequest.class,
                 ((client, data, ackSender) -> messageService.messageDelete(client, data)));
+
+        server.addEventListener("update", ChatUpdateRequest.class,
+                (((client, data, ackSender) -> messageService.messageUpdate(client, data))));
     }
 
 }

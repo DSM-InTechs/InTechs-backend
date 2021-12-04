@@ -2,11 +2,10 @@ package InTechs.InTechs.chat.service;
 
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.payload.request.ChatDeleteRequest;
+import InTechs.InTechs.chat.payload.request.ChatUpdateRequest;
 import InTechs.InTechs.chat.payload.response.*;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.MessageNotFoundException;
-import InTechs.InTechs.file.FileUploader;
-import InTechs.InTechs.user.repository.UserRepository;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import lombok.RequiredArgsConstructor;
@@ -74,6 +73,15 @@ public class MessageService {
     public List<ChatResponse> messageSearch(String email, String channelId, String message){
         List<Chat> chats = chatRepository.findAllByChannelIdAndMessageContaining(channelId, message).stream().filter((c)-> !c.isDeleted()).collect(Collectors.toList());
         return chatResponsesCreate(chats, email);
+    }
+
+    public void messageUpdate(SocketIOClient client, ChatUpdateRequest req){
+        if(!client.getAllRooms().contains(req.getChannelId())) {
+            clientDisconnect(client, 401, "Invalid Connection");
+            return;
+        }
+//        chatRepository.findById(req.getChatId()).orElseThrow(ChatNotFound)
+
     }
 
     private List<ChatResponse> chatResponsesCreate(List<Chat> chats, String email){

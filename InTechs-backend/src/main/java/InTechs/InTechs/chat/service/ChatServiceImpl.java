@@ -98,7 +98,7 @@ public class  ChatServiceImpl implements ChatService {
                                 .name(findUser().getName())
                                 .image(findUser().getFileUrl()).build())
                         .message(chat.getMessage())
-                        .chatType(ChatType.TEXT)
+                        .chatType(chatType)
                         .id(chat.getChannelId())
                         .isDelete(false)
                         .notice(false)

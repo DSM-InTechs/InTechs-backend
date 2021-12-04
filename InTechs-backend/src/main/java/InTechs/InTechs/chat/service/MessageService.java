@@ -36,7 +36,7 @@ public class MessageService {
 
         changeMessageDelete(req.getMessageId());
 
-        server.getRoomOperations(req.getChannelId()).sendEvent("delete",req.getChannelId());
+        server.getRoomOperations(req.getChannelId()).sendEvent("delete",req.getMessageId());
     }
 
     private void changeMessageDelete(String messageId){

@@ -5,6 +5,7 @@ import InTechs.InTechs.chat.payload.request.ChatDeleteRequest;
 import InTechs.InTechs.chat.payload.request.ChatUpdateRequest;
 import InTechs.InTechs.chat.payload.response.*;
 import InTechs.InTechs.chat.repository.ChatRepository;
+import InTechs.InTechs.exception.exceptions.ChatNotFoundException;
 import InTechs.InTechs.exception.exceptions.MessageNotFoundException;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 // 메세지에 이모티콘
-// 메세지 수정
+
 @RequiredArgsConstructor
 @Service
 public class MessageService {
@@ -53,10 +54,7 @@ public class MessageService {
                     .notice(ChatResponse.builder()
                             .id(String.valueOf(noticeChat.getId()))
                             .message(noticeChat.getMessage())
-                            .sender(SenderResponse.builder()
-                                    .email(noticeChat.getSender().getEmail())
-                                    .name(noticeChat.getSender().getName())
-                                    .image(noticeChat.getSender().getImage()).build())
+                            .sender(noticeChat.getSender())
                             .time(noticeChat.getTime())
                             .isDelete(noticeChat.isDeleted())
                             .isMine(email.equals(noticeChat.getSender().getEmail()))
@@ -105,10 +103,7 @@ public class MessageService {
             chatResponses.add(ChatResponse.builder()
                     .id(c.getId().toString())
                     .message(c.getMessage())
-                    .sender(SenderResponse.builder()
-                            .email(c.getSender().getEmail())
-                            .name(c.getSender().getName())
-                            .image(c.getSender().getImage()).build())
+                    .sender(c.getSender())
                     .time(c.getTime())
                     .isDelete(c.isDeleted())
                     .isMine(email.equals(c.getSender().getEmail()))

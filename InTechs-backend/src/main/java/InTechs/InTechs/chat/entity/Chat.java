@@ -38,6 +38,8 @@ public class Chat {
 
     private List<Thread> threads = new ArrayList<>();
 
+//    private Map<String, Integer> emojis = new LinkedHashMap<>();
+
     public Chat updateNotice(boolean notice) {
         this.notice = notice;
         return this;

@@ -93,13 +93,13 @@ public class  ChatServiceImpl implements ChatService {
         socketIOServer.getRoomOperations(channelId).sendEvent(
                 "send-file",
                 ChatSendResponse.builder()
+                        .id(chat.getId().toString())
                         .sender(SenderResponse.builder()
                                 .email(findUser().getEmail())
                                 .name(findUser().getName())
                                 .image(findUser().getFileUrl()).build())
                         .message(chat.getMessage())
                         .chatType(chatType)
-                        .id(chat.getChannelId())
                         .isDelete(false)
                         .notice(false)
                         .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))

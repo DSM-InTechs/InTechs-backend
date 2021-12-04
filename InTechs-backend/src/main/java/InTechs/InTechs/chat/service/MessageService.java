@@ -80,7 +80,22 @@ public class MessageService {
             clientDisconnect(client, 401, "Invalid Connection");
             return;
         }
-//        chatRepository.findById(req.getChatId()).orElseThrow(ChatNotFound)
+
+        Chat chat = chatRepository.findById(req.getChatId()).orElseThrow(ChatNotFoundException::new);
+        chat.messageUpdate(req.getMessage());
+        chatRepository.save(chat);
+
+        server.getRoomOperations(req.getChannelId())
+                .sendEvent(
+                        "update",
+                        ChatResponse.builder()
+                        .id(req.getChatId())
+                        .message(chat.getMessage())
+                        .isDelete(chat.isDeleted())
+                        .isMine(true)
+                        .chatType(chat.getChatType())
+                        .time(chat.getTime())
+                        .sender(chat.getSender()).build());
 
     }
 

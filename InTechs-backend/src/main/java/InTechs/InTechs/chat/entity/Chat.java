@@ -51,4 +51,8 @@ public class Chat {
         threads.add(thread);
     }
 
+    public void messageUpdate(String message){
+        this.message = message;
+    }
+
 }

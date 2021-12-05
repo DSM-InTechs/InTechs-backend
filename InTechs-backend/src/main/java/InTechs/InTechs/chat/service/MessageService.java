@@ -135,6 +135,11 @@ public class MessageService {
         return threadResponses;
     }
 
+    public void allFileRead(String channelId){
+//        chatRepository.findBy
+        // message에서 file이라는 것을 알 수 있는방법은...?
+    }
+
     public void emoji(SocketIOClient client, EmojiRequest req){
         if(!client.getAllRooms().contains(req.getChannelId())) {
             clientDisconnect(client, 401, "Invalid Connection");

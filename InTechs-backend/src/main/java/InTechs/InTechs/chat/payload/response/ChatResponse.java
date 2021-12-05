@@ -18,5 +18,5 @@ public class ChatResponse {
     private final boolean isDelete;
     private final ChatType chatType;
     private final List<ThreadResponse> threads;
-    private final Map<String, EmojiInfoResponse> emojis;
+    private final List<EmojiResponse> emojis;
 }

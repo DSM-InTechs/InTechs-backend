@@ -1,6 +1,7 @@
 package InTechs.InTechs.chat.service;
 
 import InTechs.InTechs.chat.entity.Chat;
+import InTechs.InTechs.chat.entity.ChatType;
 import InTechs.InTechs.chat.entity.Sender;
 import InTechs.InTechs.chat.entity.Thread;
 import InTechs.InTechs.chat.payload.request.ChatDeleteRequest;
@@ -135,9 +136,9 @@ public class MessageService {
         return threadResponses;
     }
 
-    public void allFileRead(String channelId){
-//        chatRepository.findBy
-        // message에서 file이라는 것을 알 수 있는방법은...?
+    public List<ChatResponse> allFileRead(String email, String channelId){
+        List<Chat> chats = chatRepository.findByChannelIdAndChatType(channelId, ChatType.FILE);
+        return chatResponsesCreate(chats, email);
     }
 
     public void emoji(SocketIOClient client, EmojiRequest req){

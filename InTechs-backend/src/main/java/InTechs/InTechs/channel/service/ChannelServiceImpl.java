@@ -11,6 +11,9 @@ import InTechs.InTechs.channel.repository.ChannelRepository;
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.entity.ChatType;
 import InTechs.InTechs.chat.entity.Sender;
+import InTechs.InTechs.chat.entity.Thread;
+import InTechs.InTechs.chat.payload.response.SenderResponse;
+import InTechs.InTechs.chat.payload.response.ThreadResponse;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
@@ -129,6 +132,7 @@ public class ChannelServiceImpl implements ChannelService {
     public void exitChannel(int projectId, String channelId) {
         Channel channel = channelRepository.findByProjectIdAndChannelId(projectId, channelId)
                 .orElseThrow(ChatChannelNotFoundException::new);
+        List<Thread> threadResponses = new ArrayList<>();
 
         channel.deleteUser(findUser());
         channelRepository.save(channel);
@@ -149,6 +153,10 @@ public class ChannelServiceImpl implements ChannelService {
                 .channelId(channelId)
                 .time(LocalDateTime.now())
                 .chatType(ChatType.INFO)
+                .isDeleted(false)
+                .notice(false)
+                .noticeTime(LocalDateTime.now())
+                .threads(threadResponses)
                 .build();
 
         chatRepository.save(chat);
@@ -248,6 +256,7 @@ public class ChannelServiceImpl implements ChannelService {
 
     private void addUser(User user, String channelId) {
         String addMessage = user.getName() + "님이 입장하셨습니다.";
+        List<Thread> threadResponses = new ArrayList<>();
 
         server.getRoomOperations(channelId).sendEvent(
                 "addUser",
@@ -263,6 +272,10 @@ public class ChannelServiceImpl implements ChannelService {
                 .channelId(channelId)
                 .time(LocalDateTime.now())
                 .chatType(ChatType.INFO)
+                .isDeleted(false)
+                .notice(false)
+                .noticeTime(LocalDateTime.now())
+                .threads(threadResponses)
                 .build();
 
         chatRepository.save(chat);
@@ -272,4 +285,5 @@ public class ChannelServiceImpl implements ChannelService {
         User user = userRepository.findById(authenticationFacade.getUserEmail()).orElseThrow(UserNotFoundException::new);
         return users.contains(user);
     }
+
 }

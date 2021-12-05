@@ -30,6 +30,8 @@ public class Chat {
 
     private boolean notice;
 
+    private LocalDateTime noticeTime;
+
     private String channelId;
 
     private boolean isDeleted;
@@ -42,6 +44,11 @@ public class Chat {
 
     public Chat updateNotice(boolean notice) {
         this.notice = notice;
+        return this;
+    }
+
+    public Chat updateNoticeTime(LocalDateTime noticeTime) {
+        this.noticeTime = noticeTime;
         return this;
     }
 

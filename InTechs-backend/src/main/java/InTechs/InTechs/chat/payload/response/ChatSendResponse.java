@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
@@ -30,8 +31,17 @@ public class ChatSendResponse {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime time;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime noticeTime;
+
+    private List<ThreadResponse> threads;
+
     public String getTime() {
         return time.toString();
+    }
+
+    public String getNoticeTime() {
+        return noticeTime.toString();
     }
 
 }

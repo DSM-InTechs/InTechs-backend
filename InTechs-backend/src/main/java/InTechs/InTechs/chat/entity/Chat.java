@@ -10,7 +10,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Builder
@@ -38,7 +40,7 @@ public class Chat {
 
     private List<Thread> threads = new ArrayList<>();
 
-//    private Map<String, Integer> emojis = new LinkedHashMap<>();
+    private Map<String, EmojiInfo> emojis = new LinkedHashMap<>();
 
     public Chat updateNotice(boolean notice) {
         this.notice = notice;
@@ -55,6 +57,13 @@ public class Chat {
 
     public void messageUpdate(String message){
         this.message = message;
+    }
+
+    public void addEmoji(String emoji, Sender sender){
+        if(emojis.containsKey(emoji)){
+            emojis.get(emoji).emojiUser(sender);
+        }
+        // 없을경우 처음 등록
     }
 
 }

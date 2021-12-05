@@ -174,14 +174,17 @@ public class MessageService {
                                 .build());
     }
 
-    private Map<String, EmojiInfoResponse> emojiCreate(Chat chat){
-        Map<String, EmojiInfoResponse> emojis = new HashMap<>();
+    private List<EmojiResponse> emojiCreate(Chat chat){
+        List<EmojiResponse> emojis = new ArrayList<>();
         for(String key : chat.getEmojis().keySet()){
             EmojiInfo emojiInfo = chat.getEmojis().get(key);
-            emojis.put(key, EmojiInfoResponse.builder()
-                                            .count(emojiInfo.getCount())
-                                            .users(createSenderResponse(emojiInfo.getUsers()))
-                                            .build());
+            emojis.add(
+                    EmojiResponse.builder()
+                            .emoji(key)
+                            .emojiInfo(EmojiInfoResponse.builder()
+                                    .count(emojiInfo.getCount())
+                                    .users(createSenderResponse(emojiInfo.getUsers())).build())
+                    .build());
         }
         return emojis;
     }

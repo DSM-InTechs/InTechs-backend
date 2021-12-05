@@ -2,11 +2,13 @@ package InTechs.InTechs.chat.service;
 
 import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.chat.entity.ChatType;
+import InTechs.InTechs.chat.entity.Thread;
 import InTechs.InTechs.chat.payload.request.TextRequest;
 import InTechs.InTechs.chat.payload.response.ChatSendResponse;
 import InTechs.InTechs.chat.payload.response.ErrorResponse;
 import InTechs.InTechs.channel.repository.ChannelRepository;
 import InTechs.InTechs.chat.payload.response.SenderResponse;
+import InTechs.InTechs.chat.payload.response.ThreadResponse;
 import InTechs.InTechs.exception.exceptions.ChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.FirebaseException;
 import InTechs.InTechs.notification.service.NotificationSendService;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -96,6 +99,8 @@ public class SocketServiceImpl implements SocketService {
             return;
         }
 
+        List<ThreadResponse> threadResponses = new ArrayList<>();
+
         User user = client.get("user");
         chatService.sendChat(
                 user,
@@ -116,6 +121,8 @@ public class SocketServiceImpl implements SocketService {
                     .isDelete(false)
                     .notice(false)
                     .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                    .noticeTime(LocalDateTime.now())
+                    .threads(threadResponses)
                     .build()
         );
       

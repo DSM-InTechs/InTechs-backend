@@ -43,6 +43,7 @@ public class ThreadService {
                         .chatId(req.getChatId())
                         .message(req.getMessage())
                         .sender(SenderResponse.builder().email(user.getEmail()).name(user.getName()).image(user.getFileUrl()).build())
+                        .time(LocalDateTime.now())
                         .build()
         );
 

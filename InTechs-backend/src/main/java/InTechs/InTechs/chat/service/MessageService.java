@@ -177,10 +177,13 @@ public class MessageService {
         List<EmojiResponse> emojis = new ArrayList<>();
         for(String key : chat.getEmojis().keySet()){
             EmojiInfo emojiInfo = chat.getEmojis().get(key);
-            emojis.put(key, EmojiInfoResponse.builder()
-                                            .count(emojiInfo.getCount())
-                                            .users(createSenderResponse(emojiInfo.getUsers()))
-                                            .build());
+            emojis.add(
+                    EmojiResponse.builder()
+                            .emoji(key)
+                            .emojiInfo(EmojiInfoResponse.builder()
+                                    .count(emojiInfo.getCount())
+                                    .users(createSenderResponse(emojiInfo.getUsers())).build())
+                    .build());
         }
         return emojis;
     }

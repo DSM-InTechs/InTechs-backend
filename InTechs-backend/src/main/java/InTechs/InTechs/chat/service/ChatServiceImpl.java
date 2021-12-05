@@ -7,6 +7,7 @@ import InTechs.InTechs.chat.entity.Sender;
 import InTechs.InTechs.chat.payload.request.FileRequest;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
 import InTechs.InTechs.channel.repository.ChannelRepository;
+import InTechs.InTechs.chat.payload.response.ChatSendResponse;
 import InTechs.InTechs.chat.payload.response.SenderResponse;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChannelNotFoundException;
@@ -68,9 +69,9 @@ public class  ChatServiceImpl implements ChatService {
     @SneakyThrows
     @Override
     public void sendFile(String channelId, FileRequest fileRequest) {
-        String fileName = UUID.randomUUID().toString();
         ChatType chatType = ChatType.valueOf(fileRequest.getChatType());
-
+        String fileName = fileRequest.getFile().getOriginalFilename();
+        
         fileUploader.uploadFile(fileRequest.getFile(), fileName);
         String fileUrl = fileUploader.getObjectUrl(fileName);
 
@@ -89,7 +90,21 @@ public class  ChatServiceImpl implements ChatService {
                 .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
 
-        socketIOServer.getRoomOperations(channelId).sendEvent("send-file", chat);
+        socketIOServer.getRoomOperations(channelId).sendEvent(
+                "send-file",
+                ChatSendResponse.builder()
+                        .id(chat.getId().toString())
+                        .sender(SenderResponse.builder()
+                                .email(findUser().getEmail())
+                                .name(findUser().getName())
+                                .image(findUser().getFileUrl()).build())
+                        .message(chat.getMessage())
+                        .chatType(chatType)
+                        .isDelete(false)
+                        .notice(false)
+                        .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                        .build());
+
         chatRepository.save(chat);
     }
 

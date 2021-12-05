@@ -4,6 +4,7 @@ import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.entity.Thread;
 import InTechs.InTechs.chat.payload.request.ChatDeleteRequest;
 import InTechs.InTechs.chat.payload.request.ChatUpdateRequest;
+import InTechs.InTechs.chat.payload.request.EmojiRequest;
 import InTechs.InTechs.chat.payload.response.*;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChatNotFoundException;
@@ -132,6 +133,11 @@ public class MessageService {
         return threadResponses;
     }
 
+    public void emoji(SocketIOClient client, EmojiRequest req){
+        Chat chat = chatRepository.findById(req.getChatId()).orElseThrow(ChatNotFoundException::new);
+        //chat.
+
+    }
 
     // class로 따로 빼기?
     private void clientDisconnect(SocketIOClient client, Integer status, String reason) {

@@ -14,6 +14,7 @@ public class EmojiInfo {
     public void emojiUser(Sender user){
         if(users.contains(user)){
             users.remove(user);
+            this.count--;
         } else{
             users.add(user);
             this.count++;

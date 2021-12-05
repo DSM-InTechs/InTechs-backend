@@ -51,7 +51,7 @@ public class MessageService {
 
     public ChatsResponse readChat(String email, String channelId, Pageable pageable){
         List<Chat> chats = chatRepository.findByChannelId(channelId,pageable);
-        Chat noticeChat = chatRepository.findByNoticeTrueAndChannelId(channelId).orElseGet(()->Chat.builder().build());
+        Chat noticeChat = chatRepository.findFirstByNoticeTrueAndChannelIdOrderByNoticeTime(channelId).orElseGet(()->Chat.builder().build());
         if(noticeChat.getSender()!=null){
             return ChatsResponse.builder()
                     .channelId(channelId)

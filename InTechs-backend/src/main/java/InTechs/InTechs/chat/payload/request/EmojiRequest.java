@@ -9,5 +9,4 @@ public class EmojiRequest {
     private String channelId;
     private String chatId;
     private String emojiName;
-    private boolean action; // true면 create, false면 delete
 }

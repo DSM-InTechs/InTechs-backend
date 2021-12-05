@@ -1,6 +1,7 @@
 package InTechs.InTechs.chat.service;
 
 import InTechs.InTechs.chat.entity.Chat;
+import InTechs.InTechs.chat.entity.Thread;
 import InTechs.InTechs.chat.payload.request.ChatDeleteRequest;
 import InTechs.InTechs.chat.payload.request.ChatUpdateRequest;
 import InTechs.InTechs.chat.payload.response.*;
@@ -58,7 +59,8 @@ public class MessageService {
                             .time(noticeChat.getTime().toString())
                             .isDelete(noticeChat.isDeleted())
                             .isMine(email.equals(noticeChat.getSender().getEmail()))
-                            .chatType(noticeChat.getChatType()).build())
+                            .chatType(noticeChat.getChatType())
+                            .threads(threadResponsesCreate(noticeChat.getThreads())).build())
                     .chats(chatResponsesCreate(chats, email))
                     .build();
         }
@@ -107,9 +109,27 @@ public class MessageService {
                     .isDelete(c.isDeleted())
                     .isMine(email.equals(c.getSender().getEmail()))
                     .chatType(c.getChatType())
+                    .threads(threadResponsesCreate(c.getThreads()))
                     .build());
         }
         return chatResponses;
+    }
+
+    private List<ThreadResponse> threadResponsesCreate(List<Thread> threads){
+        List<ThreadResponse> threadResponses = new ArrayList<>();
+        if(threads==null){
+            threadResponses.add(ThreadResponse.builder().build());
+            return threadResponses;
+        }
+        for(Thread t : threads){
+            threadResponses.add(
+                    ThreadResponse.builder()
+                                .message(t.getMessage())
+                                .sender(SenderResponse.builder().email(t.getSender().getEmail()).name(t.getSender().getName()).image(t.getSender().getImage()).build())
+                                .time(t.getTime()).build()
+            );
+        }
+        return threadResponses;
     }
 
 

@@ -36,4 +36,9 @@ public class MessageController {
         chatService.sendFile(channelId, file);
     }
 
+    @GetMapping("/file")
+    public List<ChatResponse> allFileRead(@PathVariable String channelId){
+        return messageService.allFileRead(authenticationFacade.getUserEmail(),channelId);
+    }
+
 }

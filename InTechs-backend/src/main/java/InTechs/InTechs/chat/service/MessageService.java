@@ -1,6 +1,7 @@
 package InTechs.InTechs.chat.service;
 
 import InTechs.InTechs.chat.entity.Chat;
+import InTechs.InTechs.chat.entity.ChatType;
 import InTechs.InTechs.chat.entity.EmojiInfo;
 import InTechs.InTechs.chat.entity.Sender;
 import InTechs.InTechs.chat.entity.Thread;
@@ -51,7 +52,7 @@ public class MessageService {
 
     public ChatsResponse readChat(String email, String channelId, Pageable pageable){
         List<Chat> chats = chatRepository.findByChannelId(channelId,pageable);
-        Chat noticeChat = chatRepository.findByNoticeTrueAndChannelId(channelId).orElseGet(()->Chat.builder().build());
+        Chat noticeChat = chatRepository.findFirstByNoticeTrueAndChannelIdOrderByNoticeTime(channelId).orElseGet(()->Chat.builder().build());
         if(noticeChat.getSender()!=null){
             return ChatsResponse.builder()
                     .channelId(channelId)
@@ -134,6 +135,11 @@ public class MessageService {
             );
         }
         return threadResponses;
+    }
+
+    public List<ChatResponse> allFileRead(String email, String channelId){
+        List<Chat> chats = chatRepository.findByChannelIdAndChatType(channelId, ChatType.FILE);
+        return chatResponsesCreate(chats, email);
     }
 
     public void emoji(SocketIOClient client, EmojiRequest req){

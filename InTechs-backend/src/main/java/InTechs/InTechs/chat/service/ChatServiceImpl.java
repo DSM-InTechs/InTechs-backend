@@ -99,6 +99,8 @@ public class  ChatServiceImpl implements ChatService {
                 .threads(null)
                 .build();
 
+        chatRepository.save(chat);
+        
         socketIOServer.getRoomOperations(channelId).sendEvent(
                 "send-file",
                 ChatSendResponse.builder()
@@ -116,8 +118,6 @@ public class  ChatServiceImpl implements ChatService {
                         .noticeTime(LocalDateTime.now())
                         .threads(threadResponsesCreate(chat.getThreads()))
                         .build());
-
-        chatRepository.save(chat);
     }
 
     private User findUser() {

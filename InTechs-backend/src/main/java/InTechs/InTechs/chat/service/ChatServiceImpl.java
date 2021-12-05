@@ -4,11 +4,13 @@ import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.entity.ChatType;
 import InTechs.InTechs.chat.entity.Sender;
+import InTechs.InTechs.chat.entity.Thread;
 import InTechs.InTechs.chat.payload.request.FileRequest;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
 import InTechs.InTechs.channel.repository.ChannelRepository;
 import InTechs.InTechs.chat.payload.response.ChatSendResponse;
 import InTechs.InTechs.chat.payload.response.SenderResponse;
+import InTechs.InTechs.chat.payload.response.ThreadResponse;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
@@ -24,6 +26,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -44,6 +48,7 @@ public class  ChatServiceImpl implements ChatService {
     @Override
     public void sendChat(User user, String channelId, String message) {
         boolean existsChannel = channelRepository.existsByChannelIdAndUsersContaining(channelId, user);
+        List<Thread> threadResponses = new ArrayList<>();
 
         if(!existsChannel) throw new ChatChannelNotFoundException();
 
@@ -58,6 +63,8 @@ public class  ChatServiceImpl implements ChatService {
                 .notice(false)
                 .chatType(ChatType.TEXT)
                 .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                .noticeTime(LocalDateTime.now())
+                .threads(threadResponses)
                 .build();
 
         Channel channel = channelRepository.findById(channelId).orElseThrow(ChannelNotFoundException::new);
@@ -88,6 +95,8 @@ public class  ChatServiceImpl implements ChatService {
                 .notice(false)
                 .chatType(chatType)
                 .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                .noticeTime(LocalDateTime.now())
+                .threads(null)
                 .build();
 
         socketIOServer.getRoomOperations(channelId).sendEvent(
@@ -103,6 +112,9 @@ public class  ChatServiceImpl implements ChatService {
                         .isDelete(false)
                         .notice(false)
                         .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                        .noticeTime(LocalDateTime.now())
+                        .noticeTime(LocalDateTime.now())
+                        .threads(threadResponsesCreate(chat.getThreads()))
                         .build());
 
         chatRepository.save(chat);
@@ -111,5 +123,22 @@ public class  ChatServiceImpl implements ChatService {
     private User findUser() {
         return userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
+    }
+
+    private List<ThreadResponse> threadResponsesCreate(List<Thread> threads){
+        List<ThreadResponse> threadResponses = new ArrayList<>();
+        if(threads==null){
+            threadResponses.add(ThreadResponse.builder().build());
+            return threadResponses;
+        }
+        for(Thread t : threads){
+            threadResponses.add(
+                    ThreadResponse.builder()
+                            .message(t.getMessage())
+                            .sender(SenderResponse.builder().email(t.getSender().getEmail()).name(t.getSender().getName()).image(t.getSender().getImage()).build())
+                            .time(t.getTime()).build()
+            );
+        }
+        return threadResponses;
     }
 }

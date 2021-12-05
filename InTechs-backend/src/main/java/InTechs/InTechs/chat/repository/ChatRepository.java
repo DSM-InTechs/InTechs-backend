@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface ChatRepository extends MongoRepository<Chat, String> {
     List<Chat> findByChannelId(String channelId, Pageable pageable);
     Optional<Chat> findByNoticeTrueAndChannelId(String channelId);
-    Optional<Chat> findByNoticeTrueAndAndChannelIdOOrderByTime(String channelId);
+    Optional<Chat> findByNoticeTrueAndAndChannelIdOrderByTime(String channelId);
 
     List<Chat> findByChannelIdAndNoticeIsTrue(String channelId);
 

@@ -10,9 +10,9 @@ import java.util.Optional;
 
 @Repository
 public interface ChatRepository extends MongoRepository<Chat, String> {
-    List<Chat> findBySenderAndChannelId(String sender, String channelId);
     List<Chat> findByChannelId(String channelId, Pageable pageable);
     Optional<Chat> findByNoticeTrueAndChannelId(String channelId);
+    Optional<Chat> findByNoticeTrueAndAndChannelIdOrderByTime(String channelId);
 
     List<Chat> findByChannelIdAndNoticeIsTrueOrderByNoticeTime(String channelId);
 

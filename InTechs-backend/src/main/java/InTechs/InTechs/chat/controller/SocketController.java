@@ -1,9 +1,6 @@
 package InTechs.InTechs.chat.controller;
 
-import InTechs.InTechs.chat.payload.request.ChatDeleteRequest;
-import InTechs.InTechs.chat.payload.request.ChatUpdateRequest;
-import InTechs.InTechs.chat.payload.request.TextRequest;
-import InTechs.InTechs.chat.payload.request.ThreadRequest;
+import InTechs.InTechs.chat.payload.request.*;
 import InTechs.InTechs.chat.service.MessageService;
 import InTechs.InTechs.chat.service.SocketService;
 import InTechs.InTechs.chat.service.ThreadService;
@@ -42,6 +39,9 @@ public class SocketController {
 
         server.addEventListener("thread", ThreadRequest.class,
                 ((client, data, ackSender) -> threadService.thread(client, data)));
+
+        server.addEventListener("emoji", EmojiRequest.class,
+                ((client, data, ackSender) -> messageService.emoji(client, data)));
     }
 
 }

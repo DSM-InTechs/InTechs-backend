@@ -1,13 +1,16 @@
 package InTechs.InTechs.chat.service;
 
 import InTechs.InTechs.chat.entity.Chat;
+import InTechs.InTechs.chat.entity.Sender;
 import InTechs.InTechs.chat.entity.Thread;
 import InTechs.InTechs.chat.payload.request.ChatDeleteRequest;
 import InTechs.InTechs.chat.payload.request.ChatUpdateRequest;
+import InTechs.InTechs.chat.payload.request.EmojiRequest;
 import InTechs.InTechs.chat.payload.response.*;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChatNotFoundException;
 import InTechs.InTechs.exception.exceptions.MessageNotFoundException;
+import InTechs.InTechs.user.entity.User;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import lombok.RequiredArgsConstructor;
@@ -132,6 +135,22 @@ public class MessageService {
         return threadResponses;
     }
 
+    public void emoji(SocketIOClient client, EmojiRequest req){
+        if(!client.getAllRooms().contains(req.getChannelId())) {
+            clientDisconnect(client, 401, "Invalid Connection");
+            return;
+        }
+        User user = client.get("user");
+
+        Chat chat = chatRepository.findById(req.getChatId()).orElseThrow(ChatNotFoundException::new);
+
+        Sender sender = Sender.builder()
+                                .email(user.getEmail())
+                                .name(user.getName())
+                                .image(user.getFileUrl()).build();
+        chat.addEmoji(req.getEmojiName(), sender);
+        chatRepository.save(chat);
+    }
 
     // class로 따로 빼기?
     private void clientDisconnect(SocketIOClient client, Integer status, String reason) {

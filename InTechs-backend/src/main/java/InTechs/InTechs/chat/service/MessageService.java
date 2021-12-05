@@ -169,6 +169,7 @@ public class MessageService {
                                 .chatType(chat.getChatType())
                                 .time(chat.getTime().toString())
                                 .sender(chat.getSender())
+                                .threads(threadResponsesCreate(chat.getThreads()))
                                 .emojis(emojiCreate(chat))
                                 .build());
     }

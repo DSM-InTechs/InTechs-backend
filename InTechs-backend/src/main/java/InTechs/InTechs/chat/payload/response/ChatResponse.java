@@ -13,7 +13,8 @@ public class ChatResponse {
     private final String id;
     private final String message;
 //    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private final LocalDateTime time;
+//    private final LocalDateTime time;
+    private final String time;
     private final Sender sender;
     private final Boolean isMine;
     private final boolean isDelete;

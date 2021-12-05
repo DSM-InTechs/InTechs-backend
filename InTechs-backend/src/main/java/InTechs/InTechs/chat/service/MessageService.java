@@ -55,7 +55,7 @@ public class MessageService {
                             .id(String.valueOf(noticeChat.getId()))
                             .message(noticeChat.getMessage())
                             .sender(noticeChat.getSender())
-                            .time(noticeChat.getTime())
+                            .time(noticeChat.getTime().toString())
                             .isDelete(noticeChat.isDeleted())
                             .isMine(email.equals(noticeChat.getSender().getEmail()))
                             .chatType(noticeChat.getChatType()).build())
@@ -92,9 +92,8 @@ public class MessageService {
                         .isDelete(chat.isDeleted())
                         .isMine(true)
                         .chatType(chat.getChatType())
-                        .time(chat.getTime())
+                        .time(chat.getTime().toString())
                         .sender(chat.getSender()).build());
-
     }
 
     private List<ChatResponse> chatResponsesCreate(List<Chat> chats, String email){
@@ -104,7 +103,7 @@ public class MessageService {
                     .id(c.getId().toString())
                     .message(c.getMessage())
                     .sender(c.getSender())
-                    .time(c.getTime())
+                    .time(c.getTime().toString())
                     .isDelete(c.isDeleted())
                     .isMine(email.equals(c.getSender().getEmail()))
                     .chatType(c.getChatType())

@@ -1,6 +1,7 @@
 package InTechs.InTechs.chat.service;
 
 import InTechs.InTechs.chat.entity.Chat;
+import InTechs.InTechs.chat.entity.EmojiInfo;
 import InTechs.InTechs.chat.entity.Sender;
 import InTechs.InTechs.chat.entity.Thread;
 import InTechs.InTechs.chat.payload.request.ChatDeleteRequest;
@@ -20,8 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 // 메세지에 이모티콘
@@ -113,6 +113,7 @@ public class MessageService {
                     .isMine(email.equals(c.getSender().getEmail()))
                     .chatType(c.getChatType())
                     .threads(threadResponsesCreate(c.getThreads()))
+                    .emojis(emojiCreate(c))
                     .build());
         }
         return chatResponses;
@@ -150,6 +151,44 @@ public class MessageService {
                                 .image(user.getFileUrl()).build();
         chat.addEmoji(req.getEmojiName(), sender);
         chatRepository.save(chat);
+
+        server.getRoomOperations(req.getChannelId())
+                .sendEvent(
+                        "emoji",
+                        ChatResponse.builder()
+                                .id(req.getChatId())
+                                .message(chat.getMessage())
+                                .isDelete(chat.isDeleted())
+                                .isMine(true)
+                                .chatType(chat.getChatType())
+                                .time(chat.getTime().toString())
+                                .sender(chat.getSender())
+                                .emojis(emojiCreate(chat))
+                                .build());
+    }
+
+    private Map<String, EmojiInfoResponse> emojiCreate(Chat chat){
+        Map<String, EmojiInfoResponse> emojis = new HashMap<>();
+        for(String key : chat.getEmojis().keySet()){
+            EmojiInfo emojiInfo = chat.getEmojis().get(key);
+            emojis.put(key, EmojiInfoResponse.builder()
+                                            .count(emojiInfo.getCount())
+                                            .users(createSenderResponse(emojiInfo.getUsers()))
+                                            .build());
+        }
+        return emojis;
+    }
+
+    private Set<SenderResponse> createSenderResponse(Set<Sender> users){
+        Set<SenderResponse> senders = new HashSet<>();
+        for(Sender s : users){
+            senders.add(SenderResponse.builder()
+                                    .email(s.getEmail())
+                                    .name(s.getName())
+                                    .image(s.getImage())
+                                    .build());
+        }
+        return senders;
     }
 
     // class로 따로 빼기?

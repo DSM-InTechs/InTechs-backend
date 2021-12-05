@@ -9,10 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 @Builder
@@ -60,10 +57,17 @@ public class Chat {
     }
 
     public void addEmoji(String emoji, Sender sender){
-        if(emojis.containsKey(emoji)){
+        if(emojis.containsKey(emoji)) {
             emojis.get(emoji).emojiUser(sender);
+        } else {
+            emojis.put(emoji, createEmojiInfo(sender));
         }
-        // 없을경우 처음 등록
+    }
+
+    private EmojiInfo createEmojiInfo(Sender sender){
+        Set<Sender> user = new HashSet<>();
+        user.add(sender);
+        return EmojiInfo.builder().count(1).users(user).build();
     }
 
 }

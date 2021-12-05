@@ -5,6 +5,7 @@ import InTechs.InTechs.chat.entity.Sender;
 import lombok.Builder;
 import lombok.Getter;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Builder
@@ -17,4 +18,5 @@ public class ChatResponse {
     private final boolean isDelete;
     private final ChatType chatType;
     private final List<ThreadResponse> threads;
+    private final Map<String, EmojiInfoResponse> emojis;
 }

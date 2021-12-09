@@ -31,6 +31,8 @@ public class Channel {
 
     private String fileUrl;
 
+    private Boolean isDM;
+
     private LocalDateTime time;
 
     public Channel updateName(String name) {
@@ -58,14 +60,5 @@ public class Channel {
     public void notificationOn(User user){
         this.notificationOnUsers.add(user);
     }
-
-
-//    public void addChat(Chat chat) {
-//        this.chats.add(chat);
-//    }
-//
-//    public void deleteChat(Chat chat) {
-//        this.chats.remove(chat);
-//    }
 
 }

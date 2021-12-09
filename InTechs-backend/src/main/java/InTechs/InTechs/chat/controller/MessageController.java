@@ -1,15 +1,15 @@
 package InTechs.InTechs.chat.controller;
 
+import InTechs.InTechs.chat.payload.request.FileRequest;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
 import InTechs.InTechs.chat.payload.response.ChatsResponse;
+import InTechs.InTechs.chat.service.ChatService;
 import InTechs.InTechs.chat.service.MessageService;
 import InTechs.InTechs.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,6 +19,7 @@ import java.util.List;
 public class MessageController {
     private final MessageService messageService;
     private final AuthenticationFacade authenticationFacade;
+    private final ChatService chatService;
 
     @GetMapping
     public ChatsResponse readChannelChat(@PathVariable String channelId, final Pageable pageable){
@@ -28,6 +29,16 @@ public class MessageController {
     @GetMapping("/{message}")
     public List<ChatResponse> messageSearch(@PathVariable String channelId, @PathVariable String message){
         return messageService.messageSearch(authenticationFacade.getUserEmail(), channelId, message);
+    }
+
+    @PostMapping("/file")
+    public void fileSend(@PathVariable String channelId, @ModelAttribute FileRequest file) {
+        chatService.sendFile(channelId, file);
+    }
+
+    @GetMapping("/file")
+    public List<ChatResponse> allFileRead(@PathVariable String channelId){
+        return messageService.allFileRead(authenticationFacade.getUserEmail(),channelId);
     }
 
 }

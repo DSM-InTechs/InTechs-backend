@@ -4,9 +4,13 @@ import InTechs.InTechs.channel.entity.Channel;
 import InTechs.InTechs.chat.entity.Chat;
 import InTechs.InTechs.chat.entity.ChatType;
 import InTechs.InTechs.chat.entity.Sender;
+import InTechs.InTechs.chat.entity.Thread;
+import InTechs.InTechs.chat.payload.request.FileRequest;
 import InTechs.InTechs.chat.payload.response.ChatResponse;
 import InTechs.InTechs.channel.repository.ChannelRepository;
+import InTechs.InTechs.chat.payload.response.ChatSendResponse;
 import InTechs.InTechs.chat.payload.response.SenderResponse;
+import InTechs.InTechs.chat.payload.response.ThreadResponse;
 import InTechs.InTechs.chat.repository.ChatRepository;
 import InTechs.InTechs.exception.exceptions.ChannelNotFoundException;
 import InTechs.InTechs.exception.exceptions.ChatChannelNotFoundException;
@@ -19,7 +23,6 @@ import com.corundumstudio.socketio.SocketIOServer;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -29,7 +32,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ChatServiceImpl implements ChatService {
+public class  ChatServiceImpl implements ChatService {
 
     private final UserRepository userRepository;
     private final ChatRepository chatRepository;
@@ -41,41 +44,11 @@ public class ChatServiceImpl implements ChatService {
     private final SocketIOServer socketIOServer;
 
 
-    @Override
-    public List<ChatResponse> getChatList(String channelId) {
-        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotFoundException::new);
-
-        List<Chat> chatList = chatRepository.findBySenderAndChannelId(user.getEmail(), channelId);
-
-        List<ChatResponse> chatResponses = new ArrayList<>();
-        for(Chat chat : chatList) {
-            User sender = userRepository.findByEmail(chat.getSender().getEmail())
-                    .orElseThrow(UserNotFoundException::new);
-
-            chatResponses.add(
-                    ChatResponse.builder()
-                            .sender(SenderResponse.builder()
-                                    .email(sender.getEmail())
-                                    .image(sender.getFileUrl())
-                                    .name(sender.getName())
-                                    .build())
-                            .message(chat.getMessage())
-                            .id(channelId)
-                            .isDelete(false)
-                            .notice(false)
-                            .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                            .build()
-            );
-        }
-
-        return chatResponses;
-    }
-
     @SneakyThrows
     @Override
     public void sendChat(User user, String channelId, String message) {
         boolean existsChannel = channelRepository.existsByChannelIdAndUsersContaining(channelId, user);
+        List<Thread> threadResponses = new ArrayList<>();
 
         if(!existsChannel) throw new ChatChannelNotFoundException();
 
@@ -90,69 +63,82 @@ public class ChatServiceImpl implements ChatService {
                 .notice(false)
                 .chatType(ChatType.TEXT)
                 .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                .noticeTime(LocalDateTime.now())
+                .threads(threadResponses)
                 .build();
 
         Channel channel = channelRepository.findById(channelId).orElseThrow(ChannelNotFoundException::new);
 
-        //channel.addChat(chat);
         channelRepository.save(channel);
-
         chatRepository.save(chat);
     }
 
     @SneakyThrows
-    public void sendFile(User user, String channelId, MultipartFile file) {
-        Channel channel = channelRepository.findById(channelId).orElseThrow(ChannelNotFoundException::new);
-        String fileName = UUID.randomUUID().toString();
+    @Override
+    public void sendFile(String channelId, FileRequest fileRequest) {
+        ChatType chatType = ChatType.valueOf(fileRequest.getChatType());
+        String fileName = fileRequest.getFile().getOriginalFilename();
+        
+        fileUploader.uploadFile(fileRequest.getFile(), fileName);
+        String fileUrl = fileUploader.getObjectUrl(fileName);
 
         Sender sender = Sender.builder()
-                .email(user.getEmail())
-                .name(user.getName())
-                .image(user.getFileUrl())
+                .email(findUser().getEmail())
+                .name(findUser().getName())
+                .image(findUser().getFileUrl())
                 .build();
         Chat chat = Chat.builder()
                 .sender(sender)
-                .message(fileName)
+                .message(fileUrl)
                 .channelId(channelId)
                 .isDeleted(false)
                 .notice(false)
-                .chatType(ChatType.FILE)
+                .chatType(chatType)
                 .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                .noticeTime(LocalDateTime.now())
+                .threads(null)
                 .build();
 
-        socketIOServer.getRoomOperations(channelId).sendEvent("send-file", chat);
-
-
-        fileUploader.uploadFile(file, fileName);
-        //channel.addChat(chat);
         chatRepository.save(chat);
+        
+        socketIOServer.getRoomOperations(channelId).sendEvent(
+                "send-file",
+                ChatSendResponse.builder()
+                        .id(chat.getId().toString())
+                        .sender(SenderResponse.builder()
+                                .email(findUser().getEmail())
+                                .name(findUser().getName())
+                                .image(findUser().getFileUrl()).build())
+                        .message(chat.getMessage())
+                        .chatType(chatType)
+                        .isDelete(false)
+                        .notice(false)
+                        .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                        .noticeTime(LocalDateTime.now())
+                        .noticeTime(LocalDateTime.now())
+                        .threads(threadResponsesCreate(chat.getThreads()))
+                        .build());
     }
 
-    @SneakyThrows
-    public void sendImage(User user, String channelId, MultipartFile file) {
-        Channel channel = channelRepository.findById(channelId).orElseThrow(ChannelNotFoundException::new);
-        String fileName = UUID.randomUUID().toString();
+    private User findUser() {
+        return userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
+    }
 
-        Sender sender = Sender.builder()
-                .email(user.getEmail())
-                .name(user.getName())
-                .image(user.getFileUrl())
-                .build();
-        Chat chat = Chat.builder()
-                .sender(sender)
-                .message(fileName)
-                .channelId(channelId)
-                .isDeleted(false)
-                .notice(false)
-                .chatType(ChatType.IMAGE)
-                .time(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                .build();
-
-        socketIOServer.getRoomOperations(channelId).sendEvent("send-image", chat);
-
-
-        fileUploader.uploadFile(file, fileName);
-        //channel.addChat(chat);
-        chatRepository.save(chat);
+    private List<ThreadResponse> threadResponsesCreate(List<Thread> threads){
+        List<ThreadResponse> threadResponses = new ArrayList<>();
+        if(threads==null){
+            threadResponses.add(ThreadResponse.builder().build());
+            return threadResponses;
+        }
+        for(Thread t : threads){
+            threadResponses.add(
+                    ThreadResponse.builder()
+                            .message(t.getMessage())
+                            .sender(SenderResponse.builder().email(t.getSender().getEmail()).name(t.getSender().getName()).image(t.getSender().getImage()).build())
+                            .time(t.getTime()).build()
+            );
+        }
+        return threadResponses;
     }
 }

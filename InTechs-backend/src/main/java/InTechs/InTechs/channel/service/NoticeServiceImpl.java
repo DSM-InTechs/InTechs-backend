@@ -11,6 +11,7 @@ import InTechs.InTechs.chat.repository.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +20,6 @@ import java.util.stream.Collectors;
 public class NoticeServiceImpl implements NoticeService {
 
     private final ChatRepository chatRepository;
-    private final UserRepository userRepository;
 
     @Override
     public void updateNotice(String chatId, NoticeRequest noticeRequest) {
@@ -28,29 +28,15 @@ public class NoticeServiceImpl implements NoticeService {
 
         Boolean notice = noticeRequest.getNotice();
 
+        chatRepository.save(chat.updateNoticeTime(LocalDateTime.now()));
         chatRepository.save(chat.updateNotice(notice));
     }
 
     @Override
-    public NoticeResponse currentNotice(String channelId) {
-        Chat notice = chatRepository.findTop1ByChannelIdOrderByTime(channelId);
-
-        User user = userRepository.findByEmail(notice.getSender().getEmail())
-                .orElseThrow(UserNotFoundException::new);
-
-        return NoticeResponse.builder()
-                .name(user.getName())
-                .time(notice.getTime())
-                .message(notice.getMessage())
-                .build();
-    }
-
-    @Override
     public List<NoticeResponse> noticeList(String channelId) {
-
-        return chatRepository.findByChannelIdAndNoticeIsTrue(channelId).stream()
+        return chatRepository.findByChannelIdAndNoticeIsTrueOrderByNoticeTime(channelId).stream()
                 .map(chat -> NoticeResponse.builder()
-                        .name(chat.getSender().getEmail())
+                        .name(chat.getSender().getName())
                         .time(chat.getTime())
                         .message(chat.getMessage())
                         .build())

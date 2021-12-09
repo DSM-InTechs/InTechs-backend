@@ -1,40 +1,37 @@
 package InTechs.InTechs.chat.service;
 
 import InTechs.InTechs.chat.entity.Chat;
+import InTechs.InTechs.chat.entity.ChatType;
+import InTechs.InTechs.chat.entity.EmojiInfo;
+import InTechs.InTechs.chat.entity.Sender;
+import InTechs.InTechs.chat.entity.Thread;
 import InTechs.InTechs.chat.payload.request.ChatDeleteRequest;
-import InTechs.InTechs.chat.payload.response.ChatResponse;
-import InTechs.InTechs.chat.payload.response.ChatsResponse;
-import InTechs.InTechs.chat.payload.response.ErrorResponse;
-import InTechs.InTechs.chat.payload.response.SenderResponse;
+import InTechs.InTechs.chat.payload.request.ChatUpdateRequest;
+import InTechs.InTechs.chat.payload.request.EmojiRequest;
+import InTechs.InTechs.chat.payload.response.*;
 import InTechs.InTechs.chat.repository.ChatRepository;
+import InTechs.InTechs.exception.exceptions.ChatNotFoundException;
 import InTechs.InTechs.exception.exceptions.MessageNotFoundException;
-import InTechs.InTechs.exception.exceptions.UserNotFoundException;
-import InTechs.InTechs.file.FileUploader;
 import InTechs.InTechs.user.entity.User;
-import InTechs.InTechs.user.repository.UserRepository;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 // 메세지에 이모티콘
-// 메세지 수정
+
 @RequiredArgsConstructor
 @Service
 public class MessageService {
     private final ChatRepository chatRepository;
     private final SocketIOServer server;
-    private final UserRepository userRepository;
-    private final FileUploader fileUploader;
 
     public void messageDelete(SocketIOClient client, ChatDeleteRequest req){
         if(!client.getAllRooms().contains(req.getChannelId())) {
@@ -44,7 +41,7 @@ public class MessageService {
 
         changeMessageDelete(req.getMessageId());
 
-        server.getRoomOperations(req.getChannelId()).sendEvent("delete",req.getChannelId());
+        server.getRoomOperations(req.getChannelId()).sendEvent("delete",req.getMessageId());
     }
 
     private void changeMessageDelete(String messageId){
@@ -55,39 +52,54 @@ public class MessageService {
 
     public ChatsResponse readChat(String email, String channelId, Pageable pageable){
         List<Chat> chats = chatRepository.findByChannelId(channelId,pageable);
-        Chat noticeChat = chatRepository.findByNoticeTrueAndChannelId(channelId).orElseGet(()->Chat.builder().build());
-
-        User noticeSender = new User();
+        Chat noticeChat = chatRepository.findFirstByNoticeTrueAndChannelIdOrderByNoticeTime(channelId).orElseGet(()->Chat.builder().build());
         if(noticeChat.getSender()!=null){
-            noticeSender = userRepository.findById(noticeChat.getSender().getEmail()).orElseThrow(UserNotFoundException::new);
+            return ChatsResponse.builder()
+                    .channelId(channelId)
+                    .notice(ChatResponse.builder()
+                            .id(String.valueOf(noticeChat.getId()))
+                            .message(noticeChat.getMessage())
+                            .sender(noticeChat.getSender())
+                            .time(noticeChat.getTime().toString())
+                            .isDelete(noticeChat.isDeleted())
+                            .isMine(email.equals(noticeChat.getSender().getEmail()))
+                            .chatType(noticeChat.getChatType())
+                            .threads(threadResponsesCreate(noticeChat.getThreads())).build())
+                    .chats(chatResponsesCreate(chats, email))
+                    .build();
         }
         return ChatsResponse.builder()
                 .channelId(channelId)
-                .notice(ChatResponse.builder()
-                        .id(String.valueOf(noticeChat.getId()))
-                        .message(noticeChat.getMessage())
-                        .sender(SenderResponse.builder()
-                                .email(noticeSender.getEmail())
-                                .name(noticeSender.getName())
-                                .image(imageUrl(noticeSender.getFileUrl())).build())
-                        .time(noticeChat.getTime()).build())
                 .chats(chatResponsesCreate(chats, email))
                 .build();
-    }
-
-
-    private String imageUrl(String fileName) {
-        String fileUrl = fileUploader.getObjectUrl(fileName);
-
-        if(fileUrl == null) {
-            fileUrl = fileUploader.getObjectUrl("인덱스 프로필.jpg");
-        }
-        return fileUrl;
     }
 
     public List<ChatResponse> messageSearch(String email, String channelId, String message){
         List<Chat> chats = chatRepository.findAllByChannelIdAndMessageContaining(channelId, message).stream().filter((c)-> !c.isDeleted()).collect(Collectors.toList());
         return chatResponsesCreate(chats, email);
+    }
+
+    public void messageUpdate(SocketIOClient client, ChatUpdateRequest req){
+        if(!client.getAllRooms().contains(req.getChannelId())) {
+            clientDisconnect(client, 401, "Invalid Connection");
+            return;
+        }
+
+        Chat chat = chatRepository.findById(req.getChatId()).orElseThrow(ChatNotFoundException::new);
+        chat.messageUpdate(req.getMessage());
+        chatRepository.save(chat);
+
+        server.getRoomOperations(req.getChannelId())
+                .sendEvent(
+                        "update",
+                        ChatResponse.builder()
+                        .id(req.getChatId())
+                        .message(chat.getMessage())
+                        .isDelete(chat.isDeleted())
+                        .isMine(true)
+                        .chatType(chat.getChatType())
+                        .time(chat.getTime().toString())
+                        .sender(chat.getSender()).build());
     }
 
     private List<ChatResponse> chatResponsesCreate(List<Chat> chats, String email){
@@ -96,17 +108,98 @@ public class MessageService {
             chatResponses.add(ChatResponse.builder()
                     .id(c.getId().toString())
                     .message(c.getMessage())
-                    .sender(SenderResponse.builder()
-                            .email(c.getSender().getEmail())
-                            .name(c.getSender().getName())
-                            .image(c.getSender().getImage()).build())
-                    .time(c.getTime())
+                    .sender(c.getSender())
+                    .time(c.getTime().toString())
                     .isDelete(c.isDeleted())
+                    .isMine(email.equals(c.getSender().getEmail()))
+                    .chatType(c.getChatType())
+                    .threads(threadResponsesCreate(c.getThreads()))
+                    .emojis(emojiCreate(c))
                     .build());
         }
         return chatResponses;
     }
 
+    private List<ThreadResponse> threadResponsesCreate(List<Thread> threads){
+        List<ThreadResponse> threadResponses = new ArrayList<>();
+        if(threads==null){
+            threadResponses.add(ThreadResponse.builder().build());
+            return threadResponses;
+        }
+        for(Thread t : threads){
+            threadResponses.add(
+                    ThreadResponse.builder()
+                                .message(t.getMessage())
+                                .sender(SenderResponse.builder().email(t.getSender().getEmail()).name(t.getSender().getName()).image(t.getSender().getImage()).build())
+                                .time(t.getTime()).build()
+            );
+        }
+        return threadResponses;
+    }
+
+    public List<ChatResponse> allFileRead(String email, String channelId){
+        List<Chat> chats = chatRepository.findByChannelIdAndChatType(channelId, ChatType.FILE);
+        return chatResponsesCreate(chats, email);
+    }
+
+    public void emoji(SocketIOClient client, EmojiRequest req){
+        if(!client.getAllRooms().contains(req.getChannelId())) {
+            clientDisconnect(client, 401, "Invalid Connection");
+            return;
+        }
+        User user = client.get("user");
+
+        Chat chat = chatRepository.findById(req.getChatId()).orElseThrow(ChatNotFoundException::new);
+
+        Sender sender = Sender.builder()
+                                .email(user.getEmail())
+                                .name(user.getName())
+                                .image(user.getFileUrl()).build();
+        chat.addEmoji(req.getEmojiName(), sender);
+        chatRepository.save(chat);
+
+        server.getRoomOperations(req.getChannelId())
+                .sendEvent(
+                        "emoji",
+                        ChatResponse.builder()
+                                .id(req.getChatId())
+                                .message(chat.getMessage())
+                                .isDelete(chat.isDeleted())
+                                .isMine(true)
+                                .chatType(chat.getChatType())
+                                .time(chat.getTime().toString())
+                                .sender(chat.getSender())
+                                .threads(threadResponsesCreate(chat.getThreads()))
+                                .emojis(emojiCreate(chat))
+                                .build());
+    }
+
+    private List<EmojiResponse> emojiCreate(Chat chat){
+        List<EmojiResponse> emojis = new ArrayList<>();
+        for(String key : chat.getEmojis().keySet()){
+            EmojiInfo emojiInfo = chat.getEmojis().get(key);
+            emojis.add(
+                    EmojiResponse.builder()
+                            .emoji(key)
+                            .emojiInfo(EmojiInfoResponse.builder()
+                                    .count(emojiInfo.getCount())
+                                    .users(createSenderResponse(emojiInfo.getUsers())).build())
+                    .build());
+        }
+        return emojis;
+    }
+
+    private Set<SenderResponse> createSenderResponse(Set<Sender> users){
+        Set<SenderResponse> senders = new HashSet<>();
+        for(Sender s : users){
+            senders.add(SenderResponse.builder()
+                                    .email(s.getEmail())
+                                    .name(s.getName())
+                                    .image(s.getImage())
+                                    .build());
+        }
+        return senders;
+    }
 
     // class로 따로 빼기?
     private void clientDisconnect(SocketIOClient client, Integer status, String reason) {

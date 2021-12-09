@@ -10,10 +10,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChannelRequest {
+public class UpdateChannelRequest {
 
     private String name;
 
-    private Boolean isDM;
+    private MultipartFile file;
 
 }

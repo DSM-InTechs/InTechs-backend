@@ -2,6 +2,9 @@ package InTechs.InTechs.config;
 
 import InTechs.InTechs.security.JwtConfigure;
 import InTechs.InTechs.security.JwtTokenProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -59,4 +62,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }

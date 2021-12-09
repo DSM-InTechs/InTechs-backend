@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -16,5 +18,9 @@ public class ChannelResponse {
     private final String image;
 
     private final String message;
+
+    private final boolean isDM;
+
+    private final LocalDateTime time;
 
 }

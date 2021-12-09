@@ -1,29 +1,22 @@
 package InTechs.InTechs.chat.payload.response;
 
 import InTechs.InTechs.chat.entity.ChatType;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import InTechs.InTechs.chat.entity.Sender;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @Builder
 public class ChatResponse {
-
     private final String id;
-
     private final String message;
-
-    private final SenderResponse sender;
-
-    private final Boolean isDelete;
-
-    private final Boolean notice;
-
+    private final String time;
+    private final Sender sender;
+    private final Boolean isMine;
+    private final boolean isDelete;
     private final ChatType chatType;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private final LocalDateTime time;
-
+    private final List<ThreadResponse> threads;
+    private final List<EmojiResponse> emojis;
 }

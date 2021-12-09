@@ -9,8 +9,6 @@ public interface NoticeService {
 
     void updateNotice(String chatId, NoticeRequest noticeRequest);
 
-    NoticeResponse currentNotice(String channelId);
-
     List<NoticeResponse> noticeList(String channelId);
 
 }

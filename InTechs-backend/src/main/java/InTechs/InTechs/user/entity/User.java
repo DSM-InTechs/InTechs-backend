@@ -62,4 +62,5 @@ public class User {
         this.fileUrl = fileUrl;
         return this;
     }
+
 }
